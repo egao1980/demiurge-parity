@@ -1,0 +1,39 @@
+# Demo evidence
+
+Narrated mock-tier scripts for later human review. These are **not** Rove
+tests: they print what is happening and what to look at (section writes,
+citations, gate verdicts, journal replay counts). S3/S5/S8 stay skipped
+until B7b.
+
+## Run
+
+```bash
+./demos/run-demo.sh s2-boot
+./demos/run-demo.sh s4-answer
+./demos/run-demo.sh s6-improve
+./demos/run-demo.sh s7-resume
+```
+
+`run-demo.sh` wraps SBCL in `asciinema rec demos/recordings/<version>/<name>.cast`
+when asciinema is on `PATH`, otherwise `script`(1). It **always** tees
+`demos/recordings/<version>/<name>.log`. The Lisp header prints ASDF versions
+of loaded systems and the OCI tag when the source path is a GHCR dest.
+
+Checkout-only: dependencies come from `ghcr.io/egao1980/cl-systems`. Do not
+point `CL_SOURCE_REGISTRY` at a sibling `demiurge/` checkout.
+
+CI: `.github/workflows/demo-evidence.yml` on `v*` tags and `workflow_dispatch`.
+It uploads logs/casts as artifacts and does not auto-commit.
+
+## Index
+
+| Recording | What it proves | Date | System versions |
+|---|---|---|---|
+| [`recordings/0.1.1/s2-boot-demo`](recordings/0.1.1/s2-boot-demo.log) ([.cast](recordings/0.1.1/s2-boot-demo.cast)) | Personal profile factory in a clean temp dir: `:personal` kind, journal/session/chunker/rag/llm stores bound; SQLite files created | 2026-09-13 | `demiurge-parity` 0.1.1, `demiurge` 0.3.0, `llm-protocol` 0.3.0, `blackboard-protocol` 0.2.2, `steer-protocol` 0.2.0, `task-protocol` 0.1.0, `event-backend-libuv` 0.1.2 (full list in log header) |
+| [`recordings/0.1.1/s4-answer-demo`](recordings/0.1.1/s4-answer-demo.log) ([.cast](recordings/0.1.1/s4-answer-demo.cast)) | cl-dev expert answers via mock LLM; board `:prompt`/`:result` writes; citation `:block-id`s from `fixtures/sample.html` | 2026-09-13 | same as s2-boot (see log header) |
+| [`recordings/0.1.1/s6-improve-demo`](recordings/0.1.1/s6-improve-demo.log) ([.cast](recordings/0.1.1/s6-improve-demo.cast)) | Mock-LLM candidate wins → gate `:promote` + skill version with provenance; critical regression → `:demote` despite higher mean | 2026-09-13 | same as s2-boot (see log header) |
+| [`recordings/0.1.1/s7-resume-demo`](recordings/0.1.1/s7-resume-demo.log) ([.cast](recordings/0.1.1/s7-resume-demo.cast)) | Child SBCL kill after step 1; parent replay: `before-count=1`, `after-count=2`, `fresh-1=0`, `fresh-2=1` | 2026-09-13 | same as s2-boot (see log header) |
+
+Casts sit next to the logs (`.cast`). Play an asciinema cast with
+`asciinema play demos/recordings/0.1.1/<name>.cast` when the recorder was
+asciinema; `script`(1) typescripts are plain terminal captures.
