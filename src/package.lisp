@@ -48,6 +48,9 @@
    #:memory-store-count
    #:chunk-ids
    #:chunk-block-ids
+   #:copy-fixture-corpus
+   #:make-fixture-file-source
+   #:run-ingest-fixtures
 
    #:make-script-ks
    #:promote-demo-domain

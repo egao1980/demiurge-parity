@@ -1,7 +1,6 @@
 (in-package #:demiurge-parity)
 
-;;; Helpers for S3. When B3 lands, flip INGEST-SYSTEM-AVAILABLE-P and call
-;;; demiurge/ingest GFs from the same functions (same fixture + hash contract).
+;;; S3 helpers: fixture extract → chunk → store, plus RUN-INGEST on fixtures/.
 
 (defun %read-source (source)
   (etypecase source
@@ -78,3 +77,77 @@
          (store (or store (rag-backend-memory:make-memory-vector-store))))
     (store-chunks store chunks :embedder embedder)
     (values chunks store doc)))
+
+(defun copy-fixture-corpus (dest)
+  "Copy `fixtures/` into DEST. Returns the destination directory."
+  (let* ((dest (ensure-directories-exist
+                (uiop:ensure-directory-pathname dest)))
+         (root (asdf:system-relative-pathname "demiurge-parity" "fixtures/")))
+    (dolist (name '("sample.txt" "sample.html"))
+      (uiop:copy-file (merge-pathnames name root)
+                      (merge-pathnames name dest)))
+    dest))
+
+(defclass fixture-source (demiurge/ingest:ingest-source)
+  ((items :initarg :items :reader fixture-source-items))
+  (:documentation
+   "Ingest source over copied fixtures. Uses UIOP directory listing so
+    we do not depend on pathlib GLOB matching typed names."))
+
+(defun %fixture-format (path)
+  (let ((ext (string-downcase (or (pathname-type path) ""))))
+    (cond
+      ((member ext '("html" "htm") :test #'string=) :html)
+      ((member ext '("md" "markdown") :test #'string=) :md)
+      (t :txt))))
+
+(defun fixture-ingest-items (root)
+  "Build INGEST-ITEMs from SAMPLE.* files under ROOT."
+  (let ((root (uiop:ensure-directory-pathname root)))
+    (loop for path in (uiop:directory-files root)
+          for name = (file-namestring path)
+          when (and (stringp name)
+                    (>= (length name) 6)
+                    (string-equal "sample" name :end2 6))
+            collect (demiurge/ingest:make-ingest-item
+                     :id (namestring path)
+                     :uri (namestring path)
+                     :content (uiop:read-file-string path)
+                     :format (%fixture-format path)))))
+
+(defun make-fixture-file-source (root)
+  "Ingest source over a copied fixture corpus."
+  (check-type root (or pathname string))
+  (let ((items (fixture-ingest-items root)))
+    (unless items
+      (error 'stage-unavailable
+             :stage :s3
+             :reason "empty fixture corpus"
+             :message (format nil "no sample.* files under ~s" root)))
+    (make-instance 'fixture-source :items items)))
+
+(defmethod demiurge/ingest:enumerate-items ((source fixture-source))
+  (copy-list (fixture-source-items source)))
+
+(defun run-ingest-fixtures (&key store journal embedder task-id domain dest)
+  "RUN-INGEST on a fixture corpus. Returns (values result store source domain)."
+  (let* ((dest (or dest
+                   (ensure-directories-exist
+                    (uiop:ensure-directory-pathname
+                     (merge-pathnames (format nil "demiurge-parity-corpus-~a/"
+                                              (random 1000000))
+                                      (uiop:temporary-directory))))))
+         (root (copy-fixture-corpus dest))
+         (source (make-fixture-file-source root))
+         (domain (or domain
+                     (demiurge:make-expert-domain :name "parity-ingest")))
+         (store (or store (rag:make-mock-vector-store)))
+         (journal (or journal (task:make-in-memory-journal)))
+         (embedder (or embedder (make-scripted-llm)))
+         (result (demiurge/ingest:run-ingest
+                  domain source
+                  :store store
+                  :journal journal
+                  :task-id (or task-id "parity-ingest")
+                  :embedder embedder)))
+    (values result store source domain)))

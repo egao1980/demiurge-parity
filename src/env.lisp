@@ -20,13 +20,12 @@
        t))
 
 (defun ingest-system-available-p ()
-  "True when B3 `demiurge/ingest` is published and loadable."
+  "True when `demiurge/ingest` is published and loadable."
   (system-available-p "demiurge/ingest"))
 
 (defun serve-system-available-p ()
-  "True when B3 `demiurge/serve` is published and loadable."
-  (or (system-available-p "demiurge/serve")
-      (system-available-p "demiurge/feedback")))
+  "True when `demiurge/serve` is published and loadable."
+  (system-available-p "demiurge/serve"))
 
 (defun ensure-ci-backends ()
   "Load sqlite + libuv extras used by personal-profile / run-expert."
