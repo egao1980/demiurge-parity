@@ -1,0 +1,52 @@
+name: demo-evidence
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+env:
+  SBCL_VERSION: 2.6.7
+  ROSWELL_VERSION: "26.02.116"
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  DEMIURGE_PARITY_TIER: mock
+
+jobs:
+  demos:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: egao1980/cl-repository/.github/actions/setup-lisp@main
+        with:
+          sbcl-version: ${{ env.SBCL_VERSION }}
+          roswell-version: ${{ env.ROSWELL_VERSION }}
+
+      - uses: egao1980/cl-repository/.github/actions/ci@main
+        with:
+          phase: install
+          system: demiurge-parity
+
+      - name: Install asciinema (optional)
+        run: |
+          python3 -m pip install --user asciinema || true
+          echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
+
+      - name: Run mock-tier demos
+        run: |
+          chmod +x demos/run-demo.sh
+          ./demos/run-demo.sh s2-boot
+          ./demos/run-demo.sh s4-answer
+          ./demos/run-demo.sh s6-improve
+          ./demos/run-demo.sh s7-resume
+
+      - name: Upload demo evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-evidence
+          path: demos/recordings/

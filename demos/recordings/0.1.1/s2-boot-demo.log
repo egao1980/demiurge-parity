@@ -1,0 +1,109 @@
+=== demiurge-parity demo: s2-boot-demo ===
+date: 2026-09-13T21:58:32Z
+version: 0.1.1
+host: Darwin arm64
+sbcl: SBCL 2.6.5-85913ede1
+recorder: asciinema
+tier: mock
+
+WARNING: System definition file #P"/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity/.cl-repository/trivial-garbage-0.21/trivial-garbage.asd" contains definition for system "trivial-garbage-tests". Please only define "trivial-garbage" and secondary systems with a name starting with "trivial-garbage/" (e.g. "trivial-garbage/test") in that file.
+WARNING: redefining LLM-PROTOCOL:INVOKE-RETRY in DEFUN
+WARNING: redefining LLM-PROTOCOL:INVOKE-USE-VALUE in DEFUN
+WARNING: redefining LLM-PROTOCOL:AUTO-RETRY in DEFUN
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-WARNING>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERFACE-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-UNIMPLEMENTED-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATABASE-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATA-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-OPERATIONAL-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTEGRITY-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERNAL-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-PROGRAMMING-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-NOTSUPPORTED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-COMMITED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-ROLLED-BACK-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-DRIVER>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-QUERY>
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3)) or (:STRUCT
+                                                                              SQLITE3) instead.
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3-STMT)) or (:STRUCT
+                                                                                   SQLITE3-STMT) instead.
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3>
+WARNING:
+   redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-QUERY>
+=== loaded system versions ===
+oci systems-root: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity/.cl-repository/
+  demiurge-parity  asdf=0.1.1  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity/
+  demiurge  asdf=0.3.0  oci=0.3.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/demiurge/0.3.0/
+  demiurge/improve  asdf=0.3.0  oci=0.3.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/demiurge/0.3.0/
+  blackboard-protocol  asdf=0.2.2  oci=0.2.2  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/capability-protocol/0.2.2/
+  capability-protocol  asdf=0.2.1  oci=0.2.2  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/capability-protocol/0.2.2/
+  eval-protocol  asdf=0.1.0  oci=0.1.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/eval-protocol/0.1.0/
+  rag-protocol  asdf=0.1.2  oci=0.1.2  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/rag-protocol/0.1.2/
+  rag-backend-text  asdf=0.2.0  oci=0.2.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/rag-backend-text/0.2.0/
+  rag-backend-memory  asdf=0.1.0  oci=0.1.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/rag-backend-memory/0.1.0/
+  doc-extract-protocol  asdf=0.2.0  oci=0.2.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/doc-extract-protocol/0.2.0/
+  llm-protocol  asdf=0.3.0  oci=0.3.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/llm-protocol/0.3.0/
+  steer-protocol  asdf=0.2.0  oci=0.2.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/steer-protocol/0.2.0/
+  task-protocol  asdf=0.1.0  oci=0.1.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/task-protocol/0.1.0/
+  task-backend-sql  asdf=0.1.0  oci=0.1.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/task-backend-sql/0.1.0/
+  sql-protocol  asdf=0.1.0  oci=0.1.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/sql-backend-postgres/0.1.0/
+  sql-backend-sqlite3  asdf=0.1.0  oci=0.1.0  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/sql-backend-postgres/0.1.0/
+  event-backend-libuv  asdf=0.1.2  oci=0.1.2  loaded=T
+    /Users/nikolaimatiushev/.local/share/cl-repository/systems/event-backend-libuv/0.1.2/
+=== end versions ===
+
+── S2 boot — personal profile factory in a clean temp dir
+   look at: profile-kind, bound journal/session/chunker/rag/llm stores, SQLite paths under data-dir
+
+── Calling BOOT-PERSONAL-PROFILE with data-dir /var/folders/z7/7gcqc88j6hxd63ltgkgxvb300000gn/T/demiurge-parity-3998325513-113500/
+   personal-profile-p: T
+   profile-kind: :PERSONAL
+   journal bound: T
+   session-store bound: T
+   chunker bound: T
+   rag-store bound: T
+   llm-catalog bound: T
+   data-dir exists: T
+
+── Expected SQLite files under the temp data-dir
+   look at: journal.sqlite / sessions.sqlite may be absent when the backend is in-memory
+   JOURNAL path: "/var/folders/z7/7gcqc88j6hxd63ltgkgxvb300000gn/T/demiurge-parity-3998325513-113500/journal.sqlite"
+   JOURNAL exists: T
+   SESSIONS path: "/var/folders/z7/7gcqc88j6hxd63ltgkgxvb300000gn/T/demiurge-parity-3998325513-113500/sessions.sqlite"
+   SESSIONS exists: T
+   RAG path: "/var/folders/z7/7gcqc88j6hxd63ltgkgxvb300000gn/T/demiurge-parity-3998325513-113500/rag.sqlite"
+   RAG exists: T
+
+── S2 done. Reviewer: :PERSONAL kind and stores bound from a clean temp dir.

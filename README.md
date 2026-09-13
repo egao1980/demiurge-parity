@@ -42,6 +42,21 @@ ros -e '(asdf:load-system "demiurge-parity/tests")' \
     -e '(rove:run #p"tests/s1-resolve.lisp")' -q
 ```
 
+## Demo evidence
+
+Narrated mock-tier recordings for later human review live in
+[`demos/`](demos/README.md). They are scripts, not tests — S3/S5/S8 stay
+skipped here.
+
+```bash
+./demos/run-demo.sh s2-boot
+./demos/run-demo.sh s4-answer
+./demos/run-demo.sh s6-improve
+./demos/run-demo.sh s7-resume
+```
+
+CI: `.github/workflows/demo-evidence.yml` (release tags + `workflow_dispatch`).
+
 ## License
 
 MIT
