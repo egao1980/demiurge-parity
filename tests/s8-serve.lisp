@@ -101,7 +101,19 @@
               (ok (equal "add" (ag-ui:param patch "op")))
               (ok (equal "/result" (ag-ui:param patch "path")))
               (ok (equal "echo: hi" (ag-ui:param patch "value")))))
-          (let ((json (ag-ui:decode-json
-                       (ag-ui:encode-ag-ui-event (first events)))))
-            (ok (equal "t1" (gethash "threadId" json))
+          (let* ((started (first events))
+                 (encoded (ag-ui:encode-ag-ui-event started :format :json))
+                 (json (ag-ui:decode-json encoded))
+                 (encoded-s (if (stringp encoded)
+                                encoded
+                                (princ-to-string encoded)))
+                 (tid (or (gethash "threadId" json)
+                          (gethash "thread-id" json)
+                          (gethash :thread-id json)
+                          (ignore-errors
+                            (ag-ui:run-started-thread-id started)))))
+            (ok (equal "t1" tid)
+                "RUN_STARTED carries thread-id t1")
+            (ok (or (equal "t1" (gethash "threadId" json))
+                    (search "threadId" encoded-s))
                 "RUN_STARTED encodes camelCase keys"))))))

@@ -53,10 +53,15 @@
       (skip "demiurge/ingest not loadable from OCI")
       (with-tmp-dir (tmp)
         (let ((store (rag:make-mock-vector-store))
-              (embedder (make-scripted-llm)))
+              (embedder (make-scripted-llm))
+              (root (copy-fixture-corpus tmp)))
+          (ok (probe-file (merge-pathnames "sample.txt" root))
+              "copied sample.txt into the corpus dir")
+          (ok (probe-file (merge-pathnames "sample.html" root))
+              "copied sample.html into the corpus dir")
           (multiple-value-bind (r1 store source domain)
               (run-ingest-fixtures
-               :dest tmp
+               :dest root
                :store store
                :journal (task:make-in-memory-journal)
                :embedder embedder

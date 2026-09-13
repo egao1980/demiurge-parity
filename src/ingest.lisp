@@ -89,12 +89,13 @@
     dest))
 
 (defun make-fixture-file-source (root)
-  "FILE-SOURCE over a copied fixture corpus."
+  "FILE-SOURCE over a copied fixture corpus.
+   Pattern SAMPLE.* (not bare *) so pathlib DIRECTORY matches typed names."
   (check-type root (or pathname string))
   (demiurge/ingest:make-file-source
    :root root
-   :pattern "*"
-   :recursive nil))
+   :pattern "sample.*"
+   :recursive t))
 
 (defun run-ingest-fixtures (&key store journal embedder task-id domain dest)
   "RUN-INGEST on a fixture corpus. Returns (values result store source domain)."
