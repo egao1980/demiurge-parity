@@ -1,0 +1,23 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  SBCL_VERSION: 2.6.7
+  ROSWELL_VERSION: "26.02.116"
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  DEMIURGE_PARITY_TIER: mock
+
+jobs:
+  test:
+    uses: egao1980/cl-repository/.github/workflows/test-system.yml@main
+
+  # Compose (Postgres/pgvector, MinIO, collector) activates with C4.
+  # Until then this job is the mock tier only — same canned test-system.
+  parity-live:
+    uses: egao1980/cl-repository/.github/workflows/test-system.yml@main

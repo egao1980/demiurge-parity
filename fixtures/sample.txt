@@ -1,0 +1,4 @@
+Parity fixture (plain text).
+
+The personal profile stores file corpora. Re-ingest is keyed by content hash
+so a second run must not duplicate chunks.
