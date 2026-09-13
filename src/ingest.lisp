@@ -88,14 +88,46 @@
                       (merge-pathnames name dest)))
     dest))
 
+(defclass fixture-source (demiurge/ingest:ingest-source)
+  ((items :initarg :items :reader fixture-source-items))
+  (:documentation
+   "Ingest source over copied fixtures. Uses UIOP directory listing so
+    we do not depend on pathlib GLOB matching typed names."))
+
+(defun %fixture-format (path)
+  (let ((ext (string-downcase (or (pathname-type path) ""))))
+    (cond
+      ((member ext '("html" "htm") :test #'string=) :html)
+      ((member ext '("md" "markdown") :test #'string=) :md)
+      (t :txt))))
+
+(defun fixture-ingest-items (root)
+  "Build INGEST-ITEMs from SAMPLE.* files under ROOT."
+  (let ((root (uiop:ensure-directory-pathname root)))
+    (loop for path in (uiop:directory-files root)
+          for name = (file-namestring path)
+          when (and (stringp name)
+                    (>= (length name) 6)
+                    (string-equal "sample" name :end2 6))
+            collect (demiurge/ingest:make-ingest-item
+                     :id (namestring path)
+                     :uri (namestring path)
+                     :content (uiop:read-file-string path)
+                     :format (%fixture-format path)))))
+
 (defun make-fixture-file-source (root)
-  "FILE-SOURCE over a copied fixture corpus.
-   Pattern SAMPLE.* (not bare *) so pathlib DIRECTORY matches typed names."
+  "Ingest source over a copied fixture corpus."
   (check-type root (or pathname string))
-  (demiurge/ingest:make-file-source
-   :root root
-   :pattern "sample.*"
-   :recursive t))
+  (let ((items (fixture-ingest-items root)))
+    (unless items
+      (error 'stage-unavailable
+             :stage :s3
+             :reason "empty fixture corpus"
+             :message (format nil "no sample.* files under ~s" root)))
+    (make-instance 'fixture-source :items items)))
+
+(defmethod demiurge/ingest:enumerate-items ((source fixture-source))
+  (copy-list (fixture-source-items source)))
 
 (defun run-ingest-fixtures (&key store journal embedder task-id domain dest)
   "RUN-INGEST on a fixture corpus. Returns (values result store source domain)."
