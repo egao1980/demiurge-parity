@@ -10,4 +10,4 @@
 ;;; S9 corporate — compose profile boots and readyz goes green. Activates with C4.
 
 (deftest s9-corporate-stub
-  (skip "activates with B3/C4"))
+  (skip "activates with C4"))

@@ -2,8 +2,8 @@
 
 Narrated mock-tier scripts for later human review. These are **not** Rove
 tests: they print what is happening and what to look at (section writes,
-citations, gate verdicts, journal replay counts). S3/S5/S8 stay skipped
-until B7b.
+citations, gate verdicts, journal replay counts). S3/S5/S8 now run in
+Rove; these recordings stay on S2/S4/S6/S7.
 
 ## Run
 

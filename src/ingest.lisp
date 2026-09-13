@@ -1,7 +1,6 @@
 (in-package #:demiurge-parity)
 
-;;; Helpers for S3. When B3 lands, flip INGEST-SYSTEM-AVAILABLE-P and call
-;;; demiurge/ingest GFs from the same functions (same fixture + hash contract).
+;;; S3 helpers: fixture extract → chunk → store, plus RUN-INGEST on fixtures/.
 
 (defun %read-source (source)
   (etypecase source
@@ -78,3 +77,44 @@
          (store (or store (rag-backend-memory:make-memory-vector-store))))
     (store-chunks store chunks :embedder embedder)
     (values chunks store doc)))
+
+(defun copy-fixture-corpus (dest)
+  "Copy `fixtures/` into DEST. Returns the destination directory."
+  (let* ((dest (ensure-directories-exist
+                (uiop:ensure-directory-pathname dest)))
+         (root (asdf:system-relative-pathname "demiurge-parity" "fixtures/")))
+    (dolist (name '("sample.txt" "sample.html"))
+      (uiop:copy-file (merge-pathnames name root)
+                      (merge-pathnames name dest)))
+    dest))
+
+(defun make-fixture-file-source (root)
+  "FILE-SOURCE over a copied fixture corpus."
+  (check-type root (or pathname string))
+  (demiurge/ingest:make-file-source
+   :root root
+   :pattern "*"
+   :recursive nil))
+
+(defun run-ingest-fixtures (&key store journal embedder task-id domain dest)
+  "RUN-INGEST on a fixture corpus. Returns (values result store source domain)."
+  (let* ((dest (or dest
+                   (ensure-directories-exist
+                    (uiop:ensure-directory-pathname
+                     (merge-pathnames (format nil "demiurge-parity-corpus-~a/"
+                                              (random 1000000))
+                                      (uiop:temporary-directory))))))
+         (root (copy-fixture-corpus dest))
+         (source (make-fixture-file-source root))
+         (domain (or domain
+                     (demiurge:make-expert-domain :name "parity-ingest")))
+         (store (or store (rag:make-mock-vector-store)))
+         (journal (or journal (task:make-in-memory-journal)))
+         (embedder (or embedder (make-scripted-llm)))
+         (result (demiurge/ingest:run-ingest
+                  domain source
+                  :store store
+                  :journal journal
+                  :task-id (or task-id "parity-ingest")
+                  :embedder embedder)))
+    (values result store source domain)))
