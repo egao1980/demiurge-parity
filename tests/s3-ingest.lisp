@@ -3,8 +3,7 @@
     (asdf:load-system "demiurge-parity")))
 
 (defpackage #:demiurge-parity/tests/s3-ingest
-  (:use #:cl #:rove #:demiurge-parity)
-  (:local-nicknames (#:rag #:rag-protocol)))
+  (:use #:cl #:rove #:demiurge-parity))
 
 (in-package #:demiurge-parity/tests/s3-ingest)
 
@@ -25,7 +24,7 @@
               :ids ids-1
               :ids-2 (chunk-ids chunks-2)
               :block-ids (remove nil (chunk-block-ids chunks))
-              :store-size (memory-store-count store)))))))
+              :store-size (memory-store-count store))))))
 
 (deftest s3-helper-extract-chunk-store-idempotent
   (let ((html (fixture-pathname "sample.html"))
