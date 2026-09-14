@@ -84,12 +84,14 @@
 
 (defun %dotenv-candidates ()
   (let* ((explicit (%env "DEMIURGE_PARITY_ENV"))
-         (root (and (boundp '*demo-root*) *demo-root*))
-         (parent (and root (uiop:pathname-parent-directory-pathname root))))
+         (root-sym (find-symbol "*DEMO-ROOT*" :cl-user))
+         (root (or (and root-sym (boundp root-sym) (symbol-value root-sym))
+                   (uiop:getcwd)))
+         (parent (uiop:pathname-parent-directory-pathname root)))
     (remove nil
             (list (and explicit (pathname explicit))
-                  (and root (merge-pathnames ".env" root))
-                  (and parent (merge-pathnames ".env" parent))))))
+                  (merge-pathnames ".env" root)
+                  (merge-pathnames ".env" parent)))))
 
 (defun %apply-dotenv-file (path)
   "Set env from PATH. Does not override a non-empty existing value."
@@ -207,10 +209,27 @@
   (or (demo-llm-label backend)
       (llm:backend-model (demo-llm-inner backend))))
 
+(defun %steer-turns (turns)
+  "Workflow prompts do not mention JSON. Live Qwen then dumps markdown and
+   coerce-research-plan treats the whole blob as one subquestion. Ask for
+   JSON only; CL = Common Lisp so the plan matches this stack."
+  (let ((text (%turns-text turns)))
+    (cond
+      ((search "Decompose this question" text)
+       (format nil "~A~%~%Return ONLY JSON, no markdown:~%~
+{\"question\":string,\"subquestions\":[{\"id\":string,\"question\":string,\"rationale\":string}]}~%~
+Interpret CL as Common Lisp. Emit 3 short subquestions about KSAR, the blackboard, and the journal."
+               text))
+      ((search "Gap analysis" text)
+       (format nil "~A~%~%Return ONLY JSON {\"question\":string,\"subquestions\":[...]}. ~
+Use an empty subquestions array if there are no gaps."
+               text))
+      (t turns))))
+
 (defun %prefill-turns (turns)
   "Trailing assistant ' \\n' skips Qwen/Gemma thinking on LM Studio REST.
    Do not combine with response_format json_schema — the grammar rejects it."
-  (append (llm:coerce-turns turns)
+  (append (llm:coerce-turns (%steer-turns turns))
           (list (llm:assistant-turn (format nil " ~%")))))
 
 (defun %wire-settings (settings)
@@ -282,7 +301,7 @@
          (prompt (%turns-text turns))
          (payload (if (demo-llm-prefill-p backend)
                       (%prefill-turns turns)
-                      turns))
+                      (%steer-turns turns)))
          (wire (%wire-settings settings))
          (response (llm:generate (demo-llm-inner backend) payload
                                  :model model
