@@ -3,8 +3,8 @@
 #   ./demos/run-demo.sh <name>
 # names: s2-boot | s4-answer | s6-improve | s7-resume | deep-research | corporate-boot
 # Resolves demos/<name>/, isolates dest to .demo-oci, then:
-#   product commands (ask/research/improve/ingest) → demiurge demo <dir>
-#   boot/resume/corporate → demos/runner.lisp
+#   product commands (ask/research/ingest) → demiurge demo <dir>
+#   boot/resume/corporate/scripted-improve → demos/runner.lisp
 # Wraps SBCL in `asciinema rec` when present, else script(1).
 # Always tees demos/recordings/<version>/<name>.log
 set -Eeuo pipefail

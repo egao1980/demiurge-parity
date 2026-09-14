@@ -31,7 +31,7 @@ and the demo is `deep-research` with a non-mock websearch tier.
 demos/
   run-demo.sh          # recording wrapper (asciinema + tee)
   prelude.lisp         # OCI dest + source-registry bootstrap
-  runner.lisp          # boot / resume / corporate only
+  runner.lisp          # boot / resume / corporate / scripted improve
   s2-boot/             # command=boot     → runner
   s4-answer/           # command=ask      → demiurge demo
   s6-improve/          # command=improve  → runner (promote + demote helpers)
