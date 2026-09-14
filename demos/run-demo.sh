@@ -112,9 +112,11 @@ resolve_dir() {
     "${ROOT}/demos/${raw}"
   )
   local a
-  for a in "${aliases[@]}"; do
-    candidates+=("${ROOT}/demos/${a}")
-  done
+  if ((${#aliases[@]})); then
+    for a in "${aliases[@]}"; do
+      candidates+=("${ROOT}/demos/${a}")
+    done
+  fi
   local c
   for c in "${candidates[@]}"; do
     if [[ -d "${c}" && -f "${c}/demo.toml" ]]; then
