@@ -10,6 +10,19 @@
         (uiop:quit 1)))
 #+sbcl (sb-ext:disable-debugger)
 
+#+sbcl
+(flet ((%linebuf (stream)
+         (let ((inner (if (typep stream 'synonym-stream)
+                          (symbol-value (synonym-stream-symbol stream))
+                          stream)))
+           (when (and (typep inner 'sb-sys:fd-stream)
+                      (fboundp 'sb-impl::fd-stream-buffering))
+             (setf (sb-impl::fd-stream-buffering inner) :line)))))
+  (%linebuf *standard-output*)
+  (%linebuf *error-output*))
+(force-output *standard-output*)
+(force-output *error-output*)
+
 (defparameter *demo-root*
   (uiop:pathname-parent-directory-pathname
    (uiop:pathname-directory-pathname

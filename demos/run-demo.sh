@@ -57,20 +57,27 @@ if [[ "${1:-}" == "--inner" ]]; then
   MODE="${6:-cli}"
   [[ -n "${NAME}" && -n "${DIR}" && -n "${LOG}" ]] || usage
   SBCL_BIN="${SBCL:-sbcl}"
+  # Piped SBCL full-buffers; stdbuf (if present) + Lisp line-buffering keep
+  # ── LLM generate lines visible while GENERATE blocks on HTTP.
+  if command -v stdbuf >/dev/null 2>&1; then
+    SBCL_BIN=(stdbuf -oL -eL "${SBCL_BIN}")
+  else
+    SBCL_BIN=("${SBCL_BIN}")
+  fi
   set +e
   {
     printf '=== demiurge-parity demo: %s ===\n' "${NAME}"
     printf 'date: %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     printf 'version: %s\n' "${VERSION}"
     printf 'host: %s %s\n' "$(uname -s)" "$(uname -m)"
-    printf 'sbcl: %s\n' "$(${SBCL_BIN} --version 2>/dev/null || printf 'unknown')"
+    printf 'sbcl: %s\n' "$("${SBCL_BIN[@]}" --version 2>/dev/null || printf 'unknown')"
     printf 'recorder: %s\n' "${RECORDER}"
     printf 'tier: %s\n' "${DEMIURGE_PARITY_TIER:-mock}"
     printf 'dir: %s\n' "${DIR}"
     printf 'mode: %s\n' "${MODE}"
     printf '\n'
     if [[ "${MODE}" == "runner" ]]; then
-      "${SBCL_BIN}" --noinform --non-interactive --disable-debugger \
+      "${SBCL_BIN[@]}" --noinform --non-interactive --disable-debugger \
         --load "${SCRIPT_DIR}/prelude.lisp" \
         --load "${SCRIPT_DIR}/runner.lisp" \
         -- "${DIR}"
@@ -80,7 +87,7 @@ if [[ "${1:-}" == "--inner" ]]; then
           "${DEMIURGE_LISP}" >&2
         exit 1
       fi
-      "${SBCL_BIN}" --noinform --non-interactive --disable-debugger \
+      "${SBCL_BIN[@]}" --noinform --non-interactive --disable-debugger \
         --load "${SCRIPT_DIR}/prelude.lisp" \
         --load "${DEMIURGE_LISP}" \
         -- demo "${DIR}"

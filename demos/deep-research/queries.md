@@ -1,4 +1,4 @@
 # Deep research — self-reflecting cl-stack / demiurge.
-# Live tier: SearXNG + nvidia/nemotron-3-nano-omni (LM Studio) + workspace:// MCP.
+# Live tier: SearXNG + nvidia/nemotron-3-nano-4b (LM Studio) + workspace:// MCP.
 # Expected: plan → cited child answers (workspace + web) → gap → synthesis.
 How does cl-stack / demiurge implement self-reflection (KSAR blackboard control, gap-analysis research rounds, and the improve cycle with no-critical-regression-gate), and what are the current gaps?
