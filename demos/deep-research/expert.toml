@@ -25,6 +25,7 @@ kind = "mock"
 
 [workspace]
 root = "../../"
+seed = "KSAR blackboard no-critical-regression-gate gap-analysis improve cycle demiurge"
 
 [websearch]
 kind = "searxng"
@@ -36,4 +37,4 @@ name = "echo"
 watch = "(:prompt)"
 prompt-key = "prompt"
 result-key = "result"
-instructions = "You are a Common Lisp / cl-stack expert. Cite sources. Do not guess."
+instructions = "You are a Common Lisp / cl-stack expert. Check the local workspace (workspace://) first. Cite workspace:// files before the web. Do not guess."
