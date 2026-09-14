@@ -1,5 +1,12 @@
-# Corporate parity stack. Activates with C4 — not started by default CI.
-# parity-live currently runs the mock tier only.
+# Corporate parity stack. S9 live needs Postgres only.
+# LDAP / Keycloak / MinIO / collector are optional.
+#
+#   docker compose --profile corporate up --wait
+#   DEMIURGE_PARITY_TIER=live-corporate \
+#     DEMIURGE_CORPORATE__POSTGRES__DSN=postgres://demiurge:demiurge@127.0.0.1:5432/demiurge \
+#     ros -e '(asdf:test-system "demiurge-parity")' -q
+#
+# Optional: --profile extras (MinIO+collector), --profile ldap, --profile oidc.
 services:
   postgres:
     image: pgvector/pgvector:pg16
@@ -10,14 +17,15 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U demiurge"]
+      test: ["CMD-SHELL", "pg_isready -U demiurge -d demiurge"]
       interval: 5s
-      timeout: 3s
+      timeout: 5s
       retries: 10
-    profiles: ["corporate"]
+    profiles: ["corporate", "oidc"]
 
   minio:
-    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    # Docker Hub minio/minio is rate-limited / denied on GH runners.
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minio
@@ -25,12 +33,44 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
-    profiles: ["corporate"]
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+    profiles: ["extras"]
 
   collector:
     image: otel/opentelemetry-collector-contrib:0.128.0
     command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./otel-collector.yaml:/etc/otelcol/config.yaml:ro
     ports:
       - "4317:4317"
       - "4318:4318"
-    profiles: ["corporate"]
+    profiles: ["extras"]
+
+  ldap:
+    profiles: ["ldap"]
+    image: osixia/openldap:1.5.0
+    environment:
+      LDAP_ORGANISATION: Demiurge
+      LDAP_DOMAIN: example.com
+      LDAP_ADMIN_PASSWORD: admin
+    ports:
+      - "389:389"
+      - "636:636"
+
+  keycloak:
+    profiles: ["oidc"]
+    image: quay.io/keycloak/keycloak:25.0
+    command: ["start-dev"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy

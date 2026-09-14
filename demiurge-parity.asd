@@ -1,5 +1,5 @@
 (defsystem "demiurge-parity"
-  :version "0.1.3"
+  :version "0.1.4"
   :description "Product smoke / incremental integration harness for demiurge"
   :author "egao1980"
   :license "MIT"
@@ -7,6 +7,8 @@
                "demiurge/improve"
                "demiurge/ingest"
                "demiurge/serve"
+               "demiurge/observe"
+               "demiurge/workflows"
                "blackboard-protocol"
                "blackboard-wire"
                "capability-protocol"
@@ -18,11 +20,15 @@
                "object-store-protocol"
                "mail-protocol"
                "cl-stack-pathlib"
+               "cl-stack-oauth2"
+               "cl-stack-jwt"
+               "ldap-protocol"
                "llm-protocol"
                "steer-protocol"
                "task-protocol"
                "task-backend-sql"
                "sql-protocol"
+               "websearch-protocol"
                "mcp-protocol"
                "a2a-protocol"
                "ag-ui-protocol"
@@ -33,9 +39,13 @@
                "uiop")
   :properties (:cl-repo
                (:ci (:with ("event-backend-libuv"
-                            "sql-backend-sqlite3")
+                            "sql-backend-sqlite3"
+                            "crypto-backend-ironclad"
+                            "json-backend-jzon")
                      :load-before-test ("event-backend-libuv"
-                                        "sql-backend-sqlite3"))))
+                                        "sql-backend-sqlite3"
+                                        "crypto-backend-ironclad"
+                                        "json-backend-jzon"))))
   :serial t
   :pathname "src"
   :components ((:file "package")

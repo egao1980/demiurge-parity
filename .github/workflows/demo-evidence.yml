@@ -43,6 +43,8 @@ jobs:
           ./demos/run-demo.sh s4-answer
           ./demos/run-demo.sh s6-improve
           ./demos/run-demo.sh s7-resume
+          ./demos/run-demo.sh deep-research
+          ./demos/run-demo.sh corporate-boot
 
       - name: Upload demo evidence
         if: always()
