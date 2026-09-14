@@ -6,6 +6,9 @@ catalogue = "world"
 [profile]
 kind = "personal"
 
+[profile.paths]
+data-dir = "/tmp/demiurge-demo-deep-research"
+
 [llm]
 default-model = "lmstudio"
 

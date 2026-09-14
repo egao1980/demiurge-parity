@@ -166,7 +166,13 @@ ensure_searxng() {
   case "${mode}" in
     mock|scripted) return 0 ;;
   esac
-  local url="${SEARXNG_URL:-${DEMIURGE_PARITY_SEARXNG:-http://127.0.0.1:8888}}"
+  local url=""
+  if [[ -f "${DIR}/expert.toml" ]]; then
+    url="$(sed -n '/^\[websearch\]/,/^\[/{
+      s/^[[:space:]]*base-url[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p
+    }' "${DIR}/expert.toml" | head -n 1)"
+  fi
+  url="${url:-http://127.0.0.1:8888}"
   if curl -sS -m 2 -o /dev/null "${url}/search?q=ping&format=json"; then
     return 0
   fi
