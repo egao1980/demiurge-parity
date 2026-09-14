@@ -14,9 +14,11 @@ counts). S3/S5/S8/S9 run in Rove; recordings cover S2/S4/S6/S7 plus
 B8 v2 deep-research / corporate-boot.
 
 `deep-research` prefers a live local model: LM Studio (`OPENAI_BASE_URL`,
-`OPENAI_MODEL`, `LM_API_TOKEN` from the workspace `.env`) then
-`llm-backend-llama-cpp` (`LLAMA_MODEL_PATH`). `DEMIURGE_PARITY_DEMO_LLM=mock`
-forces the scripted backend. CI falls back to mock when nothing is listening.
+`OPENAI_MODEL=nvidia/nemotron-3-nano-omni`, `LM_API_TOKEN` from the workspace `.env`) then
+`llm-backend-llama-cpp` (`LLAMA_MODEL_PATH`). `expert.toml` `[workspace] root`
+exposes the checkout as `workspace://` MCP resources on the research board.
+`DEMIURGE_PARITY_DEMO_LLM=mock` forces the scripted backend. CI falls back to
+mock when nothing is listening.
 
 Websearch uses `websearch-protocol:make-searxng-backend` against a local
 SearXNG with JSON enabled (`demos/searxng/settings.yml`). Default
