@@ -1,0 +1,6 @@
+# S2 boot — personal profile factory. Not a query demo.
+# Dispatched by demos/runner.lisp (product CLI has no boot command).
+command = "boot"
+llm = "mock"
+websearch = "mock"
+narration = "normal"

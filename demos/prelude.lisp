@@ -1,5 +1,7 @@
-;;;; Shared demo prelude. Loaded by each narrated demo script.
-;;;; Prints loaded-system versions (ASDF + OCI path when present).
+;;;; Demo OCI bootstrap + isolated source registry.
+;;;; Loaded by run-demo.sh before `demiurge demo` or demos/runner.lisp.
+;;;; Narration lives in the product CLI (ask/research/improve/ingest) or
+;;;; the one generic runner (boot/resume/corporate).
 
 (setf *debugger-hook*
       (lambda (c h)
@@ -27,17 +29,19 @@
 
 (defun %local-override-directories ()
   "Sibling first-party checkouts beat OCI dest (unpublished protocol fixes).
-   Prefer demiurge-b4b over demiurge-plan-vectors so B4b and B10 do not share a tree."
+   Prefer demiurge-plan-vectors: B8 needs demiurge/cli (B9). Do not put
+   demiurge-b4b or a stale demiurge/ checkout first — those trees lack the CLI."
   (let* ((parent (uiop:pathname-parent-directory-pathname *demo-root*))
-         (b4b (probe-file (merge-pathnames "demiurge-b4b/" parent)))
-         (b10 (probe-file (merge-pathnames "demiurge-plan-vectors/" parent)))
-         (demiurge-dir (or b4b b10)))
+         (cli (probe-file (merge-pathnames "demiurge-plan-vectors/" parent)))
+         (cli-protocol (probe-file (merge-pathnames "cli-protocol/" parent))))
     (append
      (loop for name in '("http-backend-dexador" "websearch-protocol")
            for dir = (probe-file (merge-pathnames (format nil "~A/" name) parent))
            when dir collect `(:directory ,dir))
-     (when demiurge-dir
-       (list `(:directory ,demiurge-dir))))))
+     (when cli-protocol
+       (list `(:directory ,cli-protocol)))
+     (when cli
+       (list `(:directory ,cli))))))
 
 (defun %isolated-source-registry ()
   "Checkout + dest + client only. Inherited shared trees have stale demiurge."
@@ -58,8 +62,8 @@
 (defun %ensure-demo-oci-deps ()
   "Pull OCI deps into CL_REPOSITORY_DEST / .demo-oci. Local demos do not
    wait on CI and must not use a polluted shared systems tree.
-   Slash systems (demiurge/workflows, …) are not GHCR packages — they
-   live in published demiurge.asd :provides. Install the primary first."
+   Slash systems (demiurge/cli, demiurge/workflows, …) live in published
+   demiurge.asd :provides. Install the primary first, then CLI extras."
   (unless (asdf:find-system "cl-repository-client" nil)
     (%pin-isolated-registry)
     (unless (asdf:find-system "cl-repository-client" nil)
@@ -86,6 +90,9 @@
                               "sql-backend-sqlite3"
                               "crypto-backend-ironclad"
                               "json-backend-jzon"
+                              "toml-backend-tomlet"
+                              "cli-protocol"
+                              "cli-backend-clingon"
                               "llm-protocol-openai"
                               "llm-protocol/schema"
                               "http-backend-dexador"
@@ -98,24 +105,8 @@
 
 (asdf:load-system "demiurge-parity")
 (asdf:load-system "demiurge")
-(asdf:load-system "demiurge/improve")
+(asdf:load-system "demiurge/cli")
 (demiurge-parity:ensure-ci-backends)
-
-(in-package #:demiurge-parity)
-
-(defun demo-narrate (fmt &rest args)
-  "What is happening."
-  (format t "~&~%── ~?~%" fmt args)
-  (finish-output))
-
-(defun demo-look-at (fmt &rest args)
-  "What a reviewer should look at."
-  (format t "~&   look at: ~?~%" fmt args)
-  (finish-output))
-
-(defun demo-kv (key value)
-  (format t "~&   ~A: ~S~%" key value)
-  (finish-output))
 
 (defun %oci-version-from-path (path)
   "If PATH sits under .../systems/<name>/<version>/, return VERSION."
@@ -145,16 +136,18 @@
 (defun print-loaded-system-versions ()
   "Header: ASDF versions, plus OCI tag when the source path is a GHCR dest."
   (format t "~&=== loaded system versions ===~%")
-  (let* ((root (systems-root-dir))
-         (interesting '("demiurge-parity" "demiurge" "demiurge/improve"
-                        "demiurge/workflows" "demiurge/serve" "demiurge/observe"
-                        "blackboard-protocol" "capability-protocol"
-                        "eval-protocol" "rag-protocol" "rag-backend-text"
+  (let* ((root (ignore-errors (demiurge-parity:systems-root-dir)))
+         (interesting '("demiurge-parity" "demiurge" "demiurge/cli"
+                        "demiurge/improve" "demiurge/workflows"
+                        "demiurge/serve" "demiurge/observe"
+                        "cli-protocol" "blackboard-protocol"
+                        "capability-protocol" "eval-protocol"
+                        "rag-protocol" "rag-backend-text"
                         "rag-backend-memory" "doc-extract-protocol"
                         "llm-protocol" "websearch-protocol" "mcp-protocol"
                         "http-backend-dexador" "json-backend-jzon"
-                        "steer-protocol" "task-protocol"
-                        "task-backend-sql" "sql-protocol"
+                        "toml-backend-tomlet" "steer-protocol"
+                        "task-protocol" "task-backend-sql" "sql-protocol"
                         "sql-backend-sqlite3" "event-backend-libuv")))
     (when root
       (format t "~&oci systems-root: ~A~%" root))

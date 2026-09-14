@@ -1,0 +1,17 @@
+[expert]
+name = "research-demo"
+description = "Deep-research demo expert (mock LLM by default)."
+catalogue = "world"
+
+[profile]
+kind = "personal"
+
+[llm]
+default-model = "mock"
+
+[[ks]]
+name = "echo"
+watch = "(:prompt)"
+prompt-key = "prompt"
+result-key = "result"
+instructions = "You are a Common Lisp / cl-stack expert. Cite sources. Do not guess."

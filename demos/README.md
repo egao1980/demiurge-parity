@@ -1,25 +1,48 @@
 # Demo evidence
 
-Narrated scripts for later human review. These are **not** Rove
-tests: they print what is happening and what to look at (section writes,
-citations, gate verdicts, journal replay counts). S3/S5/S8/S9 run in
-Rove; recordings cover S2/S4/S6/S7 plus B8 v2 deep-research / corporate-boot.
+Demos are **data**, not Lisp scripts: each name is a directory with
+`demo.toml` (expert / command / tier prefs) and `queries.md` (ordered
+queries; `#` comments are expected-behavior notes). The product runner
+is `demiurge demo <dir>` (B9). Boot / resume / corporate-boot go through
+the one generic `demos/runner.lisp` because those commands are
+parity-specific.
+
+These are **not** Rove tests: they print what is happening and what to
+look at (section writes, citations, gate verdicts, journal replay
+counts). S3/S5/S8/S9 run in Rove; recordings cover S2/S4/S6/S7 plus
+B8 v2 deep-research / corporate-boot.
 
 `deep-research` prefers a live local model: LM Studio (`OPENAI_BASE_URL`,
 `OPENAI_MODEL`, `LM_API_TOKEN` from the workspace `.env`) then
 `llm-backend-llama-cpp` (`LLAMA_MODEL_PATH`). `DEMIURGE_PARITY_DEMO_LLM=mock`
 forces the scripted backend. CI falls back to mock when nothing is listening.
-Each live `generate` dumps the step system prompt, user turn, response, and
-token usage. Fetched pages land on a blackboard research workspace: board
-`:source-index`, RAG retrieve, and MCP `research://source/<id>` /
-`research://instructions/<step>`. Child answers are short cited summaries.
 
 Websearch uses `websearch-protocol:make-searxng-backend` against a local
 SearXNG with JSON enabled (`demos/searxng/settings.yml`). Default
 `SEARXNG_URL=http://127.0.0.1:8888`. `run-demo.sh` starts
-`docker compose --profile search up -d --wait searxng` when `:8888` is down.
-`DEMIURGE_PARITY_DEMO_WEBSEARCH=mock` forces the scripted hits. CI falls
-back to mock. Live `search-web` / `fetch-page` dump hits and page sizes.
+`docker compose --profile search up -d --wait searxng` when `:8888` is down
+and the demo is `deep-research` with a non-mock websearch tier.
+`DEMIURGE_PARITY_DEMO_WEBSEARCH=mock` uses `demos/deep-research/websearch.toml`.
+
+## Layout
+
+```
+demos/
+  run-demo.sh          # recording wrapper (asciinema + tee)
+  prelude.lisp         # OCI dest + source-registry bootstrap
+  runner.lisp          # boot / resume / corporate only
+  s2-boot/             # command=boot
+  s4-answer/           # command=ask  → demiurge demo
+  s6-improve/          # command=improve → demiurge demo
+  s7-resume/           # command=resume
+  deep-research/       # command=research → demiurge demo
+  corporate-boot/      # command=corporate
+  searxng/settings.yml
+  recordings/0.1.1/    # B8 v1 casts+logs (kept)
+  recordings/0.1.4/    # B8 v2 casts+logs (kept)
+```
+
+A new demo is a new directory (`demo.toml` + `queries.md`). No new Lisp.
 
 ## Run
 
@@ -32,16 +55,28 @@ back to mock. Live `search-web` / `fetch-page` dump hits and page sizes.
 ./demos/run-demo.sh corporate-boot
 ```
 
-`run-demo.sh` wraps SBCL in `asciinema rec demos/recordings/<version>/<name>.cast`
-when asciinema is on `PATH`, otherwise `script`(1). It **always** tees
-`demos/recordings/<version>/<name>.log`. The Lisp header prints ASDF versions
-of loaded systems and the OCI tag when the source path is a GHCR dest.
+Mock-tier verification (no live LLM / SearXNG):
 
-Checkout-only: dependencies come from `ghcr.io/egao1980/cl-systems`. Do not
-point `CL_SOURCE_REGISTRY` at a sibling `demiurge/` checkout. `run-demo.sh`
-isolates dest to `.demo-oci` and does **not** inherit the shared systems
-tree (stale `demiurge` without `/workflows`). Slash systems are not GHCR
-packages — prelude installs primary `demiurge` first.
+```bash
+DEMIURGE_PARITY_DEMO_LLM=mock \
+DEMIURGE_PARITY_DEMO_WEBSEARCH=mock \
+  ./demos/run-demo.sh s4-answer
+```
+
+`run-demo.sh` resolves `demos/<name>/`, isolates dest to `.demo-oci`, then
+loads `prelude.lisp` and either `scripts/demiurge.lisp -- demo <dir>`
+(from the sibling `demiurge-plan-vectors` checkout, which has B9
+`demiurge/cli`) or `runner.lisp` for boot/resume/corporate. It wraps SBCL
+in `asciinema rec demos/recordings/<version>/<name>.cast` when asciinema
+is on `PATH`, otherwise `script`(1). It **always** tees
+`demos/recordings/<version>/<name>.log`. The Lisp header prints ASDF
+versions of loaded systems and the OCI tag when the source path is a
+GHCR dest.
+
+Checkout-only: dependencies come from `ghcr.io/egao1980/cl-systems`.
+`%local-override-directories` prefers sibling `demiurge-plan-vectors`
+so B8 can load `demiurge/cli`. Do not point `CL_SOURCE_REGISTRY` at a
+stale `demiurge/` or `demiurge-b4b` checkout.
 
 CI: `.github/workflows/demo-evidence.yml` on `v*` tags and `workflow_dispatch`.
 It uploads logs/casts as artifacts and does not auto-commit.
@@ -57,9 +92,10 @@ It uploads logs/casts as artifacts and does not auto-commit.
 | [`recordings/0.1.4/deep-research-demo`](recordings/0.1.4/deep-research-demo.log) ([.cast](recordings/0.1.4/deep-research-demo.cast)) | B4 `run-deep-research`: per-step system prompts, SearXNG fetch → board/RAG/MCP `research://source/<id>`, short cited child answers, synthesis | 2026-09-14 | `demiurge-parity` 0.1.4, `demiurge` 0.3.6 + `/workflows`, `websearch-protocol` 0.1.1 (log header) |
 | [`recordings/0.1.4/corporate-boot-demo`](recordings/0.1.4/corporate-boot-demo.log) ([.cast](recordings/0.1.4/corporate-boot-demo.cast)) | C4 `make-corporate-profile` memory/sqlite fallback: `:corporate` kind, tenant-scoped ids, `/healthz`/`/readyz` 200, unauthenticated `/` → 302 `/login` | 2026-09-14 | `demiurge-parity` 0.1.4, `demiurge` 0.3.5 + `/serve` + `/observe` (log header) |
 
-B8 v2 scripts are `demos/deep-research-demo.lisp` and `demos/corporate-boot-demo.lisp`.
+B8 v3 sources are the directories above (`demo.toml` + `queries.md`).
 Record locally with `./demos/run-demo.sh` — CI is not required. `demo-evidence` only
-re-records on tags / dispatch.
+re-records on tags / dispatch. Live re-record of the six names after this
+layout change is deferred.
 
 Casts sit next to the logs (`.cast`). Play an asciinema cast with
 `asciinema play demos/recordings/<version>/<name>.cast` when the recorder was

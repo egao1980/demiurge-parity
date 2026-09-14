@@ -1,0 +1,26 @@
+# Mock-tier websearch hits for the deep-research demo.
+# Live tier ignores this file and uses SearXNG.
+
+[[hit]]
+query = "What is KSAR?"
+url = "https://ex.test/ksar"
+title = "What is KSAR?"
+snippet = "KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps."
+
+[[hit]]
+query = "What is a blackboard?"
+url = "https://ex.test/blackboard"
+title = "What is a blackboard?"
+snippet = "The blackboard is the shared working memory. KSs read/write named sections; the controller picks the next KSAR."
+
+[[hit]]
+query = "What is a journal?"
+url = "https://ex.test/journal"
+title = "What is a journal?"
+snippet = "The journal is the durable event log. Kill-and-resume replays completed steps; it does not re-execute them."
+
+[[hit]]
+query = "CL expert systems"
+url = "https://ex.test/ksar"
+title = "CL expert systems"
+snippet = "KSAR, the blackboard, and the journal are the three moving parts of a demiurge expert run."

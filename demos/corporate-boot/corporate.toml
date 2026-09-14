@@ -1,0 +1,7 @@
+[corporate]
+postgres.dsn = ""
+tenant.id = "acme"
+
+[corporate.oidc]
+issuer = "https://idp.example"
+client-id = "app"

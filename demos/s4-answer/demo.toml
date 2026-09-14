@@ -1,0 +1,7 @@
+# S4 answer — product `ask` over an echo expert + HTML fixture corpus.
+expert = "expert.toml"
+command = "ask"
+queries = "queries.md"
+llm = "mock"
+websearch = "mock"
+narration = "verbose"
