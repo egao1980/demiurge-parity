@@ -6,7 +6,9 @@
 ;;;; DEMIURGE_PARITY_DEMO_LLM=auto|live|mock  (default auto)
 ;;;; LM Studio: OPENAI_BASE_URL / OPENAI_MODEL / LM_API_TOKEN (workspace .env)
 ;;;; llama.cpp: LLAMA_MODEL_PATH or DEMIURGE_PARITY_LLAMA_MODEL
-;;;; Websearch stays mocked (fixture hits).
+;;;; Websearch: SearXNG JSON (SEARXNG_URL, default http://127.0.0.1:8888).
+;;;;   docker compose --profile search up -d --wait searxng
+;;;; DEMIURGE_PARITY_DEMO_WEBSEARCH=auto|live|mock  (default auto)
 
 (load (merge-pathnames "prelude.lisp"
                        (or *load-truename* *compile-file-truename*)))
@@ -72,15 +74,23 @@
 (defun %ci-p ()
   (or (%env "CI") (%env "GITHUB_ACTIONS")))
 
-(defun %demo-llm-mode ()
+(defun %demo-mode (env-name)
   "auto (default) | live | mock."
-  (let ((raw (or (%env "DEMIURGE_PARITY_DEMO_LLM")
+  (let ((raw (or (%env env-name)
                  (when (eq (parity-tier) :live-local) "live")
                  "auto")))
     (cond
-      ((member raw '("live" "local" "lmstudio" "llama") :test #'string-equal) :live)
+      ((member raw '("live" "local" "lmstudio" "llama" "searx" "searxng")
+               :test #'string-equal)
+       :live)
       ((member raw '("mock" "scripted") :test #'string-equal) :mock)
       (t :auto))))
+
+(defun %demo-llm-mode ()
+  (%demo-mode "DEMIURGE_PARITY_DEMO_LLM"))
+
+(defun %demo-websearch-mode ()
+  (%demo-mode "DEMIURGE_PARITY_DEMO_WEBSEARCH"))
 
 (defun %dotenv-candidates ()
   (let* ((explicit (%env "DEMIURGE_PARITY_ENV"))
@@ -121,15 +131,24 @@
         (%apply-dotenv-file found)
         (return found)))))
 
+(defun %bind-demo-http-client (backend)
+  "Client-level 300s for LM Studio generate. search-web/fetch-page set their own request timeouts."
+  (setf http-protocol:*http-backend* backend)
+  (setf http-protocol:*http-client*
+        (http-protocol:make-http-client backend :timeout 300))
+  backend)
+
 (defun %ensure-demo-http ()
-  "Bind a sync HTTP backend so llm-protocol-openai can hit LM Studio."
+  "Bind a sync HTTP backend so llm-protocol-openai / searxng-backend can SEND."
   (when http-protocol:*http-backend*
+    (unless http-protocol:*http-client*
+      (%bind-demo-http-client http-protocol:*http-backend*))
     (return-from %ensure-demo-http http-protocol:*http-backend*))
   (ignore-errors (asdf:load-system "http-backend-dexador" :verbose nil))
   (let ((fn (ignore-errors (find-symbol "MAKE-DEXADOR-BACKEND" :http-backend-dexador))))
     (when (and fn (fboundp fn))
       (return-from %ensure-demo-http
-        (setf http-protocol:*http-backend* (funcall fn)))))
+        (%bind-demo-http-client (funcall fn)))))
   (ignore-errors (asdf:load-system "http-backend-async" :verbose nil))
   (ignore-errors (asdf:load-system "event-backend-libuv" :verbose nil))
   (let ((maker (ignore-errors (find-symbol "MAKE-ASYNC-BACKEND" :http-backend-async)))
@@ -139,7 +158,7 @@
       (when (and slot loop-fn (fboundp loop-fn))
         (setf (symbol-value slot) loop-fn))
       (return-from %ensure-demo-http
-        (setf http-protocol:*http-backend* (funcall maker)))))
+        (%bind-demo-http-client (funcall maker)))))
   (error "no http-protocol backend (need http-backend-dexador or http-backend-async)"))
 
 (defun %lmstudio-base-url ()
@@ -161,31 +180,9 @@
       (%env "LLAMA_CPP_MODEL")
       (%env "DEMIURGE_PARITY_LLAMA_MODEL")))
 
-(defun %curl-request (method url &key headers content want-stream)
-  "Dexador hung on the second LM Studio generate. curl -m 300; body via stdin."
-  (when want-stream
-    (error "demo curl request-fn does not stream"))
-  (let* ((args (append (list "curl" "-sS" "-m" "300"
-                             "-w" (format nil "~C%{http_code}" #\Newline)
-                             "-X" (string-upcase (string method))
-                             url)
-                       (loop for pair in headers
-                             collect "-H"
-                             collect (format nil "~A: ~A" (car pair) (cdr pair)))
-                       (and content (list "--data-binary" "@-"))))
-         (raw (uiop:run-program args
-                                :input (make-string-input-stream (or content ""))
-                                :output :string
-                                :error-output :string
-                                :ignore-error-status t))
-         (nl (position #\Newline raw :from-end t)))
-    (if (null nl)
-        (values 0 raw)
-        (values (or (parse-integer (subseq raw (1+ nl)) :junk-allowed t) 0)
-                (subseq raw 0 nl)))))
-
 (defun %try-lmstudio ()
   "→ (values backend model url) or NIL."
+  (%ensure-demo-http)
   (ignore-errors (asdf:load-system "llm-protocol-openai" :verbose nil))
   (let ((pkg (find-package '#:llm-protocol-openai)))
     (unless pkg
@@ -197,8 +194,7 @@
       (unless (and fn (fboundp fn))
         (return-from %try-lmstudio nil))
       (let ((backend (funcall fn :base-url url :api-key token
-                              :default-model model
-                              :request-fn #'%curl-request)))
+                              :default-model model)))
         (handler-case
             (let ((models (llm:list-models backend)))
               (unless models
@@ -458,7 +454,7 @@ Sub-answers cover the activation record, the shared board, and the durable journ
                (%lmstudio-base-url))
        (uiop:quit 1)))))
 
-(defun %research-websearch ()
+(defun %scripted-websearch ()
   (websearch-protocol:make-mock-websearch-backend
    :handler
    (lambda (backend query &key &allow-other-keys)
@@ -471,8 +467,99 @@ Sub-answers cover the activation record, the shared board, and the durable journ
               :rank 1
               :source "mock"))))))
 
-(demo-narrate "Deep research — run-deep-research against a live local LLM (LM Studio / llama.cpp)")
-(demo-look-at "LLM generate logs, full synthesized report, each child's answer + citations, board :round-summary")
+(defun %searxng-url ()
+  (or (%env "SEARXNG_URL")
+      (%env "DEMIURGE_PARITY_SEARXNG")
+      "http://127.0.0.1:8888"))
+
+(defun %ensure-demo-json ()
+  (ignore-errors (asdf:load-system "json-backend-jzon" :verbose nil))
+  (let ((fn (ignore-errors (find-symbol "USE-JZON-BACKEND" :json-backend-jzon))))
+    (when (and fn (fboundp fn) (null json-protocol:*json-backend*))
+      (funcall fn)))
+  json-protocol:*json-backend*)
+
+(defun %make-searxng (url)
+  (%ensure-demo-http)
+  (%ensure-demo-json)
+  (unless json-protocol:*json-backend*
+    (error "json-protocol *json-backend* is unbound"))
+  (websearch-protocol:make-searxng-backend :base-url url))
+
+(defun %probe-searxng (url)
+  (ignore-errors
+    (let ((hits (websearch-protocol:search-web (%make-searxng url)
+                                               "common lisp" :count 1)))
+      (and hits (plusp (length hits))))))
+
+(defclass demo-logging-websearch (websearch-protocol:websearch-backend)
+  ((inner :initarg :inner :accessor demo-ws-inner)
+   (kind :initarg :kind :accessor demo-ws-kind)
+   (call-n :initform 0 :accessor demo-ws-call-n)
+   (fetch-n :initform 0 :accessor demo-ws-fetch-n)))
+
+(defmethod websearch-protocol:search-web ((backend demo-logging-websearch) query
+                                          &key count freshness site)
+  (incf (demo-ws-call-n backend))
+  (let* ((n (demo-ws-call-n backend))
+         (hits (websearch-protocol:search-web (demo-ws-inner backend) query
+                                              :count count
+                                              :freshness freshness
+                                              :site site)))
+    (format t "~&~%── websearch #~D (~A) ~S → ~D hit~:P~%"
+            n (demo-ws-kind backend) query (length hits))
+    (dolist (h hits)
+      (format t "~&   ~A~%        ~A~%        ~A~%"
+              (or (websearch-protocol:search-hit-url h) "")
+              (or (websearch-protocol:search-hit-title h) "")
+              (%clip (or (websearch-protocol:search-hit-snippet h) "") 220)))
+    (finish-output)
+    hits))
+
+(defmethod websearch-protocol:fetch-page ((backend demo-logging-websearch) url)
+  (incf (demo-ws-fetch-n backend))
+  (let ((text (websearch-protocol:fetch-page (demo-ws-inner backend) url)))
+    (format t "~&   fetch-page #~D ~A → ~A~%"
+            (demo-ws-fetch-n backend) url
+            (if (and text (plusp (length text)))
+                (format nil "~D chars" (length text))
+                "nil"))
+    (finish-output)
+    text))
+
+(defun %research-websearch ()
+  "Live SearXNG via websearch-protocol:make-searxng-backend, else mock."
+  (let ((mode (%demo-websearch-mode))
+        (url (%searxng-url)))
+    (demo-kv "demo-websearch-mode" mode)
+    (when (eq mode :mock)
+      (demo-narrate "Using scripted mock websearch")
+      (return-from %research-websearch (%scripted-websearch)))
+    (cond
+      ((%probe-searxng url)
+       (demo-narrate "Using SearXNG backend at ~A" url)
+       (demo-kv "websearch" (list :kind :searxng :url url
+                                  :system (asdf:component-version
+                                           (asdf:find-system "websearch-protocol" nil))))
+       (make-instance 'demo-logging-websearch
+                      :kind :searxng
+                      :inner (%make-searxng url)))
+      ((eq mode :live)
+       (format *error-output*
+               "~&DEMO FAIL: no SearXNG at ~A. docker compose --profile search up -d --wait searxng~%"
+               url)
+       (uiop:quit 1))
+      ((%ci-p)
+       (demo-narrate "No SearXNG in CI — falling back to scripted mock websearch")
+       (%scripted-websearch))
+      (t
+       (format *error-output*
+               "~&DEMO FAIL: no SearXNG at ~A. Start it or set DEMIURGE_PARITY_DEMO_WEBSEARCH=mock.~%"
+               url)
+       (uiop:quit 1)))))
+
+(demo-narrate "Deep research — live local LLM + SearXNG websearch")
+(demo-look-at "LLM generate logs, live search hits, full synthesized report, citations, board :round-summary")
 
 (let* ((domain (demiurge:make-expert-domain
                 :name "research-demo"

@@ -99,6 +99,27 @@ mkdir -p "${OUTDIR}"
 LOG="${OUTDIR}/${REC_NAME}.log"
 CAST="${OUTDIR}/${REC_NAME}.cast"
 
+ensure_searxng() {
+  local mode="${DEMIURGE_PARITY_DEMO_WEBSEARCH:-auto}"
+  if [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
+    return 0
+  fi
+  case "${mode}" in
+    mock|scripted) return 0 ;;
+  esac
+  local url="${SEARXNG_URL:-${DEMIURGE_PARITY_SEARXNG:-http://127.0.0.1:8888}}"
+  if curl -sS -m 2 -o /dev/null "${url}/search?q=ping&format=json"; then
+    return 0
+  fi
+  command -v docker >/dev/null 2>&1 || return 0
+  printf 'run-demo: starting SearXNG (docker compose --profile search)\n' >&2
+  docker compose --profile search up -d --wait searxng
+}
+
+case "${REC_NAME}" in
+  deep-research-demo) ensure_searxng ;;
+esac
+
 SBCL_BIN="${SBCL:-sbcl}"
 command -v "${SBCL_BIN}" >/dev/null 2>&1 || {
   printf 'run-demo: sbcl not on PATH (set SBCL=)\n' >&2

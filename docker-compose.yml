@@ -6,7 +6,8 @@
 #     DEMIURGE_CORPORATE__POSTGRES__DSN=postgres://demiurge:demiurge@127.0.0.1:5432/demiurge \
 #     ros -e '(asdf:test-system "demiurge-parity")' -q
 #
-# Optional: --profile extras (MinIO+collector), --profile ldap, --profile oidc.
+# Optional: --profile extras (MinIO+collector), --profile ldap, --profile oidc,
+#           --profile search (SearXNG JSON for live deep-research).
 services:
   postgres:
     image: pgvector/pgvector:pg16
@@ -61,6 +62,25 @@ services:
     ports:
       - "389:389"
       - "636:636"
+
+  searxng:
+    # B4 live search. JSON format is enabled via demos/searxng/settings.yml.
+    #   docker compose --profile search up --wait
+    #   SEARXNG_URL=http://127.0.0.1:8888
+    image: docker.io/searxng/searxng:latest
+    profiles: ["search"]
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./demos/searxng:/etc/searxng:rw
+    environment:
+      SEARXNG_BASE_URL: http://127.0.0.1:8888/
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
 
   keycloak:
     profiles: ["oidc"]
