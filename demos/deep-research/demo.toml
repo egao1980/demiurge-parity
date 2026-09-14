@@ -1,11 +1,7 @@
-# Deep research — product `research` over an echo expert.
-# Mock tier: websearch.toml canned hits. Live: SearXNG compose + local model
-# (OPENAI_* / LLAMA_MODEL_PATH / SEARXNG_URL). Override with
-# DEMIURGE_PARITY_DEMO_LLM / DEMIURGE_PARITY_DEMO_WEBSEARCH.
+# Deep research — product `research`. Backends are in expert.toml
+# ([llm.catalog], [websearch]). Env DEMIURGE_PARITY_DEMO_LLM/WEBSEARCH
+# can force mock for CI; they do not supply URLs or model names.
 expert = "expert.toml"
 command = "research"
 queries = "queries.md"
-llm = "auto"
-websearch = "auto"
-websearch-fixtures = "websearch.toml"
 narration = "verbose"

@@ -1,13 +1,29 @@
 [expert]
 name = "research-demo"
-description = "Deep-research demo expert (mock LLM by default)."
+description = "Deep-research demo expert. LLM + websearch backends come from this file."
 catalogue = "world"
 
 [profile]
 kind = "personal"
 
 [llm]
-default-model = "mock"
+default-model = "lmstudio"
+
+[[llm.catalog]]
+name = "lmstudio"
+kind = "openai-compat"
+base-url = "http://127.0.0.1:1234/v1"
+model = "prism-ml/bonsai-27b"
+api-key-env = "LM_API_TOKEN"
+
+[[llm.catalog]]
+name = "mock"
+kind = "mock"
+
+[websearch]
+kind = "searxng"
+base-url = "http://127.0.0.1:8888"
+fixtures = "websearch.toml"
 
 [[ks]]
 name = "echo"
