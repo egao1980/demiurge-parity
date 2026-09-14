@@ -1,0 +1,651 @@
+=== demiurge-parity demo: corporate-boot-demo ===
+date: 2026-09-14T12:28:57Z
+version: 0.1.4
+host: Darwin arm64
+sbcl: SBCL 2.6.5-85913ede1
+recorder: script
+tier: mock
+
+WARNING: System definition file #P"/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/trivial-garbage/0.21/trivial-garbage.asd" contains definition for system "trivial-garbage-tests". Please only define "trivial-garbage" and secondary systems with a name starting with "trivial-garbage/" (e.g. "trivial-garbage/test") in that file.
+WARNING: redefining IRONCLAD:BLOCK-LENGTH in DEFGENERIC
+;;; Computing Hangul syllable namesWARNING:
+   redefining LOAD-PROXY-SYSTEM-PLATFORM (#<STANDARD-CLASS HTTP-PROTOCOL:HTTP-PROXY-CONFIG>) in DEFMETHOD
+
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/encoding.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/encoding-tmpAAURSO1.fasl
+; compilation finished in 0:00:00.003
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/connection-cache.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/connection-cache-tmp5GEXGEG5.fasl
+; compilation finished in 0:00:00.016
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/decoding-stream.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/decoding-stream-tmpAR3FSGEY.fasl
+; compilation finished in 0:00:00.018
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/keep-alive-stream.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; file: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/keep-alive-stream.lisp
+; in: DEFMETHOD STREAM-READ-SEQUENCE (KEEP-ALIVE-STREAM T T T)
+;     (MIN (- DEXADOR.KEEP-ALIVE-STREAM::END DEXADOR.KEEP-ALIVE-STREAM::START)
+;          (DEXADOR.KEEP-ALIVE-STREAM::KEEP-ALIVE-STREAM-END STREAM))
+; 
+; note: unable to
+;   open-code FLOAT to RATIONAL comparison
+; due to type uncertainty:
+;   The first argument is a REAL, not a SINGLE-FLOAT.
+;   The second argument is a REAL, not a RATIONAL.
+; 
+; note: unable to
+;   open-code FLOAT to RATIONAL comparison
+; due to type uncertainty:
+;   The first argument is a REAL, not a DOUBLE-FLOAT.
+;   The second argument is a REAL, not a RATIONAL.
+
+;     (<= (DEXADOR.KEEP-ALIVE-STREAM::KEEP-ALIVE-STREAM-END STREAM) 0)
+; 
+; note: unable to
+;   open-code FLOAT to RATIONAL comparison
+; due to type uncertainty:
+;   The first argument is a REAL, not a SINGLE-FLOAT.
+; 
+; note: unable to
+;   open-code FLOAT to RATIONAL comparison
+; due to type uncertainty:
+;   The first argument is a REAL, not a DOUBLE-FLOAT.
+
+;     (- DEXADOR.KEEP-ALIVE-STREAM::END DEXADOR.KEEP-ALIVE-STREAM::START)
+; 
+; note: forced to do full call
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a T, not a FIXNUM.
+;       The second argument is a T, not a FIXNUM.
+;       The result is a (VALUES NUMBER &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline float arithmetic (cost 2) because:
+;       The first argument is a T, not a SINGLE-FLOAT.
+;       The second argument is a T, not a SINGLE-FLOAT.
+;       The result is a (VALUES NUMBER &OPTIONAL), not a (VALUES SINGLE-FLOAT
+;                                                                &OPTIONAL).
+;       etc.
+
+;     (MIN (- DEXADOR.KEEP-ALIVE-STREAM::END DEXADOR.KEEP-ALIVE-STREAM::START)
+;          (DEXADOR.KEEP-ALIVE-STREAM::KEEP-ALIVE-STREAM-END STREAM))
+; 
+; note: forced to do full call
+;       unable to do inline float comparison (cost 3) because:
+;       The first argument is a T, not a SINGLE-FLOAT.
+;       The second argument is a NUMBER, not a SINGLE-FLOAT.
+;       unable to do inline float comparison (cost 3) because:
+;       The first argument is a T, not a DOUBLE-FLOAT.
+;       The second argument is a NUMBER, not a DOUBLE-FLOAT.
+;       etc.
+
+;     (+ DEXADOR.KEEP-ALIVE-STREAM::START DEXADOR.KEEP-ALIVE-STREAM::TO-READ)
+; 
+; note: forced to do full call
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a NUMBER, not a FIXNUM.
+;       The second argument is a REAL, not a FIXNUM.
+;       The result is a (VALUES NUMBER &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline float arithmetic (cost 2) because:
+;       The first argument is a NUMBER, not a SINGLE-FLOAT.
+;       The second argument is a REAL, not a SINGLE-FLOAT.
+;       The result is a (VALUES NUMBER &OPTIONAL), not a (VALUES SINGLE-FLOAT
+;                                                                &OPTIONAL).
+;       etc.
+
+;     (DECF (DEXADOR.KEEP-ALIVE-STREAM::KEEP-ALIVE-STREAM-END STREAM)
+;           (- DEXADOR.KEEP-ALIVE-STREAM::N DEXADOR.KEEP-ALIVE-STREAM::START))
+; --> SB-IMPL::XSUBTRACT BLOCK 
+; ==>
+;   (- SB-IMPL::B SB-IMPL::A)
+; 
+; note: forced to do full call
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a T, not a FIXNUM.
+;       The result is a (VALUES NUMBER &OPTIONAL), not a (VALUES FIXNUM &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 5) because:
+;       The first argument is a T, not a (UNSIGNED-BYTE 64).
+;       The second argument is a (INTEGER -35184372088831 35184372088831), not a (UNSIGNED-BYTE
+;                                                                                 64).
+;       The result is a (VALUES NUMBER &OPTIONAL), not a (VALUES
+;                                                         (UNSIGNED-BYTE 64)
+;                                                         &OPTIONAL).
+;       etc.
+
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/keep-alive-stream-tmpJAIDFZTC.fasl
+; compilation finished in 0:00:00.009
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/util.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; file: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/util.lisp
+; in: DEFUN-SPEEDY %ASCII-STRING-TO-OCTETS
+;     (LENGTH STRING)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a SEQUENCE, not a VECTOR.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a SEQUENCE, not a VECTOR.
+
+;     (AREF STRING DEXADOR.UTIL::I)
+; 
+; note: unable to
+;   avoid runtime dispatch on array element type
+; because:
+;   Upgraded element type of array is not known at compile time.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a VECTOR, not a SIMPLE-STRING.
+
+; in: DEFPARAMETER *DEFAULT-USER-AGENT*
+;     (OR (LISP-IMPLEMENTATION-TYPE) "Common Lisp")
+; --> IF 
+; ==>
+;   "Common Lisp"
+; 
+; note: deleting unreachable code
+
+;     (OR (LISP-IMPLEMENTATION-VERSION) "")
+; --> IF 
+; ==>
+;   ""
+; 
+; note: deleting unreachable code
+
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/util-tmp8V3J6PE9.fasl
+; compilation finished in 0:00:00.013
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/body.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/body-tmp9V47YWQF.fasl
+; compilation finished in 0:00:00.010
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/error.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/error-tmp9BN22RMA.fasl
+; compilation finished in 0:00:00.023
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/restarts.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/restarts-tmp1CXFJSK9.fasl
+; compilation finished in 0:00:00.002
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/backend/usocket.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; file: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/backend/usocket.lisp
+; in: DEFUN-CAREFUL REQUEST
+;     (STRING= DEXADOR.BACKEND.USOCKET::SCHEME "socks5")
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a STRING, not a (SIMPLE-ARRAY CHARACTER (*)).
+
+;     (STRING= DEXADOR.BACKEND.USOCKET::SCHEME "http")
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a STRING, not a (SIMPLE-ARRAY CHARACTER (*)).
+
+;     (STRING= DEXADOR.BACKEND.USOCKET::SCHEME "https")
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a STRING, not a (SIMPLE-ARRAY CHARACTER (*)).
+
+;     (= (THE REAL DEXADOR.BACKEND.USOCKET::VERSION) 1.0)
+; 
+; note: unable to open code because: The operands might not be the same type.
+; 
+; note: unable to
+;   open-code RATIONAL to FLOAT comparison
+; due to type uncertainty:
+;   The first argument is a REAL, not a RATIONAL.
+
+;     (FIND :CONTENT-TYPE DEXADOR.BACKEND.USOCKET::HEADERS :KEY #'CAR :TEST
+;           #'STRING-EQUAL)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The second argument is a SEQUENCE, not a (OR LIST VECTOR).
+
+;     (LENGTH DEXADOR.BACKEND.USOCKET::CONTENT-TYPE)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a (OR CONS VECTOR
+;                               SB-KERNEL:EXTENDED-SEQUENCE), not a VECTOR.
+
+;     (STRING= DEXADOR.BACKEND.USOCKET::CONTENT-TYPE "multipart/" :END1 10)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a STRING, not a (SIMPLE-ARRAY CHARACTER (*)).
+
+;     (STRING= DEXADOR.BACKEND.USOCKET::CONTENT-TYPE
+;              "application/x-www-form-urlencoded")
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a (OR STRING NULL), not a (SIMPLE-ARRAY CHARACTER (*)).
+
+;     (= (THE REAL DEXADOR.BACKEND.USOCKET::VERSION) 1.0)
+; 
+; note: unable to open code because: The operands might not be the same type.
+; 
+; note: unable to
+;   open-code RATIONAL to FLOAT comparison
+; due to type uncertainty:
+;   The first argument is a REAL, not a RATIONAL.
+
+;     (= (THE REAL DEXADOR.BACKEND.USOCKET::VERSION) 1.1)
+; 
+; note: unable to open code because: The operands might not be the same type.
+; 
+; note: unable to
+;   open-code RATIONAL to FLOAT comparison
+; due to type uncertainty:
+;   The first argument is a REAL, not a RATIONAL.
+
+;     (STRING= DEXADOR.BACKEND.USOCKET::SCHEME "http")
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a (OR STRING SYMBOL CHARACTER), not a (SIMPLE-ARRAY
+;                                                                CHARACTER (*)).
+
+;     (STRING= (QURI.URI:URI-SCHEME DEXADOR.BACKEND.USOCKET::LOCATION-URI)
+;              (QURI.URI:URI-SCHEME DEXADOR.BACKEND.USOCKET::URI))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a (OR STRING SYMBOL
+;                               CHARACTER), not a SIMPLE-BASE-STRING.
+;   The second argument is a (OR STRING SYMBOL
+;                                CHARACTER), not a SIMPLE-BASE-STRING.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a (OR STRING SYMBOL CHARACTER), not a (SIMPLE-ARRAY
+;                                                                CHARACTER (*)).
+;   The second argument is a (OR STRING SYMBOL CHARACTER), not a (SIMPLE-ARRAY
+;                                                                 CHARACTER (*)).
+
+;     (EQL (QURI.URI:URI-PORT DEXADOR.BACKEND.USOCKET::LOCATION-URI)
+;          (QURI.URI:URI-PORT DEXADOR.BACKEND.USOCKET::URI))
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a T, not a SINGLE-FLOAT.
+;   The second argument is a T, not a SINGLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a T, not a DOUBLE-FLOAT.
+;   The second argument is a T, not a DOUBLE-FLOAT.
+
+;     (EQL
+;      (DEXADOR.BACKEND.USOCKET::USOCKET-WRAPPED-STREAM-STREAM
+;       DEXADOR.BACKEND.USOCKET::ORIGINAL-USER-SUPPLIED-STREAM)
+;      STREAM)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a T, not a SINGLE-FLOAT.
+;   The second argument is a T, not a SINGLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a T, not a DOUBLE-FLOAT.
+;   The second argument is a T, not a DOUBLE-FLOAT.
+
+;     (EQL DEXADOR.BACKEND.USOCKET::ORIGINAL-USER-SUPPLIED-STREAM STREAM)
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a (AND (NOT USOCKET-WRAPPED-STREAM)
+;                                (NOT NULL)), not a SINGLE-FLOAT.
+;   The second argument is a T, not a SINGLE-FLOAT.
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a (AND (NOT USOCKET-WRAPPED-STREAM)
+;                                (NOT NULL)), not a DOUBLE-FLOAT.
+;   The second argument is a T, not a DOUBLE-FLOAT.
+
+;     (STRING= DEXADOR.BACKEND.USOCKET::SCHEME "https")
+; 
+; note: unable to
+;   optimize
+; due to type uncertainty:
+;   The first argument is a STRING, not a (SIMPLE-ARRAY CHARACTER (*)).
+
+;     (= (THE REAL DEXADOR.BACKEND.USOCKET::VERSION) 1.0)
+; 
+; note: forced to do full call
+;       unable to do inline float comparison (cost 3) because:
+;       The first argument is a REAL, not a SINGLE-FLOAT.
+; 
+; note: forced to do full call
+;       unable to do inline float comparison (cost 3) because:
+;       The first argument is a REAL, not a SINGLE-FLOAT.
+
+;     (= (THE REAL DEXADOR.BACKEND.USOCKET::VERSION) 1.1)
+; 
+; note: forced to do full call
+;       unable to do inline float comparison (cost 3) because:
+;       The first argument is a REAL, not a SINGLE-FLOAT.
+
+;     (DOTIMES (DEXADOR.BACKEND.USOCKET::I DEXADOR.BODY:CONTENT-LENGTH)
+;       (LOOP DEXADOR.BACKEND.USOCKET::UNTIL (READ-BYTE
+;                                             DEXADOR.BACKEND.USOCKET::BODY NIL
+;                                             NIL)))
+; --> BLOCK LET TAGBODY UNLESS IF >= 
+; ==>
+;   1
+; 
+; note: forced to do full call
+;       unable to do inline fixnum comparison (cost 4) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The second argument is a INTEGER, not a FIXNUM.
+;       unable to do inline (unsigned-byte 64) comparison (cost 6) because:
+;       The first argument is a UNSIGNED-BYTE, not a (UNSIGNED-BYTE 64).
+;       The second argument is a INTEGER, not a (UNSIGNED-BYTE 64).
+;       etc.
+
+; --> BLOCK LET TAGBODY PSETQ PROGN SETQ THE 1+ 
+; ==>
+;   1
+; 
+; note: forced to do full call
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a UNSIGNED-BYTE, not a FIXNUM.
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES FIXNUM
+;                                                                     &OPTIONAL).
+;       unable to do inline (unsigned-byte 64) arithmetic (cost 5) because:
+;       The first argument is a UNSIGNED-BYTE, not a (UNSIGNED-BYTE 64).
+;       The result is a (VALUES (INTEGER 1) &OPTIONAL), not a (VALUES
+;                                                              (UNSIGNED-BYTE 64)
+;                                                              &OPTIONAL).
+;       etc.
+
+;     (EQL (QURI.URI:URI-PORT DEXADOR.BACKEND.USOCKET::LOCATION-URI)
+;          (QURI.URI:URI-PORT DEXADOR.BACKEND.USOCKET::URI))
+; 
+; note: forced to do full call
+;       unable to do inline (unsigned-byte 64) comparison (cost 6) because:
+;       The first argument is a T, not a (UNSIGNED-BYTE 64).
+;       The second argument is a T, not a (UNSIGNED-BYTE 64).
+;       unable to do inline (signed-byte 64) comparison (cost 6) because:
+;       The first argument is a T, not a (SIGNED-BYTE 64).
+;       The second argument is a T, not a (SIGNED-BYTE 64).
+
+;     (EQL
+;      (DEXADOR.BACKEND.USOCKET::USOCKET-WRAPPED-STREAM-STREAM
+;       DEXADOR.BACKEND.USOCKET::ORIGINAL-USER-SUPPLIED-STREAM)
+;      STREAM)
+; 
+; note: forced to do full call
+;       unable to do inline (unsigned-byte 64) comparison (cost 6) because:
+;       The first argument is a T, not a (UNSIGNED-BYTE 64).
+;       The second argument is a T, not a (UNSIGNED-BYTE 64).
+;       unable to do inline (signed-byte 64) comparison (cost 6) because:
+;       The first argument is a T, not a (SIGNED-BYTE 64).
+;       The second argument is a T, not a (SIGNED-BYTE 64).
+
+;     (EQL DEXADOR.BACKEND.USOCKET::ORIGINAL-USER-SUPPLIED-STREAM STREAM)
+; 
+; note: forced to do full call
+;       unable to do inline (unsigned-byte 64) comparison (cost 6) because:
+;       The first argument is a (AND (NOT USOCKET-WRAPPED-STREAM) (NOT NULL)), not a (UNSIGNED-BYTE
+;                                                                                     64).
+;       The second argument is a T, not a (UNSIGNED-BYTE 64).
+;       unable to do inline (signed-byte 64) comparison (cost 6) because:
+;       The first argument is a (AND (NOT USOCKET-WRAPPED-STREAM) (NOT NULL)), not a (SIGNED-BYTE
+;                                                                                     64).
+;       The second argument is a T, not a (SIGNED-BYTE 64).
+
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/backend/usocket-tmpX4BRKI0R.fasl
+; compilation finished in 0:00:00.092
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/dexador.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/dexador-0.9.16/src/dexador-tmpQ371UGST.fasl
+; compilation finished in 0:00:00.031
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/http-encoding-chipz-0.1.0/src/package.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/http-encoding-chipz-0.1.0/src/package-tmp2OWI3Q7U.fasl
+; compilation finished in 0:00:00.000
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/http-encoding-chipz-0.1.0/src/backend.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/http-encoding-chipz-0.1.0/src/backend-tmp9KKTJMYV.fasl
+; compilation finished in 0:00:00.007
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/http-backend-dexador-0.1.2/src/package.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/http-backend-dexador-0.1.2/src/package-tmpJU0JWO19.fasl
+; compilation finished in 0:00:00.000
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/http-backend-dexador-0.1.2/src/backend.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/http-backend-dexador-0.1.2/src/backend-tmpZX2WN8N4.fasl
+; compilation finished in 0:00:00.015
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/http.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/http-tmpOU81XRV0.fasl
+; compilation finished in 0:00:00.004
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-chipz")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-chipz")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-brotli")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/http-encoding-brotli/src/package.lisp" (written 02 AUG 2026 11:19:18 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/http-encoding-brotli/src/package-tmpY2ML9CFA.fasl
+; compilation finished in 0:00:00.000
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/http-encoding-brotli/src/backend.lisp" (written 07 SEP 2026 10:04:34 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/http-encoding-brotli/src/backend-tmpX2JYJDQE.fasl
+; compilation finished in 0:00:00.004
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/auth.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/auth-tmpOPCILR65.fasl
+; compilation finished in 0:00:00.009
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/registry.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; file: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/registry.lisp
+; in: DEFUN PING
+;     (ERROR 'CL-OCI-CLIENT/CONDITIONS:REGISTRY-ERROR :STATUS
+;            CL-OCI-CLIENT/REGISTRY::STATUS :URL CL-OCI-CLIENT/REGISTRY::URL :BODY
+;            CL-OCI-CLIENT/REGISTRY::BODY)
+; 
+; caught STYLE-WARNING:
+;   reading an ignored variable: BODY
+
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/registry-tmpRV9F8A9A.fasl
+; compilation finished in 0:00:00.008
+WARNING:
+   Lisp compilation had style-warnings while
+   compiling #<CL-SOURCE-FILE "cl-oci-client/registry" "lisp">
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/pull.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/pull-tmpK2ZAJT4I.fasl
+; compilation finished in 0:00:00.002
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/installer.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; file: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/installer.lisp
+; in: DEFUN GENERATE-INIT-FILE
+;     'NIL
+; 
+; note: deleting unreachable code
+
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/installer-tmpUX5S4ADN.fasl
+; compilation finished in 0:00:00.050
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/digest-cache.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/digest-cache-tmp10401X32.fasl
+; compilation finished in 0:00:00.002
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/content-discovery.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/oci-client/content-discovery-tmpZ7CBRM0G.fasl
+; compilation finished in 0:00:00.006
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/constraint-builder.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/constraint-builder-tmp9OZEQ0G2.fasl
+; compilation finished in 0:00:00.013
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/asdf-integration.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/asdf-integration-tmpB2JTL1W9.fasl
+; compilation finished in 0:00:00.001
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/quickload.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/quickload-tmpP3BI68WQ.fasl
+; compilation finished in 0:00:00.038
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/commands.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/commands-tmpQDARA81Z.fasl
+; compilation finished in 0:00:00.021
+; compiling file "/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/all.lisp" (written 14 SEP 2026 12:55:15 PM):
+
+; wrote /Users/nikolaimatiushev/.cache/common-lisp/sbcl-2.6.5-85913ede1-macosx-arm64/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-backend-stdio/0.1.1/.cl-repository/cl-oci-0.16.0/src/client/all-tmpYEMMM7SE.fasl
+; compilation finished in 0:00:00.000
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+;   printed 46 notes
+; cl-repo: demiurge already available via ASDF
+; cl-repo: ensure deps for local demiurge-parity → 
+WARNING: redefining LLM-PROTOCOL:INVOKE-RETRY in DEFUN
+WARNING: redefining LLM-PROTOCOL:INVOKE-USE-VALUE in DEFUN
+WARNING: redefining LLM-PROTOCOL:AUTO-RETRY in DEFUN
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-WARNING>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERFACE-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-UNIMPLEMENTED-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATABASE-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATA-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-OPERATIONAL-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTEGRITY-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERNAL-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-PROGRAMMING-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-NOTSUPPORTED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-COMMITED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-ROLLED-BACK-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-DRIVER>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-QUERY>
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3)) or (:STRUCT
+                                                                              SQLITE3) instead.
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3-STMT)) or (:STRUCT
+                                                                                   SQLITE3-STMT) instead.
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3>
+WARNING:
+   redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-QUERY>
+=== loaded system versions ===
+oci systems-root: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/
+  demiurge-parity  asdf=0.1.4  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/
+  demiurge  asdf=0.3.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/demiurge/0.3.5/
+  demiurge/improve  asdf=0.3.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/demiurge/0.3.5/
+  demiurge/workflows  asdf=0.3.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/demiurge/0.3.5/
+  demiurge/serve  asdf=0.3.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/demiurge/0.3.5/
+  demiurge/observe  asdf=0.3.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/demiurge/0.3.5/
+  blackboard-protocol  asdf=0.2.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/capability-protocol/0.2.2/
+  capability-protocol  asdf=0.2.1  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/capability-protocol/0.2.2/
+  eval-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/eval-protocol/0.1.0/
+  rag-protocol  asdf=0.1.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-protocol/0.1.2/
+  rag-backend-text  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-backend-text/0.2.0/
+  rag-backend-memory  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-backend-memory/0.1.0/
+  doc-extract-protocol  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/doc-extract-protocol/0.2.0/
+  llm-protocol  asdf=0.3.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/llm-protocol/0.3.0/
+  steer-protocol  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/steer-protocol/0.2.0/
+  task-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/task-protocol/0.1.0/
+  task-backend-sql  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/task-backend-sql/0.1.0/
+  sql-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/sql-backend-postgres/0.1.0/
+  sql-backend-sqlite3  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/sql-backend-postgres/0.1.0/
+  event-backend-libuv  asdf=0.1.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/event-backend-libuv/
+=== end versions ===
+
+── Corporate boot — make-corporate-profile with memory/sqlite fallback
+   look at: kind, tenant, tenant-scoped ids; Clack /healthz /readyz 200; unauthenticated / → 302
+
+── Factory returned a corporate profile (no live Postgres)
+   corporate-profile-p: T
+   profile-kind: :CORPORATE
+   tenant: "acme"
+   look at: :CORPORATE kind and tenant "acme" — memory journal/session/rag, not a DSN
+
+── Tenant-scoped identifiers
+   tenant-task-id echo: "tenant/acme/domain/echo"
+   tenant-corpus-name docs: "tenant/acme/corpus/docs"
+   current-tenant: "acme"
+
+── make-expert-app Clack env (no session cookie)
+   GET /healthz status: 200
+   GET /readyz status: 200
+   GET / status: 302
+   GET / Location: "/login"
+   look at: /healthz and /readyz stay unauthenticated (C4). GET / is a 302 to /login.
+
+── Corporate-boot done. Reviewer: kind/tenant scoped; probes 200; / challenges.

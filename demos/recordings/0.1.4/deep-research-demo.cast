@@ -1,0 +1,149 @@
+=== demiurge-parity demo: deep-research-demo ===
+date: 2026-09-14T12:30:19Z
+version: 0.1.4
+host: Darwin arm64
+sbcl: SBCL 2.6.5-85913ede1
+recorder: script
+tier: mock
+
+WARNING: System definition file #P"/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/trivial-garbage/0.21/trivial-garbage.asd" contains definition for system "trivial-garbage-tests". Please only define "trivial-garbage" and secondary systems with a name starting with "trivial-garbage/" (e.g. "trivial-garbage/test") in that file.
+WARNING: redefining IRONCLAD:BLOCK-LENGTH in DEFGENERIC
+;;; Computing Hangul syllable namesWARNING:
+   redefining LOAD-PROXY-SYSTEM-PLATFORM (#<STANDARD-CLASS HTTP-PROTOCOL:HTTP-PROXY-CONFIG>) in DEFMETHOD
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-chipz")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-chipz")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-brotli")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+
+; cl-repo: demiurge already available via ASDF
+; cl-repo: ensure deps for local demiurge-parity → 
+WARNING: redefining LLM-PROTOCOL:INVOKE-RETRY in DEFUN
+WARNING: redefining LLM-PROTOCOL:INVOKE-USE-VALUE in DEFUN
+WARNING: redefining LLM-PROTOCOL:AUTO-RETRY in DEFUN
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-WARNING>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERFACE-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-UNIMPLEMENTED-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATABASE-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATA-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-OPERATIONAL-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTEGRITY-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERNAL-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-PROGRAMMING-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-NOTSUPPORTED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-COMMITED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-ROLLED-BACK-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-DRIVER>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-QUERY>
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3)) or (:STRUCT
+                                                                              SQLITE3) instead.
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3-STMT)) or (:STRUCT
+                                                                                   SQLITE3-STMT) instead.
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3>
+WARNING:
+   redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-QUERY>
+=== loaded system versions ===
+oci systems-root: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/
+  demiurge-parity  asdf=0.1.4  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/
+  demiurge  asdf=0.3.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/demiurge/0.3.5/
+  demiurge/improve  asdf=0.3.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/demiurge/0.3.5/
+  demiurge/workflows  asdf=0.3.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/demiurge/0.3.5/
+  demiurge/serve  asdf=0.3.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/demiurge/0.3.5/
+  demiurge/observe  asdf=0.3.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/demiurge/0.3.5/
+  blackboard-protocol  asdf=0.2.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/capability-protocol/0.2.2/
+  capability-protocol  asdf=0.2.1  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/capability-protocol/0.2.2/
+  eval-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/eval-protocol/0.1.0/
+  rag-protocol  asdf=0.1.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-protocol/0.1.2/
+  rag-backend-text  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-backend-text/0.2.0/
+  rag-backend-memory  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-backend-memory/0.1.0/
+  doc-extract-protocol  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/doc-extract-protocol/0.2.0/
+  llm-protocol  asdf=0.3.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/llm-protocol/0.3.0/
+  steer-protocol  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/steer-protocol/0.2.0/
+  task-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/task-protocol/0.1.0/
+  task-backend-sql  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/task-backend-sql/0.1.0/
+  sql-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/sql-backend-postgres/0.1.0/
+  sql-backend-sqlite3  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/sql-backend-postgres/0.1.0/
+  event-backend-libuv  asdf=0.1.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/event-backend-libuv/
+=== end versions ===
+
+── Deep research — run-deep-research with a scripted mock LLM + mock websearch
+   look at: verdict, child count, markdown excerpt, board :round-summary, ANSWER: citation lines
+
+── Calling RUN-DEEP-RESEARCH on "CL expert systems"
+   subquestions: ("What is KSAR?" "What is a blackboard?" "What is a journal?")
+
+── Workflow finished
+   verdict: :PASS
+   child count: 3
+   look at: verdict is :pass or :fail; three children match the three subquestions
+
+── Markdown excerpt (first 400 chars)
+   markdown-length: 1165
+   --- markdown ---
+<!-- {#f133df4865421fcd210e9cb3fe9387dc99d0d3c70b85bc9e0b9333743cfe8cba type=text kind=heading} -->
+Research: CL expert systems
+
+<!-- {#28bc9ab11cd003f3ce8e0f4b892ea3700b861cdbab64ebde174c99b30dbcb033 type=text kind=para} -->
+synthesis ok
+
+<!-- {#f8ce9af877d04b705e6780fa69bdd276f1c0bdaf1c0c212bc7fd41d0c0d38530 type=section level=2} -->
+## What is KSAR?
+
+<!-- {#d752ef7877bba15327f374de7fb5327987c68
+   --- end excerpt ---
+
+── Citation-ish ANSWER: lines from the mock websearch snippets
+   ANSWER:What is KSAR?: T
+   ANSWER:What is a blackboard?: T
+   ANSWER:What is a journal?: T
+
+── Blackboard :round-summary
+   section-bound-p :round-summary: T
+   :round-summary: "delivered PASS"
+
+── Deep-research done. Reviewer: verdict + 3 children + ANSWER: cites in the markdown.
