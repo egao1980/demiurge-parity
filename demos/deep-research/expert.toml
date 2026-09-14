@@ -24,7 +24,8 @@ name = "mock"
 kind = "mock"
 
 [workspace]
-root = "../../"
+# demos/deep-research → cl-workspace (wrap/demos/deep-research = 3 levels)
+root = "../../../"
 seed = "KSAR blackboard no-critical-regression-gate gap-analysis improve cycle demiurge"
 
 [websearch]
