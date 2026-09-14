@@ -1,0 +1,13 @@
+# Minimal SearXNG settings for the deep-research demo.
+# JSON API is off by default; B4 search-web needs it.
+use_default_settings: true
+search:
+  safe_search: 0
+  formats:
+    - html
+    - json
+server:
+  limiter: false
+  secret_key: "demiurge-parity-demo"
+  image_proxy: false
+  method: GET

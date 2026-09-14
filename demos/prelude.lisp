@@ -25,12 +25,20 @@
        (merge-pathnames ".local/share/cl-repository-client/cl-oci-0.16.0/"
                         (user-homedir-pathname)))))
 
+(defun %local-override-directories ()
+  "Sibling first-party checkouts beat OCI dest (unpublished protocol fixes)."
+  (let ((parent (uiop:pathname-parent-directory-pathname *demo-root*)))
+    (loop for name in '("http-backend-dexador" "websearch-protocol")
+          for dir = (probe-file (merge-pathnames (format nil "~A/" name) parent))
+          when dir collect `(:directory ,dir))))
+
 (defun %isolated-source-registry ()
   "Checkout + dest + client only. Inherited shared trees have stale demiurge."
   (let* ((dest (%demo-oci-dest))
          (client (%demo-client-dir))
-         (entries (list `(:directory ,*demo-root*)
-                        `(:tree ,dest))))
+         (entries (append (list `(:directory ,*demo-root*))
+                          (%local-override-directories)
+                          (list `(:tree ,dest)))))
     (when (and client (probe-file client))
       (setf entries (append entries (list `(:tree ,client)))))
     `(:source-registry
@@ -70,7 +78,11 @@
                       :with '("event-backend-libuv"
                               "sql-backend-sqlite3"
                               "crypto-backend-ironclad"
-                              "json-backend-jzon"))
+                              "json-backend-jzon"
+                              "llm-protocol-openai"
+                              "llm-protocol/schema"
+                              "http-backend-dexador"
+                              "llm-backend-llama-cpp"))
     (%pin-isolated-registry)
     (uiop:symbol-call :cl-repo :load-system-init-files)
     dest))
@@ -132,7 +144,9 @@
                         "blackboard-protocol" "capability-protocol"
                         "eval-protocol" "rag-protocol" "rag-backend-text"
                         "rag-backend-memory" "doc-extract-protocol"
-                        "llm-protocol" "steer-protocol" "task-protocol"
+                        "llm-protocol" "websearch-protocol"
+                        "http-backend-dexador" "json-backend-jzon"
+                        "steer-protocol" "task-protocol"
                         "task-backend-sql" "sql-protocol"
                         "sql-backend-sqlite3" "event-backend-libuv")))
     (when root

@@ -16,6 +16,16 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${ROOT}"
 
+# Workspace .env carries LM_API_TOKEN / OPENAI_* (gitignored). Do not print values.
+for dotenv in "${ROOT}/.env" "${ROOT}/../.env"; do
+  if [[ -f "${dotenv}" ]]; then
+    set -a
+    # shellcheck disable=SC1090
+    source "${dotenv}"
+    set +a
+  fi
+done
+
 # Isolated dest — do not inherit a workspace-wide systems tree (version skew:
 # shared dest can see demiurge 0.3.0/0.3.1 without /workflows). No trailing
 # inherit colon. CI already installed deps; a set CL_REPOSITORY_DEST is left alone.
@@ -88,6 +98,27 @@ OUTDIR="${ROOT}/demos/recordings/${VERSION}"
 mkdir -p "${OUTDIR}"
 LOG="${OUTDIR}/${REC_NAME}.log"
 CAST="${OUTDIR}/${REC_NAME}.cast"
+
+ensure_searxng() {
+  local mode="${DEMIURGE_PARITY_DEMO_WEBSEARCH:-auto}"
+  if [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
+    return 0
+  fi
+  case "${mode}" in
+    mock|scripted) return 0 ;;
+  esac
+  local url="${SEARXNG_URL:-${DEMIURGE_PARITY_SEARXNG:-http://127.0.0.1:8888}}"
+  if curl -sS -m 2 -o /dev/null "${url}/search?q=ping&format=json"; then
+    return 0
+  fi
+  command -v docker >/dev/null 2>&1 || return 0
+  printf 'run-demo: starting SearXNG (docker compose --profile search)\n' >&2
+  docker compose --profile search up -d --wait searxng
+}
+
+case "${REC_NAME}" in
+  deep-research-demo) ensure_searxng ;;
+esac
 
 SBCL_BIN="${SBCL:-sbcl}"
 command -v "${SBCL_BIN}" >/dev/null 2>&1 || {

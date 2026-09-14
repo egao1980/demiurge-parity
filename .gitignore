@@ -5,3 +5,5 @@
 *~
 .DS_Store
 .cl-repository/
+demos/searxng/*
+!demos/searxng/settings.yml

@@ -1,9 +1,22 @@
 # Demo evidence
 
-Narrated mock-tier scripts for later human review. These are **not** Rove
+Narrated scripts for later human review. These are **not** Rove
 tests: they print what is happening and what to look at (section writes,
 citations, gate verdicts, journal replay counts). S3/S5/S8/S9 run in
 Rove; recordings cover S2/S4/S6/S7 plus B8 v2 deep-research / corporate-boot.
+
+`deep-research` prefers a live local model: LM Studio (`OPENAI_BASE_URL`,
+`OPENAI_MODEL`, `LM_API_TOKEN` from the workspace `.env`) then
+`llm-backend-llama-cpp` (`LLAMA_MODEL_PATH`). `DEMIURGE_PARITY_DEMO_LLM=mock`
+forces the scripted backend. CI falls back to mock when nothing is listening.
+Each live `generate` dumps prompt, response, and token usage.
+
+Websearch uses `websearch-protocol:make-searxng-backend` against a local
+SearXNG with JSON enabled (`demos/searxng/settings.yml`). Default
+`SEARXNG_URL=http://127.0.0.1:8888`. `run-demo.sh` starts
+`docker compose --profile search up -d --wait searxng` when `:8888` is down.
+`DEMIURGE_PARITY_DEMO_WEBSEARCH=mock` forces the scripted hits. CI falls
+back to mock. Live `search-web` / `fetch-page` dump hits and page sizes.
 
 ## Run
 
@@ -38,7 +51,7 @@ It uploads logs/casts as artifacts and does not auto-commit.
 | [`recordings/0.1.1/s4-answer-demo`](recordings/0.1.1/s4-answer-demo.log) ([.cast](recordings/0.1.1/s4-answer-demo.cast)) | cl-dev expert answers via mock LLM; board `:prompt`/`:result` writes; citation `:block-id`s from `fixtures/sample.html` | 2026-09-13 | same as s2-boot (see log header) |
 | [`recordings/0.1.1/s6-improve-demo`](recordings/0.1.1/s6-improve-demo.log) ([.cast](recordings/0.1.1/s6-improve-demo.cast)) | Mock-LLM candidate wins → gate `:promote` + skill version with provenance; critical regression → `:demote` despite higher mean | 2026-09-13 | same as s2-boot (see log header) |
 | [`recordings/0.1.1/s7-resume-demo`](recordings/0.1.1/s7-resume-demo.log) ([.cast](recordings/0.1.1/s7-resume-demo.cast)) | Child SBCL kill after step 1; parent replay: `before-count=1`, `after-count=2`, `fresh-1=0`, `fresh-2=1` | 2026-09-13 | same as s2-boot (see log header) |
-| [`recordings/0.1.4/deep-research-demo`](recordings/0.1.4/deep-research-demo.log) ([.cast](recordings/0.1.4/deep-research-demo.cast)) | B4 `run-deep-research` with mock LLM + mock websearch: verdict `:PASS`, 3 children, markdown `ANSWER:` cites, board `:round-summary` | 2026-09-14 | `demiurge-parity` 0.1.4, `demiurge` 0.3.5 + `/workflows` (log header) |
+| [`recordings/0.1.4/deep-research-demo`](recordings/0.1.4/deep-research-demo.log) ([.cast](recordings/0.1.4/deep-research-demo.cast)) | B4 `run-deep-research` on LM Studio / llama.cpp + SearXNG `make-searxng-backend`: LLM generate logs, live search hits / fetch-page, per-child answers + citations, full synthesized report, board `:round-summary` | 2026-09-14 | `demiurge-parity` 0.1.4, `demiurge` 0.3.5 + `/workflows`, `websearch-protocol` 0.1.1 (log header) |
 | [`recordings/0.1.4/corporate-boot-demo`](recordings/0.1.4/corporate-boot-demo.log) ([.cast](recordings/0.1.4/corporate-boot-demo.cast)) | C4 `make-corporate-profile` memory/sqlite fallback: `:corporate` kind, tenant-scoped ids, `/healthz`/`/readyz` 200, unauthenticated `/` → 302 `/login` | 2026-09-14 | `demiurge-parity` 0.1.4, `demiurge` 0.3.5 + `/serve` + `/observe` (log header) |
 
 B8 v2 scripts are `demos/deep-research-demo.lisp` and `demos/corporate-boot-demo.lisp`.
