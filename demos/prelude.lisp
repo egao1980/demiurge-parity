@@ -35,7 +35,8 @@
          (cli (probe-file (merge-pathnames "demiurge-plan-vectors/" parent)))
          (cli-protocol (probe-file (merge-pathnames "cli-protocol/" parent))))
     (append
-     (loop for name in '("http-backend-dexador" "websearch-protocol")
+     (loop for name in '("http-backend-dexador" "websearch-protocol"
+                         "llm-protocol")
            for dir = (probe-file (merge-pathnames (format nil "~A/" name) parent))
            when dir collect `(:directory ,dir))
      (when cli-protocol

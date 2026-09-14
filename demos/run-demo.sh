@@ -42,7 +42,8 @@ export CL_REPOSITORY_CLIENT_DIR="${CL_REPOSITORY_CLIENT_DIR:-${HOME}/.local/shar
 # demiurge/ or demiurge-b4b checkout — those trees do not have the CLI.
 PLAN_VECTORS="${PARENT}/demiurge-plan-vectors"
 CLI_PROTOCOL="${PARENT}/cli-protocol"
-export CL_SOURCE_REGISTRY="${PLAN_VECTORS}//:${CLI_PROTOCOL}//:${ROOT}//:${CL_REPOSITORY_DEST}//"
+LLM_PROTOCOL="${PARENT}/llm-protocol"
+export CL_SOURCE_REGISTRY="${PLAN_VECTORS}//:${CLI_PROTOCOL}//:${LLM_PROTOCOL}//:${ROOT}//:${CL_REPOSITORY_DEST}//"
 
 DEMIURGE_LISP="${PLAN_VECTORS}/scripts/demiurge.lisp"
 
