@@ -45,7 +45,7 @@
                  (t
                   (write-string md out :start i :end start)
                   (let ((end (search "-->" md :start2 start)))
-                    (setf i (if end (+ end 3) n))))))))
+                    (setf i (if end (+ end 3) n)))))))))
 
 (defun %demo-print-block (label text)
   (format t "~&~%── ~A~%~A~%" label (string-right-trim '(#\Newline) text))
