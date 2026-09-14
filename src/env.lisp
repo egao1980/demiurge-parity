@@ -27,6 +27,54 @@
   "True when `demiurge/serve` is published and loadable."
   (system-available-p "demiurge/serve"))
 
+(defun demiurge-version-string ()
+  (let ((sys (asdf:find-system "demiurge" nil)))
+    (and sys (asdf:component-version sys))))
+
+(defun observe-b5b-available-p ()
+  "True when published demiurge is >= 0.3.5 and observe is loadable.
+   Parity CI does not pin a local demiurge checkout."
+  (let ((v (demiurge-version-string)))
+    (and v
+         (uiop:version<= "0.3.5" v)
+         (system-available-p "demiurge/observe"))))
+
+(defun +taxonomy-metric-names+ ()
+  '("demiurge.llm.tokens"
+    "demiurge.llm.cost"
+    "demiurge.ksar.duration"
+    "demiurge.llm.latency"
+    "demiurge.eval.score"
+    "demiurge.task.queue-depth"
+    "demiurge.ingest.documents"
+    "demiurge.improve.promotions"
+    "demiurge.improve.demotions"))
+
+(defun taxonomy-metric-present-p (dump name)
+  (find name (getf dump :metrics)
+        :key (lambda (m) (getf m :name))
+        :test #'equal))
+
+(defun s4-taxonomy-reasons ()
+  "Why an S4 answer dump may lack a taxonomy instrument."
+  '(("demiurge.llm.latency"
+     "S4 uses A2 record-usage, not observe-generate (no latency histogram)")
+    ("demiurge.eval.score" "S4 is answer, not improve")
+    ("demiurge.ingest.documents" "S4 is answer, not ingest")
+    ("demiurge.improve.promotions" "S4 is answer, not improve")
+    ("demiurge.improve.demotions" "S4 is answer, not improve")))
+
+(defun taxonomy-coverage (dump &optional extra-reasons)
+  "→ alist (NAME . :data | reason-string) for every taxonomy instrument."
+  (let ((reasons (append extra-reasons (s4-taxonomy-reasons))))
+    (mapcar (lambda (name)
+              (cons name
+                    (if (taxonomy-metric-present-p dump name)
+                        :data
+                        (or (second (assoc name reasons :test #'equal))
+                            "missing — no documented reason"))))
+            (+taxonomy-metric-names+))))
+
 (defun ensure-ci-backends ()
   "Load sqlite + libuv extras used by personal-profile / run-expert."
   (dolist (name '("sql-backend-sqlite3" "event-backend-libuv"))

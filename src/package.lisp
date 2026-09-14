@@ -28,6 +28,11 @@
    #:ingest-system-available-p
    #:serve-system-available-p
    #:ensure-ci-backends
+   #:demiurge-version-string
+   #:observe-b5b-available-p
+   #:taxonomy-metric-present-p
+   #:taxonomy-coverage
+   #:s4-taxonomy-reasons
    #:parity-tier
    #:live-local-endpoint
    #:fixture-pathname
