@@ -288,11 +288,12 @@ Use an empty subquestions array if there are no gaps."
                     (%ht-ref json "subquestions" :subquestions)))))
 
 (defun %parse-plan-output (schema text)
+  "Do not use parse-structured-output here: schema-protocol/jzon leave
+   JSON arrays as vectors, and make-research-plan mapcar's a list."
+  (declare (ignore schema))
   (let* ((blob (or (%json-blob text) text))
-         (from-schema (ignore-errors (llm:parse-structured-output schema blob))))
-    (or (and (demiurge/workflows:research-plan-p from-schema) from-schema)
-        (%plan-from-json (or (and (hash-table-p from-schema) from-schema)
-                             (ignore-errors (llm:try-parse-json-output blob))))
+         (json (ignore-errors (llm:try-parse-json-output blob))))
+    (or (%plan-from-json json)
         (when (%nonempty text)
           (ignore-errors (demiurge/workflows:coerce-research-plan text))))))
 
@@ -332,11 +333,15 @@ Use an empty subquestions array if there are no gaps."
                                  :tool-choice tool-choice))
          (text (%usable-response-text response)))
     (%log-generate backend n prompt response)
-    (when (and output (null (llm:llm-response-output response)))
-      (setf (llm:llm-response-output response)
-            (or (%parse-plan-output output text)
-                (demiurge/workflows:coerce-research-plan nil
-                                                        :question "CL expert systems"))))
+    ;; :around strips :output and puts the schema on SETTINGS. Read both.
+    (let ((schema (or output
+                      (and settings
+                           (llm:llm-settings-output (llm:coerce-settings settings))))))
+      (when schema
+        (setf (llm:llm-response-output response)
+              (or (%parse-plan-output schema text)
+                  (demiurge/workflows:coerce-research-plan
+                   nil :question "CL expert systems")))))
     (when (and (not (%nonempty (llm:llm-response-text response)))
                (%nonempty text)
                (llm:llm-response-p response))
