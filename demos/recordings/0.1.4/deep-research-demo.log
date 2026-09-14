@@ -1,5 +1,5 @@
 === demiurge-parity demo: deep-research-demo ===
-date: 2026-09-14T12:30:19Z
+date: 2026-09-14T13:55:00Z
 version: 0.1.4
 host: Darwin arm64
 sbcl: SBCL 2.6.5-85913ede1
@@ -112,7 +112,7 @@ oci systems-root: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-
 === end versions ===
 
 ── Deep research — run-deep-research with a scripted mock LLM + mock websearch
-   look at: verdict, child count, markdown excerpt, board :round-summary, ANSWER: citation lines
+   look at: full synthesized report, each child's answer + citations, board :round-summary
 
 ── Calling RUN-DEEP-RESEARCH on "CL expert systems"
    subquestions: ("What is KSAR?" "What is a blackboard?" "What is a journal?")
@@ -120,30 +120,70 @@ oci systems-root: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-
 ── Workflow finished
    verdict: :PASS
    child count: 3
-   look at: verdict is :pass or :fail; three children match the three subquestions
+   look at: three children, one answer + URL cite each; then the full report
 
-── Markdown excerpt (first 400 chars)
-   markdown-length: 1165
-   --- markdown ---
-<!-- {#f133df4865421fcd210e9cb3fe9387dc99d0d3c70b85bc9e0b9333743cfe8cba type=text kind=heading} -->
+── Per-child results (question → composed answer + citations)
+
+   ### What is KSAR?
+   answer:
+   What is KSAR?
+   What is KSAR? — KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+   cite: (:KIND :LINK :TARGET "https://ex.test/ksar")
+   hit https://ex.test/ksar
+        KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+
+   ### What is a blackboard?
+   answer:
+   What is a blackboard?
+   What is a blackboard? — The blackboard is the shared working memory. KSs read/write named sections; the controller picks the next KSAR.
+   cite: (:KIND :LINK :TARGET "https://ex.test/blackboard")
+   hit https://ex.test/blackboard
+        The blackboard is the shared working memory. KSs read/write named sections; the controller picks the next KSAR.
+
+   ### What is a journal?
+   answer:
+   What is a journal?
+   What is a journal? — The journal is the durable event log. Kill-and-resume replays completed steps; it does not re-execute them.
+   cite: (:KIND :LINK :TARGET "https://ex.test/journal")
+   hit https://ex.test/journal
+        The journal is the durable event log. Kill-and-resume replays completed steps; it does not re-execute them.
+
+── Full research report (markup comments stripped)
+
 Research: CL expert systems
 
-<!-- {#28bc9ab11cd003f3ce8e0f4b892ea3700b861cdbab64ebde174c99b30dbcb033 type=text kind=para} -->
-synthesis ok
 
-<!-- {#f8ce9af877d04b705e6780fa69bdd276f1c0bdaf1c0c212bc7fd41d0c0d38530 type=section level=2} -->
+CL expert systems here are a blackboard + KSAR controller. 
+Sub-answers cover the activation record, the shared board, and the durable journal.
+
+
 ## What is KSAR?
 
-<!-- {#d752ef7877bba15327f374de7fb5327987c68
-   --- end excerpt ---
 
-── Citation-ish ANSWER: lines from the mock websearch snippets
-   ANSWER:What is KSAR?: T
-   ANSWER:What is a blackboard?: T
-   ANSWER:What is a journal?: T
+What is KSAR?
+What is KSAR? — KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+
+
+
+
+## What is a blackboard?
+
+
+What is a blackboard?
+What is a blackboard? — The blackboard is the shared working memory. KSs read/write named sections; the controller picks the next KSAR.
+
+
+
+
+## What is a journal?
+
+
+What is a journal?
+What is a journal? — The journal is the durable event log. Kill-and-resume replays completed steps; it does not re-execute them.
+   raw-markdown-length: 1545
 
 ── Blackboard :round-summary
    section-bound-p :round-summary: T
    :round-summary: "delivered PASS"
 
-── Deep-research done. Reviewer: verdict + 3 children + ANSWER: cites in the markdown.
+── Deep-research done. Reviewer: read the per-child answers and the full report.
