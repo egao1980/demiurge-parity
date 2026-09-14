@@ -16,6 +16,16 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${ROOT}"
 
+# Workspace .env carries LM_API_TOKEN / OPENAI_* (gitignored). Do not print values.
+for dotenv in "${ROOT}/.env" "${ROOT}/../.env"; do
+  if [[ -f "${dotenv}" ]]; then
+    set -a
+    # shellcheck disable=SC1090
+    source "${dotenv}"
+    set +a
+  fi
+done
+
 # Isolated dest — do not inherit a workspace-wide systems tree (version skew:
 # shared dest can see demiurge 0.3.0/0.3.1 without /workflows). No trailing
 # inherit colon. CI already installed deps; a set CL_REPOSITORY_DEST is left alone.

@@ -70,7 +70,11 @@
                       :with '("event-backend-libuv"
                               "sql-backend-sqlite3"
                               "crypto-backend-ironclad"
-                              "json-backend-jzon"))
+                              "json-backend-jzon"
+                              "llm-protocol-openai"
+                              "llm-protocol/schema"
+                              "http-backend-dexador"
+                              "llm-backend-llama-cpp"))
     (%pin-isolated-registry)
     (uiop:symbol-call :cl-repo :load-system-init-files)
     dest))
