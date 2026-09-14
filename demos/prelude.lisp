@@ -26,12 +26,18 @@
                         (user-homedir-pathname)))))
 
 (defun %local-override-directories ()
-  "Sibling first-party checkouts beat OCI dest (unpublished protocol fixes)."
-  (let ((parent (uiop:pathname-parent-directory-pathname *demo-root*)))
-    (loop for name in '("http-backend-dexador" "websearch-protocol"
-                        "demiurge-plan-vectors")
-          for dir = (probe-file (merge-pathnames (format nil "~A/" name) parent))
-          when dir collect `(:directory ,dir))))
+  "Sibling first-party checkouts beat OCI dest (unpublished protocol fixes).
+   Prefer demiurge-b4b over demiurge-plan-vectors so B4b and B10 do not share a tree."
+  (let* ((parent (uiop:pathname-parent-directory-pathname *demo-root*))
+         (b4b (probe-file (merge-pathnames "demiurge-b4b/" parent)))
+         (b10 (probe-file (merge-pathnames "demiurge-plan-vectors/" parent)))
+         (demiurge-dir (or b4b b10)))
+    (append
+     (loop for name in '("http-backend-dexador" "websearch-protocol")
+           for dir = (probe-file (merge-pathnames (format nil "~A/" name) parent))
+           when dir collect `(:directory ,dir))
+     (when demiurge-dir
+       (list `(:directory ,demiurge-dir))))))
 
 (defun %isolated-source-registry ()
   "Checkout + dest + client only. Inherited shared trees have stale demiurge."
