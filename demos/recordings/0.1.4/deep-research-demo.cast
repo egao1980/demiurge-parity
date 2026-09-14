@@ -1,5 +1,5 @@
-=== demiurge-parity demo: deep-research-demo ===
-date: 2026-09-14T13:55:00Z
+^D=== demiurge-parity demo: deep-research-demo ===
+date: 2026-09-14T14:36:18Z
 version: 0.1.4
 host: Darwin arm64
 sbcl: SBCL 2.6.5-85913ede1
@@ -111,79 +111,169 @@ oci systems-root: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-
     /Users/nikolaimatiushev/Projects/cl-workspace/event-backend-libuv/
 === end versions ===
 
-── Deep research — run-deep-research with a scripted mock LLM + mock websearch
-   look at: full synthesized report, each child's answer + citations, board :round-summary
+── Deep research — run-deep-research against a live local LLM (LM Studio / llama.cpp)
+   look at: LLM generate logs, full synthesized report, each child's answer + citations, board :round-summary
+   dotenv: "/Users/nikolaimatiushev/Projects/cl-workspace/.env"
+   demo-llm-mode: :LIVE
+
+── Using LM Studio qwen/qwen3.8-27b at http://127.0.0.1:1234/v1
+   llm: (:KIND :LMSTUDIO :MODEL "qwen/qwen3.8-27b" :URL
+         "http://127.0.0.1:1234/v1")
 
 ── Calling RUN-DEEP-RESEARCH on "CL expert systems"
-   subquestions: ("What is KSAR?" "What is a blackboard?" "What is a journal?")
+   scripted-subquestions (fallback only): ("What is KSAR?"
+                                           "What is a blackboard?"
+                                           "What is a journal?")
+── phase plan
+
+── LLM generate #1 (LMSTUDIO qwen/qwen3.8-27b)
+   prompt:
+   Decompose this question into a schema-typed research plan with subquestions: CL expert systems
+   response:
+   {
+     "question": "CL expert systems",
+     "subquestions": [
+       {
+         "id": "sq1",
+         "question": "How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems?",
+         "rationale": "KSAR is a foundational architecture for building expert systems in CL; understanding its role clarifies how knowledge is represented and processed."
+       },
+       {
+         "id": "sq2",
+         "question": "What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems?",
+         "rationale": "The blackboard model is a key mechanism for managing complex problem-solving by allowing different components to share and update a common workspace."
+       },
+       {
+         "id": "sq3",
+         "question": "How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation?",
+         "rationale": "The journal provides transparency into the reasoning process, which is critical for explaining decisions and troubleshooting in expert systems."
+       }
+     ]
+   }
+   wire-model: "qwen/qwen3.8-27b"
+   finish: :STOP
+   tokens: (:IN 89 :OUT 247 :TOTAL 336)
+── phase join-1
+── phase synthesize
+
+── LLM generate #2 (LMSTUDIO qwen/qwen3.8-27b)
+   prompt:
+   Synthesize a cited report for CL expert systems from 3 sub-answers.
+   response:
+   # Synthesized Report: Expert Systems in Clinical Laboratory (CL) Diagnostics
+   
+   ## Executive Summary
+   This report synthesizes findings from three distinct sub-answers regarding the application of expert systems in Clinical Laboratory (CL) diagnostics. The analysis covers the **historical evolution and foundational architecture**, the **current state of hybrid AI integration**, and the **critical challenges in regulatory compliance and clinical validation**. The synthesis reveals that while early rule-based systems laid the groundwork for automated diagnostic support, modern CL expert systems are evolving into hybrid models that combine symbolic reasoning with machine learning. However, widespread adoption remains constrained by stringent regulatory hurdles, data heterogeneity, and the "black box" interpretability problem.
+   
+   ---
+   
+   ## 1. Historical Evolution and Foundational Architecture
+   *Source: Sub-Answer 1 – "The Rise and Fall of Pure Rule-Based CL Systems (1980–2000)"*
+   
+   ### Key Findings:
+   - **Dominance of MYCIN and Early Prototypes**: The 1980s saw the proliferation of rule-based expert systems (e.g., MYCIN, later adapted for lab diagnostics) that used forward-chaining inference engines to interpret abnormal lab values. These systems excelled in narrow domains such as hematology and coagulation.
+   - **Knowledge Acquisition Bottleneck**: A critical limitation was the manual encoding of expert knowledge. Domain experts (pathologists, lab scientists) had to translate heuristic rules into IF-THEN statements, a process that was time-consuming, error-prone, and difficult to maintain as clinical guidelines evolved.
+   - **Brittleness in Edge Cases**: Pure symbolic systems struggled with ambiguous or conflicting data. For example, a single abnormal value (e.g., elevated LDH) could indicate multiple conditions (hemolysis, malignancy, tissue damage), and rule-based systems often lacked the contextual reasoning to prioritize diagnoses without extensive user input.
+   - **Legacy Impact**: Despite their limitations, these systems established the foundational concept of **computer-assisted diagnostic decision support** in CL, proving that automation could reduce turnaround time and standardize preliminary interpretations.
+   
+   > **Citation**: Shortliffe, E. H. (1980). *Computer-Based Medical Consultations: MYCIN*. Elsevier.  
+   > **Citation**: Clancey, W. J. (1983). "The role of knowledge in medical expert systems." *Artificial Intelligence in Medicine*, 1(1), 3–15.
+   
+   ---
+   wire-model: "qwen/qwen3.8-27b"
+   finish: :LENGTH
+   tokens: (:IN 29 :OUT 512 :TOTAL 541)
+── phase render
+── phase gate
 
 ── Workflow finished
    verdict: :PASS
    child count: 3
-   look at: three children, one answer + URL cite each; then the full report
+   look at: live plan subquestions, one answer + URL cite each; then the full report
 
 ── Per-child results (question → composed answer + citations)
 
-   ### What is KSAR?
+   ### How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems?
    answer:
-   What is KSAR?
-   What is KSAR? — KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
-   cite: (:KIND :LINK :TARGET "https://ex.test/ksar")
-   hit https://ex.test/ksar
-        KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+   How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems?
+   How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems? — How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems?
+   cite: (:KIND :LINK :TARGET
+          "https://ex.test/How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems?")
+   hit https://ex.test/How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems?
+        How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems?
 
-   ### What is a blackboard?
+   ### What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems?
    answer:
-   What is a blackboard?
-   What is a blackboard? — The blackboard is the shared working memory. KSs read/write named sections; the controller picks the next KSAR.
-   cite: (:KIND :LINK :TARGET "https://ex.test/blackboard")
-   hit https://ex.test/blackboard
-        The blackboard is the shared working memory. KSs read/write named sections; the controller picks the next KSAR.
+   What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems?
+   What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems? — What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems?
+   cite: (:KIND :LINK :TARGET
+          "https://ex.test/What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems?")
+   hit https://ex.test/What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems?
+        What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems?
 
-   ### What is a journal?
+   ### How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation?
    answer:
-   What is a journal?
-   What is a journal? — The journal is the durable event log. Kill-and-resume replays completed steps; it does not re-execute them.
-   cite: (:KIND :LINK :TARGET "https://ex.test/journal")
-   hit https://ex.test/journal
-        The journal is the durable event log. Kill-and-resume replays completed steps; it does not re-execute them.
+   How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation?
+   How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation? — How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation?
+   cite: (:KIND :LINK :TARGET
+          "https://ex.test/How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation?")
+   hit https://ex.test/How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation?
+        How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation?
 
 ── Full research report (markup comments stripped)
 
 Research: CL expert systems
 
 
-CL expert systems here are a blackboard + KSAR controller. 
-Sub-answers cover the activation record, the shared board, and the durable journal.
+# Synthesized Report: Expert Systems in Clinical Laboratory (CL) Diagnostics
+
+## Executive Summary
+This report synthesizes findings from three distinct sub-answers regarding the application of expert systems in Clinical Laboratory (CL) diagnostics. The analysis covers the **historical evolution and foundational architecture**, the **current state of hybrid AI integration**, and the **critical challenges in regulatory compliance and clinical validation**. The synthesis reveals that while early rule-based systems laid the groundwork for automated diagnostic support, modern CL expert systems are evolving into hybrid models that combine symbolic reasoning with machine learning. However, widespread adoption remains constrained by stringent regulatory hurdles, data heterogeneity, and the "black box" interpretability problem.
+
+---
+
+## 1. Historical Evolution and Foundational Architecture
+*Source: Sub-Answer 1 – "The Rise and Fall of Pure Rule-Based CL Systems (1980–2000)"*
+
+### Key Findings:
+- **Dominance of MYCIN and Early Prototypes**: The 1980s saw the proliferation of rule-based expert systems (e.g., MYCIN, later adapted for lab diagnostics) that used forward-chaining inference engines to interpret abnormal lab values. These systems excelled in narrow domains such as hematology and coagulation.
+- **Knowledge Acquisition Bottleneck**: A critical limitation was the manual encoding of expert knowledge. Domain experts (pathologists, lab scientists) had to translate heuristic rules into IF-THEN statements, a process that was time-consuming, error-prone, and difficult to maintain as clinical guidelines evolved.
+- **Brittleness in Edge Cases**: Pure symbolic systems struggled with ambiguous or conflicting data. For example, a single abnormal value (e.g., elevated LDH) could indicate multiple conditions (hemolysis, malignancy, tissue damage), and rule-based systems often lacked the contextual reasoning to prioritize diagnoses without extensive user input.
+- **Legacy Impact**: Despite their limitations, these systems established the foundational concept of **computer-assisted diagnostic decision support** in CL, proving that automation could reduce turnaround time and standardize preliminary interpretations.
+
+> **Citation**: Shortliffe, E. H. (1980). *Computer-Based Medical Consultations: MYCIN*. Elsevier.  
+> **Citation**: Clancey, W. J. (1983). "The role of knowledge in medical expert systems." *Artificial Intelligence in Medicine*, 1(1), 3–15.
+
+---
 
 
-## What is KSAR?
+## How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems?
 
 
-What is KSAR?
-What is KSAR? — KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
-
-
-
-
-## What is a blackboard?
-
-
-What is a blackboard?
-What is a blackboard? — The blackboard is the shared working memory. KSs read/write named sections; the controller picks the next KSAR.
+How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems?
+How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems? — How does the KSAR (Knowledge System Architecture and Representation) framework structure inference engines in Common Lisp expert systems?
 
 
 
+
+## What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems?
 
-## What is a journal?
+
+What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems?
+What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems? — What is the role of the blackboard architecture in coordinating multiple inference strategies within Common Lisp-based expert systems?
 
 
-What is a journal?
-What is a journal? — The journal is the durable event log. Kill-and-resume replays completed steps; it does not re-execute them.
-   raw-markdown-length: 1545
+
+
+## How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation?
+
+
+How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation?
+How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation? — How is the journal (or trace log) used in Common Lisp expert systems to record inference steps and support debugging or explanation?
+   raw-markdown-length: 5019
 
 ── Blackboard :round-summary
    section-bound-p :round-summary: T
    :round-summary: "delivered PASS"
 
-── Deep-research done. Reviewer: read the per-child answers and the full report.
+── Deep-research done. Reviewer: read the LLM logs, per-child answers, and the full report.
