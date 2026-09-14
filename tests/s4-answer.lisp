@@ -36,6 +36,40 @@
     (%assert-citation-block-ids
      (%citations-of (bb:read-section board :result :default nil)))))
 
+(deftest s4-answer-emits-llm-tokens-and-ksar-duration
+  "B5b: answer path records llm tokens + ksar duration. Skips until 0.3.5 is on GHCR."
+  (if (not (observe-b5b-available-p))
+      (skip "demiurge 0.3.5 observe wiring not on GHCR yet (B5b; supervisor publishes)")
+      (progn
+        (ensure-ci-backends)
+        (let* ((obs (find-package '#:demiurge/observe))
+               (apply-fn (and obs (find-symbol "APPLY-PERSONAL-OBSERVABILITY" obs)))
+               (dump-fn (and obs (find-symbol "DUMP-OBSERVABILITY" obs)))
+               (wrap-sym (find-symbol "WRAP-LLM-OBSERVE" :demiurge))
+               (wrap (and wrap-sym (fboundp wrap-sym) (symbol-function wrap-sym))))
+          (ok apply-fn "demiurge/observe is loaded")
+          (ok dump-fn "dump-observability is present")
+          (funcall apply-fn :stream (make-broadcast-stream))
+          (let* ((raw (make-scripted-llm))
+                 (backend (if wrap
+                              (funcall wrap raw :expert "parity-echo" :scope "s4")
+                              raw))
+                 (domain (demiurge:make-echo-expert :backend backend
+                                                    :name "parity-echo-obs"))
+                 (board (demiurge:run-expert domain :trigger '(:prompt "hi")))
+                 (dump (funcall dump-fn))
+                 (coverage (taxonomy-coverage dump)))
+            (ok (equal "echo: hi" (bb:read-section board :result)))
+            (ok (taxonomy-metric-present-p dump "demiurge.ksar.duration")
+                "S4 records demiurge.ksar.duration")
+            (ok (taxonomy-metric-present-p dump "demiurge.llm.tokens")
+                "S4 records demiurge.llm.tokens via A2 accounting")
+            (ok (taxonomy-metric-present-p dump "demiurge.task.queue-depth")
+                "S4 records demiurge.task.queue-depth")
+            (dolist (row coverage)
+              (ok (not (equal "missing — no documented reason" (cdr row)))
+                  (format nil "taxonomy ~a: ~a" (car row) (cdr row)))))))))
+
 (deftest s4-cl-dev-or-echo-with-citations
   (ensure-ci-backends)
   (with-tmp-dir (tmp)

@@ -26,6 +26,28 @@
       (ok (steer:skill-versions store "parity-improve")
           "skill store gained a version with provenance"))))
 
+(deftest s6-improve-emits-eval-score-and-promotion
+  "B5b: improve records eval-score + promotion counter. Skips until 0.3.5 is on GHCR."
+  (if (not (observe-b5b-available-p))
+      (skip "demiurge 0.3.5 observe wiring not on GHCR yet (B5b; supervisor publishes)")
+      (let* ((obs (find-package '#:demiurge/observe))
+             (apply-fn (and obs (find-symbol "APPLY-PERSONAL-OBSERVABILITY" obs)))
+             (dump-fn (and obs (find-symbol "DUMP-OBSERVABILITY" obs))))
+        (ok apply-fn "demiurge/observe is loaded")
+        (ok dump-fn "dump-observability is present")
+        (funcall apply-fn :stream (make-broadcast-stream))
+        (with-tmp-dir (tmp)
+          (let* ((store (steer:make-file-skill-store tmp))
+                 (result (run-promote-cycle
+                          :skill-store store
+                          :cycle-id "parity-promote-obs"))
+                 (dump (funcall dump-fn)))
+            (ok (eq :promote (getf result :verdict)))
+            (ok (taxonomy-metric-present-p dump "demiurge.eval.score")
+                "S6 records demiurge.eval.score")
+            (ok (taxonomy-metric-present-p dump "demiurge.improve.promotions")
+                "S6 records demiurge.improve.promotions"))))))
+
 (deftest s6-gate-demotes-critical-regression
   (let* ((cases (list (eval:make-eval-case :input "x" :expected "echo: x")
                       (eval:make-eval-case :input "y" :expected "echo: y")
