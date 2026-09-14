@@ -174,7 +174,7 @@
                              collect (format nil "~A: ~A" (car pair) (cdr pair)))
                        (and content (list "--data-binary" "@-"))))
          (raw (uiop:run-program args
-                                :input (or content "")
+                                :input (make-string-input-stream (or content ""))
                                 :output :string
                                 :error-output :string
                                 :ignore-error-status t))
