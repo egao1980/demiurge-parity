@@ -161,6 +161,28 @@
       (%env "LLAMA_CPP_MODEL")
       (%env "DEMIURGE_PARITY_LLAMA_MODEL")))
 
+(defun %curl-request (method url &key headers content want-stream)
+  "Dexador hung on the second LM Studio generate. curl -m 180 is enough."
+  (when want-stream
+    (error "demo curl request-fn does not stream"))
+  (let* ((args (append (list "curl" "-sS" "-m" "180"
+                             "-w" (format nil "~C%{http_code}" #\Newline)
+                             "-X" (string-upcase (string method))
+                             url)
+                       (loop for pair in headers
+                             collect "-H"
+                             collect (format nil "~A: ~A" (car pair) (cdr pair)))
+                       (and content (list "--data-binary" content))))
+         (raw (uiop:run-program args
+                                :output :string
+                                :error-output :string
+                                :ignore-error-status t))
+         (nl (position #\Newline raw :from-end t)))
+    (if (null nl)
+        (values 0 raw)
+        (values (or (parse-integer (subseq raw (1+ nl)) :junk-allowed t) 0)
+                (subseq raw 0 nl)))))
+
 (defun %try-lmstudio ()
   "→ (values backend model url) or NIL."
   (ignore-errors (asdf:load-system "llm-protocol-openai" :verbose nil))
@@ -173,8 +195,9 @@
           (token (%lmstudio-token)))
       (unless (and fn (fboundp fn))
         (return-from %try-lmstudio nil))
-      (%ensure-demo-http)
-      (let ((backend (funcall fn :base-url url :api-key token :default-model model)))
+      (let ((backend (funcall fn :base-url url :api-key token
+                              :default-model model
+                              :request-fn #'%curl-request)))
         (handler-case
             (let ((models (llm:list-models backend)))
               (unless models
