@@ -265,12 +265,34 @@ Use an empty subquestions array if there are no gaps."
        (let ((start (or (search "{" s) (search "[" s))))
          (when start (subseq s start)))))))
 
+(defun %as-plain-list (x)
+  "jzon decodes JSON arrays as vectors; make-research-plan mapcar's a list."
+  (cond
+    ((null x) nil)
+    ((listp x) x)
+    ((and (vectorp x) (not (stringp x))) (map 'list #'identity x))
+    (t (list x))))
+
+(defun %ht-ref (table &rest keys)
+  (dolist (k keys)
+    (let ((v (or (gethash k table)
+                 (and (keywordp k)
+                      (gethash (string-downcase (symbol-name k)) table)))))
+      (when v (return v)))))
+
+(defun %plan-from-json (json)
+  (when (hash-table-p json)
+    (demiurge/workflows:make-research-plan
+     :question (or (%ht-ref json "question" :question) "")
+     :subquestions (%as-plain-list
+                    (%ht-ref json "subquestions" :subquestions)))))
+
 (defun %parse-plan-output (schema text)
-  (let ((blob (or (%json-blob text) text)))
-    (or (ignore-errors (llm:parse-structured-output schema blob))
-        (let ((json (ignore-errors (llm:try-parse-json-output blob))))
-          (when json
-            (ignore-errors (demiurge/workflows:coerce-research-plan json))))
+  (let* ((blob (or (%json-blob text) text))
+         (from-schema (ignore-errors (llm:parse-structured-output schema blob))))
+    (or (and (demiurge/workflows:research-plan-p from-schema) from-schema)
+        (%plan-from-json (or (and (hash-table-p from-schema) from-schema)
+                             (ignore-errors (llm:try-parse-json-output blob))))
         (when (%nonempty text)
           (ignore-errors (demiurge/workflows:coerce-research-plan text))))))
 
