@@ -28,7 +28,8 @@
 (defun %local-override-directories ()
   "Sibling first-party checkouts beat OCI dest (unpublished protocol fixes)."
   (let ((parent (uiop:pathname-parent-directory-pathname *demo-root*)))
-    (loop for name in '("http-backend-dexador" "websearch-protocol")
+    (loop for name in '("http-backend-dexador" "websearch-protocol"
+                        "demiurge-plan-vectors")
           for dir = (probe-file (merge-pathnames (format nil "~A/" name) parent))
           when dir collect `(:directory ,dir))))
 
@@ -144,7 +145,7 @@
                         "blackboard-protocol" "capability-protocol"
                         "eval-protocol" "rag-protocol" "rag-backend-text"
                         "rag-backend-memory" "doc-extract-protocol"
-                        "llm-protocol" "websearch-protocol"
+                        "llm-protocol" "websearch-protocol" "mcp-protocol"
                         "http-backend-dexador" "json-backend-jzon"
                         "steer-protocol" "task-protocol"
                         "task-backend-sql" "sql-protocol"
