@@ -392,7 +392,7 @@ Interpret CL as Common Lisp. Emit 3 short subquestions about KSAR, the blackboar
                      (string-trim '(#\Space #\Tab #\Return)
                                   (subseq text start end)))))
             (q (or (find sub questions :test #'string-equal)
-                   (find-if (lambda (q) (search q text)) questions))))
+                   (find-if (lambda (item) (search item text)) questions))))
        (cond
          ((search "Gap analysis" text)
           (llm:make-llm-response
@@ -405,11 +405,11 @@ Interpret CL as Common Lisp. Emit 3 short subquestions about KSAR, the blackboar
            :output (demiurge/workflows:make-research-plan
                     :question "CL expert systems"
                     :subquestions
-                    (loop for q in questions
+                    (loop for item in questions
                           for i from 1
                           collect (demiurge/workflows:make-research-subquestion
                                    :id (format nil "q~d" i)
-                                   :question q)))))
+                                   :question item)))))
          ((or (search "ONE subquestion" text)
               (search "research child" text)
               (search "Subquestion:" text))
@@ -420,7 +420,7 @@ Interpret CL as Common Lisp. Emit 3 short subquestions about KSAR, the blackboar
          (t
           (llm:make-llm-response
            :parts (list (llm:make-llm-text-part
-                         :text "Cited briefing over KSAR, the blackboard, and the journal."))))))))))
+                         :text "Cited briefing over KSAR, the blackboard, and the journal.")))))))))
 
 (defun %research-llm ()
   "Live LM Studio, else llama.cpp, else scripted mock (CI / explicit mock)."
@@ -612,83 +612,84 @@ Interpret CL as Common Lisp. Emit 3 short subquestions about KSAR, the blackboar
        (ws (demiurge/workflows:make-research-workspace
             :name "research-demo"
             :board board
-            :domain domain))
-       (demiurge/workflows:*research-phase-hook*
+            :domain domain)))
+  (setf demiurge/workflows:*research-phase-hook*
         (lambda (name)
           (format t "~&── phase ~A~%" name)
-          (finish-output))))
-    (%print-step-instructions ws)
-    (demo-narrate "Calling RUN-DEEP-RESEARCH on ~S" question)
-    (demo-kv "scripted-subquestions (fallback only)" *research-questions*)
-    (demo-kv "expert" (demiurge:expert-name domain))
-    (let ((result (llm:with-auto-ignore-output
-                    (demiurge/workflows:run-deep-research
-                     domain question
-                     :max-rounds 1
-                     :llm llm
-                     :websearch (%research-websearch)
-                     :journal (task:make-in-memory-journal)
-                     :task-id "research-demo"
-                     :blackboard board
-                     :workspace ws))))
-      (demo-narrate "Workflow finished")
-      (demo-kv "verdict" (getf result :verdict))
-      (demo-kv "child count" (length (getf result :children)))
-      (demo-narrate "Per-child cited answers (summaries, not page dumps)")
-      (dolist (child (getf result :children))
-        (format t "~&~%   ### ~A~%" (or (getf child :question) "?"))
-        (format t "~&   answer:~%~{   ~A~%~}"
-                (uiop:split-string (%clip (or (getf child :answer) "") 800)
-                                   :separator '(#\Newline)))
-        (demo-kv "answer-chars" (length (or (getf child :answer) "")))
-        (dolist (cite (getf child :citations))
-          (demo-kv "cite" cite))
-        (when (getf child :source-ids)
-          (demo-kv "source-ids" (getf child :source-ids))))
-      (demo-narrate "Blackboard workspace — source index (ids/URIs, not full text)")
-      (demo-kv "section-bound-p :sources" (bb:section-bound-p board :sources))
-      (demo-kv "section-bound-p :source-index" (bb:section-bound-p board :source-index))
-      (when (bb:section-bound-p board :source-index)
-        (dolist (e (bb:read-section board :source-index))
-          (format t "~&   [~A] ~A~%        ~A (~A chars)~%"
-                  (getf e :id) (or (getf e :title) "")
-                  (or (getf e :uri) "") (or (getf e :chars) 0))))
-      (when (bb:section-bound-p board :round-summary)
-        (demo-kv ":round-summary" (bb:read-section board :round-summary)))
-      (demo-narrate "RAG-style retrieve over the workspace store")
-      (dolist (hit (demiurge/workflows:retrieve-research-sources ws "KSAR" :top-k 2))
-        (demo-kv "rag-hit" (list :id (getf hit :id)
-                                 :uri (getf hit :uri)
-                                 :title (getf hit :title)
-                                 :score (getf hit :score)
-                                 :chars (getf hit :chars))))
-      (demo-narrate "MCP resources (list + read catalog + one source + one instruction)")
-      (let* ((listed (demiurge/workflows:list-research-resources ws))
-             (uris (mapcar #'%resource-uri listed))
-             (src (find-if (lambda (u) (eql (search "research://source/" u) 0)) uris)))
-        (dolist (u uris)
-          (demo-kv "mcp-resource" u))
-        (%demo-print-block "MCP read research://catalog"
+          (finish-output)))
+  (%print-step-instructions ws)
+  (demo-narrate "Calling RUN-DEEP-RESEARCH on ~S" question)
+  (demo-kv "scripted-subquestions (fallback only)" *research-questions*)
+  (demo-kv "expert" (demiurge:expert-name domain))
+  (let ((result (llm:with-auto-ignore-output
+                  (demiurge/workflows:run-deep-research
+                   domain question
+                   :max-rounds 1
+                   :llm llm
+                   :websearch (%research-websearch)
+                   :journal (task:make-in-memory-journal)
+                   :task-id "research-demo"
+                   :blackboard board
+                   :workspace ws))))
+    (demo-narrate "Workflow finished")
+    (demo-kv "verdict" (getf result :verdict))
+    (demo-kv "child count" (length (getf result :children)))
+    (demo-narrate "Per-child cited answers (summaries, not page dumps)")
+    (dolist (child (getf result :children))
+      (format t "~&~%   ### ~A~%" (or (getf child :question) "?"))
+      (format t "~&   answer:~%~{   ~A~%~}"
+              (uiop:split-string (%clip (or (getf child :answer) "") 800)
+                                 :separator '(#\Newline)))
+      (demo-kv "answer-chars" (length (or (getf child :answer) "")))
+      (dolist (cite (getf child :citations))
+        (demo-kv "cite" cite))
+      (when (getf child :source-ids)
+        (demo-kv "source-ids" (getf child :source-ids))))
+    (demo-narrate "Blackboard workspace — source index (ids/URIs, not full text)")
+    (demo-kv "section-bound-p :sources" (bb:section-bound-p board :sources))
+    (demo-kv "section-bound-p :source-index" (bb:section-bound-p board :source-index))
+    (when (bb:section-bound-p board :source-index)
+      (dolist (e (bb:read-section board :source-index))
+        (format t "~&   [~A] ~A~%        ~A (~A chars)~%"
+                (getf e :id) (or (getf e :title) "")
+                (or (getf e :uri) "") (or (getf e :chars) 0))))
+    (when (bb:section-bound-p board :round-summary)
+      (demo-kv ":round-summary" (bb:read-section board :round-summary)))
+    (demo-narrate "RAG-style retrieve over the workspace store")
+    (dolist (hit (demiurge/workflows:retrieve-research-sources ws "KSAR" :top-k 2))
+      (demo-kv "rag-hit" (list :id (getf hit :id)
+                               :uri (getf hit :uri)
+                               :title (getf hit :title)
+                               :score (getf hit :score)
+                               :chars (getf hit :chars))))
+    (demo-narrate "MCP resources (list + read catalog + one source + one instruction)")
+    (let* ((listed (demiurge/workflows:list-research-resources ws))
+           (uris (mapcar #'%resource-uri listed))
+           (src (find-if (lambda (u) (eql (search "research://source/" u) 0)) uris)))
+      (dolist (u uris)
+        (demo-kv "mcp-resource" u))
+      (%demo-print-block "MCP read research://catalog"
+                         (demiurge/workflows:clip-research-text
+                          (%resource-text
+                           (demiurge/workflows:read-research-resource
+                            ws "research://catalog"))
+                          1200))
+      (%demo-print-block "MCP read research://instructions/child"
+                         (%resource-text
+                          (demiurge/workflows:read-research-resource
+                           ws "research://instructions/child")))
+      (when src
+        (%demo-print-block (format nil "MCP read ~A (clipped)" src)
                            (demiurge/workflows:clip-research-text
                             (%resource-text
-                             (demiurge/workflows:read-research-resource
-                              ws "research://catalog"))
-                            1200))
-        (%demo-print-block "MCP read research://instructions/child"
-                           (%resource-text
-                            (demiurge/workflows:read-research-resource
-                             ws "research://instructions/child")))
-        (when src
-          (%demo-print-block (format nil "MCP read ~A (clipped)" src)
-                             (demiurge/workflows:clip-research-text
-                              (%resource-text
-                               (demiurge/workflows:read-research-resource ws src))
-                              600))))
-      (let* ((md (or (getf result :markdown) ""))
-             (readable (%strip-markup-comments md)))
-        (%demo-print-block "Full research report (markup comments stripped)"
-                           readable)
-        (demo-kv "raw-markdown-length" (length md)))
-      (demo-narrate "Deep-research done. Reviewer: instructions, source-index, RAG hits, MCP reads, short answers, synthesis.")))
+                             (demiurge/workflows:read-research-resource ws src))
+                            600))))
+    (let ((md (or (getf result :markdown) ""))
+          (readable (%strip-markup-comments (or (getf result :markdown) ""))))
+      (%demo-print-block "Full research report (markup comments stripped)"
+                         readable)
+      (demo-kv "raw-markdown-length" (length md)))
+    (demo-narrate "Deep-research done. Reviewer: instructions, source-index, RAG hits, MCP reads, short answers, synthesis.")))
 
 (uiop:quit 0)
+
