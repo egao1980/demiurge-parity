@@ -286,10 +286,14 @@ admin = [\"lookup-symbol\", \"search-corpus\", \"run-tests\"]
                           :principal "alice"
                           :tenant "acme"))
                (prin-cap (cap:get-capability filtered :lisp-dev)))
-          (ok (signals (cap:invoke-operation prin-cap 'run-tests "demiurge")
+          ;; Op names must be the DEMIURGE GFs (defcapability interned them
+          ;; there). A test-package 'lookup-symbol is unknown-operation.
+          (ok (signals (cap:invoke-operation prin-cap 'demiurge:run-tests
+                                            "demiurge")
                        'demiurge:capability-denied)
               "missing op signals capability-denied")
-          (ok (stringp (cap:invoke-operation prin-cap 'lookup-symbol "car"))
+          (ok (stringp (cap:invoke-operation prin-cap 'demiurge:lookup-symbol
+                                            "car"))
               "granted op still invokes")))))
 
 (deftest s9-corporate-live-compose-readyz
