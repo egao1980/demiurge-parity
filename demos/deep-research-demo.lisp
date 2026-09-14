@@ -162,18 +162,19 @@
       (%env "DEMIURGE_PARITY_LLAMA_MODEL")))
 
 (defun %curl-request (method url &key headers content want-stream)
-  "Dexador hung on the second LM Studio generate. curl -m 180 is enough."
+  "Dexador hung on the second LM Studio generate. curl -m 300; body via stdin."
   (when want-stream
     (error "demo curl request-fn does not stream"))
-  (let* ((args (append (list "curl" "-sS" "-m" "180"
+  (let* ((args (append (list "curl" "-sS" "-m" "300"
                              "-w" (format nil "~C%{http_code}" #\Newline)
                              "-X" (string-upcase (string method))
                              url)
                        (loop for pair in headers
                              collect "-H"
                              collect (format nil "~A: ~A" (car pair) (cdr pair)))
-                       (and content (list "--data-binary" content))))
+                       (and content (list "--data-binary" "@-"))))
          (raw (uiop:run-program args
+                                :input (or content "")
                                 :output :string
                                 :error-output :string
                                 :ignore-error-status t))
@@ -259,7 +260,7 @@ Use an empty subquestions array if there are no gaps."
   (let ((s (and settings (llm:coerce-settings settings))))
     (llm:make-llm-settings
      :temperature (or (and s (llm:llm-settings-temperature s)) 0)
-     :max-tokens (or (and s (llm:llm-settings-max-tokens s)) 2048)
+     :max-tokens (or (and s (llm:llm-settings-max-tokens s)) 512)
      :stop (and s (llm:llm-settings-stop s))
      :top-p (and s (llm:llm-settings-top-p s))
      :response-format nil
@@ -349,11 +350,18 @@ Use an empty subquestions array if there are no gaps."
                       (%prefill-turns turns)
                       (%steer-turns turns)))
          (wire (%wire-settings settings))
-         (response (llm:generate (demo-llm-inner backend) payload
-                                 :model model
-                                 :settings wire
-                                 :tools tools
-                                 :tool-choice tool-choice))
+         (response (handler-case
+                       (llm:generate (demo-llm-inner backend) payload
+                                     :model model
+                                     :settings wire
+                                     :tools tools
+                                     :tool-choice tool-choice)
+                     (error (c)
+                       (format t "~&   LLM generate #~D FAILED: ~A~%" n c)
+                       (finish-output)
+                       (llm:make-llm-response
+                        :parts (list (llm:make-llm-text-part
+                                      :text (format nil "LLM generate failed: ~A" c)))))))
          (text (%usable-response-text response)))
     (%log-generate backend n prompt response)
     ;; :around strips :output and puts the schema on SETTINGS. Read both.
