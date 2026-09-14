@@ -35,8 +35,9 @@
          (cli (probe-file (merge-pathnames "demiurge-plan-vectors/" parent)))
          (cli-protocol (probe-file (merge-pathnames "cli-protocol/" parent))))
     (append
-     (loop for name in '("http-backend-dexador" "websearch-protocol"
-                         "llm-protocol")
+     (loop for name in '("http-backend-dexador" "http-backend-async"
+                         "event-backend-libuv" "websearch-protocol"
+                         "llm-protocol" "llm-protocol-openai")
            for dir = (probe-file (merge-pathnames (format nil "~A/" name) parent))
            when dir collect `(:directory ,dir))
      (when cli-protocol
@@ -97,6 +98,7 @@
                               "llm-protocol-openai"
                               "llm-protocol/schema"
                               "http-backend-dexador"
+                              "http-backend-async"
                               "llm-backend-llama-cpp"))
     (%pin-isolated-registry)
     (uiop:symbol-call :cl-repo :load-system-init-files)
@@ -146,7 +148,8 @@
                         "rag-protocol" "rag-backend-text"
                         "rag-backend-memory" "doc-extract-protocol"
                         "llm-protocol" "websearch-protocol" "mcp-protocol"
-                        "http-backend-dexador" "json-backend-jzon"
+                        "http-backend-dexador" "http-backend-async"
+                        "json-backend-jzon"
                         "toml-backend-tomlet" "steer-protocol"
                         "task-protocol" "task-backend-sql" "sql-protocol"
                         "sql-backend-sqlite3" "event-backend-libuv")))
