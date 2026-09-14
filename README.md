@@ -29,7 +29,7 @@ Each Rove file is runnable standalone. Later stages assume earlier ones pass.
 |---|---|---|
 | `mock` | default | always (`test` job; S9 live cases skip) |
 | `live-local` | `DEMIURGE_PARITY_LLM=` | skip unless set |
-| `live-corporate` | compose stack | `parity-live` job (`docker compose --profile corporate`) |
+| `live-corporate` | compose Postgres | `parity-live` (`docker compose --profile corporate`; MinIO/collector are `--profile extras`) |
 
 ```bash
 ros -e '(asdf:test-system "demiurge-parity")' -q

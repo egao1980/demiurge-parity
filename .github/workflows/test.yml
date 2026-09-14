@@ -28,6 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Start compose
+        # Postgres only — MinIO/collector are --profile extras (Hub pulls fail on GH).
         run: docker compose --profile corporate up --wait --wait-timeout 180
       - name: Compose ready
         run: docker compose ps
