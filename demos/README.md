@@ -22,7 +22,10 @@ when asciinema is on `PATH`, otherwise `script`(1). It **always** tees
 of loaded systems and the OCI tag when the source path is a GHCR dest.
 
 Checkout-only: dependencies come from `ghcr.io/egao1980/cl-systems`. Do not
-point `CL_SOURCE_REGISTRY` at a sibling `demiurge/` checkout.
+point `CL_SOURCE_REGISTRY` at a sibling `demiurge/` checkout. `run-demo.sh`
+isolates dest to `.demo-oci` and does **not** inherit the shared systems
+tree (stale `demiurge` without `/workflows`). Slash systems are not GHCR
+packages — prelude installs primary `demiurge` first.
 
 CI: `.github/workflows/demo-evidence.yml` on `v*` tags and `workflow_dispatch`.
 It uploads logs/casts as artifacts and does not auto-commit.
@@ -39,9 +42,8 @@ It uploads logs/casts as artifacts and does not auto-commit.
 | [`recordings/0.1.4/corporate-boot-demo`](recordings/0.1.4/corporate-boot-demo.log) | C4 `make-corporate-profile` memory/sqlite fallback: `:corporate` kind, tenant-scoped ids, `/healthz`/`/readyz` 200, unauthenticated `/` → 302 `/login` | 2026-09-14 | `demiurge-parity` 0.1.4, `demiurge` 0.3.5 + `/serve` + `/observe` (see log header when recorded) |
 
 B8 v2 scripts are `demos/deep-research-demo.lisp` and `demos/corporate-boot-demo.lisp`.
-Recordings belong under `recordings/0.1.4/`. A local SBCL run against a shared OCI dest
-can fail on unrelated version skew (`ag-ui-protocol` / `mime-protocol`); do not fake
-logs. CI `demo-evidence` (tag / `workflow_dispatch`) is the recorder when that dest is clean.
+Record locally with `./demos/run-demo.sh` — CI is not required. `demo-evidence` only
+re-records on tags / dispatch.
 
 Casts sit next to the logs (`.cast`). Play an asciinema cast with
 `asciinema play demos/recordings/<version>/<name>.cast` when the recorder was

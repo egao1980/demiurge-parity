@@ -13,11 +13,69 @@
    (uiop:pathname-directory-pathname
     (or *load-truename* *compile-file-truename* (uiop:getcwd)))))
 
-(unless (asdf:find-system "demiurge-parity" nil)
-  (asdf:initialize-source-registry
-   `(:source-registry
-     (:directory ,*demo-root*)
-     :inherit-configuration)))
+(defun %demo-oci-dest ()
+  (or (let ((v (uiop:getenv "CL_REPOSITORY_DEST")))
+        (and v (plusp (length v)) (uiop:ensure-directory-pathname v)))
+      (merge-pathnames ".demo-oci/" *demo-root*)))
+
+(defun %demo-client-dir ()
+  (or (let ((v (uiop:getenv "CL_REPOSITORY_CLIENT_DIR")))
+        (and v (plusp (length v)) (uiop:ensure-directory-pathname v)))
+      (probe-file
+       (merge-pathnames ".local/share/cl-repository-client/cl-oci-0.16.0/"
+                        (user-homedir-pathname)))))
+
+(defun %isolated-source-registry ()
+  "Checkout + dest + client only. Inherited shared trees have stale demiurge."
+  (let* ((dest (%demo-oci-dest))
+         (client (%demo-client-dir))
+         (entries (list `(:directory ,*demo-root*)
+                        `(:tree ,dest))))
+    (when (and client (probe-file client))
+      (setf entries (append entries (list `(:tree ,client)))))
+    `(:source-registry
+      ,@entries
+      :ignore-inherited-configuration)))
+
+(defun %pin-isolated-registry ()
+  (asdf:initialize-source-registry (%isolated-source-registry)))
+
+(defun %ensure-demo-oci-deps ()
+  "Pull OCI deps into CL_REPOSITORY_DEST / .demo-oci. Local demos do not
+   wait on CI and must not use a polluted shared systems tree.
+   Slash systems (demiurge/workflows, …) are not GHCR packages — they
+   live in published demiurge.asd :provides. Install the primary first."
+  (unless (asdf:find-system "cl-repository-client" nil)
+    (%pin-isolated-registry)
+    (unless (asdf:find-system "cl-repository-client" nil)
+      (return-from %ensure-demo-oci-deps nil)))
+  (asdf:load-system "cl-repository-client")
+  (let ((dest (%demo-oci-dest))
+        (installer (find-package :cl-repository-client/installer)))
+    (ensure-directories-exist dest)
+    (when installer
+      (let ((root (find-symbol "*SYSTEMS-ROOT*" installer)))
+        (when root (setf (symbol-value root) dest))))
+    (%pin-isolated-registry)
+    (uiop:symbol-call :cl-repo :add-registry "https://ghcr.io"
+                      :namespace "egao1980/cl-systems"
+                      :priority :prepend)
+    (uiop:symbol-call :cl-repo :ensure-systems '("demiurge")
+                      :default-source :oci)
+    (%pin-isolated-registry)
+    (uiop:symbol-call :cl-repo :ensure-system-dependencies
+                      "demiurge-parity"
+                      :also-tests nil
+                      :default-source :oci
+                      :with '("event-backend-libuv"
+                              "sql-backend-sqlite3"
+                              "crypto-backend-ironclad"
+                              "json-backend-jzon"))
+    (%pin-isolated-registry)
+    (uiop:symbol-call :cl-repo :load-system-init-files)
+    dest))
+
+(%ensure-demo-oci-deps)
 
 (asdf:load-system "demiurge-parity")
 (asdf:load-system "demiurge")

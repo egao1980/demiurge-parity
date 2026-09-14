@@ -16,6 +16,15 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${ROOT}"
 
+# Isolated dest — do not inherit a workspace-wide systems tree (version skew:
+# shared dest can see demiurge 0.3.0/0.3.1 without /workflows). No trailing
+# inherit colon. CI already installed deps; a set CL_REPOSITORY_DEST is left alone.
+if [[ -z "${CL_REPOSITORY_DEST:-}" ]]; then
+  export CL_REPOSITORY_DEST="${ROOT}/.demo-oci"
+fi
+export CL_REPOSITORY_CLIENT_DIR="${CL_REPOSITORY_CLIENT_DIR:-${HOME}/.local/share/cl-repository-client/cl-oci-0.16.0}"
+export CL_SOURCE_REGISTRY="${ROOT}//:${CL_REPOSITORY_DEST}//:${CL_REPOSITORY_CLIENT_DIR}//"
+
 if [[ "${1:-}" == "--inner" ]]; then
   shift
   NAME="${1:-}"
