@@ -40,7 +40,7 @@ demos/
   corporate-boot/      # command=corporate → runner
   searxng/settings.yml
   recordings/0.1.1/    # B8 v1 casts+logs (kept)
-  recordings/0.1.4/    # B8 v2 casts+logs (kept)
+  recordings/0.1.4/    # B8 v2 *-demo + B8 v3 mock-tier casts+logs
 ```
 
 A new demo is a new directory (`demo.toml` + `queries.md`). No new Lisp.
@@ -92,11 +92,16 @@ It uploads logs/casts as artifacts and does not auto-commit.
 | [`recordings/0.1.1/s7-resume-demo`](recordings/0.1.1/s7-resume-demo.log) ([.cast](recordings/0.1.1/s7-resume-demo.cast)) | Child SBCL kill after step 1; parent replay: `before-count=1`, `after-count=2`, `fresh-1=0`, `fresh-2=1` | 2026-09-13 | same as s2-boot (see log header) |
 | [`recordings/0.1.4/deep-research-demo`](recordings/0.1.4/deep-research-demo.log) ([.cast](recordings/0.1.4/deep-research-demo.cast)) | B4 `run-deep-research`: per-step system prompts, SearXNG fetch → board/RAG/MCP `research://source/<id>`, short cited child answers, synthesis | 2026-09-14 | `demiurge-parity` 0.1.4, `demiurge` 0.3.6 + `/workflows`, `websearch-protocol` 0.1.1 (log header) |
 | [`recordings/0.1.4/corporate-boot-demo`](recordings/0.1.4/corporate-boot-demo.log) ([.cast](recordings/0.1.4/corporate-boot-demo.cast)) | C4 `make-corporate-profile` memory/sqlite fallback: `:corporate` kind, tenant-scoped ids, `/healthz`/`/readyz` 200, unauthenticated `/` → 302 `/login` | 2026-09-14 | `demiurge-parity` 0.1.4, `demiurge` 0.3.5 + `/serve` + `/observe` (log header) |
+| [`recordings/0.1.4/s2-boot`](recordings/0.1.4/s2-boot.log) ([.cast](recordings/0.1.4/s2-boot.cast)) | B8 v3 mock: `command=boot` via `runner.lisp` — `:PERSONAL` | 2026-09-14 | asciinema v3; `demiurge demo` path unused (boot is parity-only) |
+| [`recordings/0.1.4/s4-answer`](recordings/0.1.4/s4-answer.log) ([.cast](recordings/0.1.4/s4-answer.cast)) | B8 v3 mock: `demiurge demo` ask + ingest; board `:PROMPT`/`:RESULT` | 2026-09-14 | unpublished `demiurge/cli` 0.3.6 (`cursor/b8-demo-runner-477c`) |
+| [`recordings/0.1.4/s6-improve`](recordings/0.1.4/s6-improve.log) ([.cast](recordings/0.1.4/s6-improve.cast)) | B8 v3 mock: runner promote then demote | 2026-09-14 | same unpublished 0.3.6 CLI line |
+| [`recordings/0.1.4/s7-resume`](recordings/0.1.4/s7-resume.log) ([.cast](recordings/0.1.4/s7-resume.cast)) | B8 v3 mock: kill-and-resume `before-count=1` / `after-count=2` | 2026-09-14 | same unpublished 0.3.6 CLI line |
+| [`recordings/0.1.4/deep-research`](recordings/0.1.4/deep-research.log) ([.cast](recordings/0.1.4/deep-research.cast)) | B8 v3 mock: `demiurge demo` research, verdict `:PASS`, workspace sources | 2026-09-14 | same unpublished 0.3.6 CLI line; `DEMIURGE_PARITY_DEMO_WEBSEARCH=mock` |
+| [`recordings/0.1.4/corporate-boot`](recordings/0.1.4/corporate-boot.log) ([.cast](recordings/0.1.4/corporate-boot.cast)) | B8 v3 mock: `command=corporate` — `:CORPORATE`, `/healthz` 200 | 2026-09-14 | same unpublished 0.3.6 CLI line |
 
 B8 v3 sources are the directories above (`demo.toml` + `queries.md`).
-Record locally with `./demos/run-demo.sh` — CI is not required. `demo-evidence` only
-re-records on tags / dispatch. Live re-record of the six names after this
-layout change is deferred.
+Record locally with `./demos/run-demo.sh`. Live re-record (LM Studio / SearXNG)
+is still deferred; mock-tier v3 casts above are asciinema v3 (`{"version":3,…}`).
 
 Casts sit next to the logs (`.cast`). Play an asciinema cast with
 `asciinema play demos/recordings/<version>/<name>.cast` when the recorder was
