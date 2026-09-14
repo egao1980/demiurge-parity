@@ -144,7 +144,7 @@ peek_command() {
 COMMAND="$(peek_command "${DIR}")"
 MODE="cli"
 case "${COMMAND}" in
-  boot|resume|corporate) MODE="runner" ;;
+  boot|resume|corporate|improve) MODE="runner" ;;
 esac
 
 VERSION="${DEMO_VERSION:-}"

@@ -1,10 +1,7 @@
-# S6 improve — product `improve` cycles on an echo expert.
-# First query: mock-LLM candidate path. Second: another cycle (gate may demote).
-# Parity-specific promote/demote helpers stay in demos/runner.lisp when
-# command=improve and no expert.toml is used; this dir uses the CLI path.
-expert = "expert.toml"
+# S6 improve — promote then demote. Product CLI `improve` on an empty
+# eval suite skips; the one generic runner runs the existing parity
+# helpers (run-promote-cycle + critical-regression demote).
 command = "improve"
-queries = "queries.md"
 llm = "mock"
 websearch = "mock"
 narration = "verbose"

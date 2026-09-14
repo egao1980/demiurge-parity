@@ -3,9 +3,10 @@
 Demos are **data**, not Lisp scripts: each name is a directory with
 `demo.toml` (expert / command / tier prefs) and `queries.md` (ordered
 queries; `#` comments are expected-behavior notes). The product runner
-is `demiurge demo <dir>` (B9). Boot / resume / corporate-boot go through
-the one generic `demos/runner.lisp` because those commands are
-parity-specific.
+is `demiurge demo <dir>` (B9). Boot / resume / corporate-boot / the
+scripted S6 promote+demote pair go through the one generic
+`demos/runner.lisp` because those commands are parity-specific
+(product `improve` on a bare echo expert skips).
 
 These are **not** Rove tests: they print what is happening and what to
 look at (section writes, citations, gate verdicts, journal replay
@@ -31,12 +32,12 @@ demos/
   run-demo.sh          # recording wrapper (asciinema + tee)
   prelude.lisp         # OCI dest + source-registry bootstrap
   runner.lisp          # boot / resume / corporate only
-  s2-boot/             # command=boot
-  s4-answer/           # command=ask  → demiurge demo
-  s6-improve/          # command=improve → demiurge demo
-  s7-resume/           # command=resume
+  s2-boot/             # command=boot     → runner
+  s4-answer/           # command=ask      → demiurge demo
+  s6-improve/          # command=improve  → runner (promote + demote helpers)
+  s7-resume/           # command=resume   → runner
   deep-research/       # command=research → demiurge demo
-  corporate-boot/      # command=corporate
+  corporate-boot/      # command=corporate → runner
   searxng/settings.yml
   recordings/0.1.1/    # B8 v1 casts+logs (kept)
   recordings/0.1.4/    # B8 v2 casts+logs (kept)
