@@ -1,6 +1,5 @@
 # Minimal collector so `docker compose --profile corporate up --wait` can start.
-# Postgres is the required S9 service; this config is only enough to keep the
-# collector process up (OTLP ingest + debug export).
+# Postgres is the required S9 service; this config only keeps the collector up.
 receivers:
   otlp:
     protocols:
@@ -13,12 +12,7 @@ exporters:
   debug:
     verbosity: basic
 
-extensions:
-  health_check:
-    endpoint: 0.0.0.0:13133
-
 service:
-  extensions: [health_check]
   pipelines:
     traces:
       receivers: [otlp]

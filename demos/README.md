@@ -38,7 +38,10 @@ It uploads logs/casts as artifacts and does not auto-commit.
 | [`recordings/0.1.4/deep-research-demo`](recordings/0.1.4/deep-research-demo.log) | B4 `run-deep-research` with mock LLM + mock websearch: verdict, 3 children, markdown `ANSWER:` cites, board `:round-summary` | 2026-09-14 | `demiurge-parity` 0.1.4, `demiurge` 0.3.5 + `/workflows` (see log header when recorded) |
 | [`recordings/0.1.4/corporate-boot-demo`](recordings/0.1.4/corporate-boot-demo.log) | C4 `make-corporate-profile` memory/sqlite fallback: `:corporate` kind, tenant-scoped ids, `/healthz`/`/readyz` 200, unauthenticated `/` → 302 `/login` | 2026-09-14 | `demiurge-parity` 0.1.4, `demiurge` 0.3.5 + `/serve` + `/observe` (see log header when recorded) |
 
-B8 v2 recordings live under `recordings/0.1.4/`. If a local SBCL/OCI run cannot produce logs or `.cast` files, the scripts still land; CI `demo-evidence` is the other recorder.
+B8 v2 scripts are `demos/deep-research-demo.lisp` and `demos/corporate-boot-demo.lisp`.
+Recordings belong under `recordings/0.1.4/`. A local SBCL run against a shared OCI dest
+can fail on unrelated version skew (`ag-ui-protocol` / `mime-protocol`); do not fake
+logs. CI `demo-evidence` (tag / `workflow_dispatch`) is the recorder when that dest is clean.
 
 Casts sit next to the logs (`.cast`). Play an asciinema cast with
 `asciinema play demos/recordings/<version>/<name>.cast` when the recorder was
