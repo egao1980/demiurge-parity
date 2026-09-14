@@ -27,6 +27,8 @@
    #:system-available-p
    #:ingest-system-available-p
    #:serve-system-available-p
+   #:observe-system-available-p
+   #:workflows-system-available-p
    #:ensure-ci-backends
    #:demiurge-version-string
    #:observe-b5b-available-p
@@ -45,6 +47,8 @@
 
    #:boot-personal-profile
    #:profile-sqlite-paths
+   #:corporate-postgres-dsn
+   #:make-scripted-llm-catalog
 
    #:extract-fixture
    #:chunk-extracted

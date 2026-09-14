@@ -27,6 +27,14 @@
   "True when `demiurge/serve` is published and loadable."
   (system-available-p "demiurge/serve"))
 
+(defun observe-system-available-p ()
+  "True when `demiurge/observe` is published and loadable."
+  (system-available-p "demiurge/observe"))
+
+(defun workflows-system-available-p ()
+  "True when `demiurge/workflows` is published and loadable."
+  (system-available-p "demiurge/workflows"))
+
 (defun demiurge-version-string ()
   (let ((sys (asdf:find-system "demiurge" nil)))
     (and sys (asdf:component-version sys))))
@@ -76,8 +84,10 @@
             (+taxonomy-metric-names+))))
 
 (defun ensure-ci-backends ()
-  "Load sqlite + libuv extras used by personal-profile / run-expert."
-  (dolist (name '("sql-backend-sqlite3" "event-backend-libuv"))
+  "Load sqlite + libuv extras used by personal-profile / run-expert.
+   Ironclad + jzon are needed for S9 canned OIDC (HS256 + discovery JSON)."
+  (dolist (name '("sql-backend-sqlite3" "event-backend-libuv"
+                  "crypto-backend-ironclad" "json-backend-jzon"))
     (ignore-errors (asdf:load-system name :verbose nil)))
   t)
 
@@ -98,6 +108,11 @@
 (defun live-local-endpoint ()
   "LM Studio / llama-cpp URL from DEMIURGE_PARITY_LLM, or NIL."
   (%env "DEMIURGE_PARITY_LLM"))
+
+(defun corporate-postgres-dsn ()
+  "Postgres DSN for the live-corporate tier."
+  (or (%env "DEMIURGE_CORPORATE__POSTGRES__DSN")
+      "postgres://demiurge:demiurge@127.0.0.1:5432/demiurge"))
 
 (defun fixture-pathname (name)
   (asdf:system-relative-pathname "demiurge-parity"

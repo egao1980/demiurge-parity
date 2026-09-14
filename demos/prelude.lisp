@@ -70,6 +70,7 @@
   (format t "~&=== loaded system versions ===~%")
   (let* ((root (systems-root-dir))
          (interesting '("demiurge-parity" "demiurge" "demiurge/improve"
+                        "demiurge/workflows" "demiurge/serve" "demiurge/observe"
                         "blackboard-protocol" "capability-protocol"
                         "eval-protocol" "rag-protocol" "rag-backend-text"
                         "rag-backend-memory" "doc-extract-protocol"

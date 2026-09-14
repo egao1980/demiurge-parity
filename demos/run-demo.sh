@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Record a narrated mock-tier demo.
 #   ./demos/run-demo.sh <name>
-# names: s2-boot | s4-answer | s6-improve | s7-resume
+# names: s2-boot | s4-answer | s6-improve | s7-resume | deep-research | corporate-boot
 # Wraps SBCL in `asciinema rec` when present, else script(1).
 # Always tees demos/recordings/<version>/<name>.log
 set -Eeuo pipefail
 
 usage() {
   printf 'usage: %s <name>\n' "$(basename "$0")" >&2
-  printf '  names: s2-boot | s4-answer | s6-improve | s7-resume\n' >&2
+  printf '  names: s2-boot | s4-answer | s6-improve | s7-resume | deep-research | corporate-boot\n' >&2
   exit 2
 }
 
