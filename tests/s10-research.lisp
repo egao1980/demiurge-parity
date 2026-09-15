@@ -156,9 +156,11 @@
       (skip "demiurge B4b research APIs not on GHCR yet")
       (let* ((result (%s10-run :task-id "s10-cites"))
              (md (getf result :markdown))
-             (cites (wf:collect-research-citations
-                     (getf result :children)
-                     :workspace (getf result :workspace))))
+             (cite-fn (find-symbol "COLLECT-RESEARCH-CITATIONS" :demiurge/workflows))
+             (cites (when (and cite-fn (fboundp cite-fn))
+                      (funcall cite-fn
+                               (getf result :children)
+                               :workspace (getf result :workspace)))))
         (ok (stringp md))
         (ok (search "https://ex.test/" md) "URL citation in rendered report")
         (ok (or (search "[" md) (find :block-id cites :key (lambda (c) (getf c :kind))))
