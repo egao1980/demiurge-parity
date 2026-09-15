@@ -16,7 +16,9 @@ B8 v2 deep-research / corporate-boot.
 `deep-research` prefers a live local model: LM Studio (`OPENAI_BASE_URL`,
 `OPENAI_MODEL=zai-org/glm-4.6v-flash`, `LM_API_TOKEN` from the workspace `.env`) then
 `llm-backend-llama-cpp` (`LLAMA_MODEL_PATH`). `expert.toml` `[workspace] root`
-exposes the checkout as `workspace://` MCP resources on the research board.
+exposes the checkout as `workspace://` MCP resources on the research board
+and, via `demiurge serve --transport mcp`, as the flagship IDE surface
+(`search_workspace` / `read_workspace`; see demiurge `examples/cursor-mcp.json`).
 `DEMIURGE_PARITY_DEMO_LLM=mock` forces the scripted backend. CI falls back to
 mock when nothing is listening.
 
