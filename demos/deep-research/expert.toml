@@ -1,6 +1,6 @@
 [expert]
 name = "research-demo"
-description = "Deep-research demo expert (nvidia/nemotron-3-nano-4b). LLM + websearch backends come from this file."
+description = "Deep-research demo expert (zai-org/glm-4.6v-flash). LLM + websearch backends come from this file."
 catalogue = "world"
 
 [profile]
@@ -16,7 +16,7 @@ default-model = "lmstudio"
 name = "lmstudio"
 kind = "openai-compat"
 base-url = "http://127.0.0.1:1234/v1"
-model = "nvidia/nemotron-3-nano-4b"
+model = "zai-org/glm-4.6v-flash"
 api-key-env = "LM_API_TOKEN"
 
 [[llm.catalog]]
