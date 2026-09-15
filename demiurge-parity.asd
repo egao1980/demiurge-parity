@@ -16,7 +16,7 @@
                "rag-protocol"
                "rag-backend-text"
                "rag-backend-memory"
-               "rag-backend-hybrid")
+               "rag-backend-hybrid"
                "doc-extract-protocol"
                "object-store-protocol"
                "mail-protocol"
