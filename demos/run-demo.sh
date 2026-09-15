@@ -2,6 +2,9 @@
 # Record a narrated mock-tier demo.
 #   ./demos/run-demo.sh <name>
 # names: s2-boot | s4-answer | s6-improve | s7-resume | deep-research | corporate-boot
+# Resolves demos/<name>/, isolates dest to .demo-oci, then:
+#   product commands (ask/research/ingest) → demiurge demo <dir>
+#   boot/resume/corporate/scripted-improve → demos/runner.lisp
 # Wraps SBCL in `asciinema rec` when present, else script(1).
 # Always tees demos/recordings/<version>/<name>.log
 set -Eeuo pipefail
@@ -14,6 +17,7 @@ usage() {
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PARENT="$(cd "${ROOT}/.." && pwd)"
 cd "${ROOT}"
 
 # Workspace .env carries LM_API_TOKEN / OPENAI_* (gitignored). Do not print values.
@@ -33,28 +37,61 @@ if [[ -z "${CL_REPOSITORY_DEST:-}" ]]; then
   export CL_REPOSITORY_DEST="${ROOT}/.demo-oci"
 fi
 export CL_REPOSITORY_CLIENT_DIR="${CL_REPOSITORY_CLIENT_DIR:-${HOME}/.local/share/cl-repository-client/cl-oci-0.16.0}"
-export CL_SOURCE_REGISTRY="${ROOT}//:${CL_REPOSITORY_DEST}//:${CL_REPOSITORY_CLIENT_DIR}//"
+
+# B8 needs demiurge/cli from demiurge-plan-vectors (B9). Never add a stale
+# demiurge/ or demiurge-b4b checkout — those trees do not have the CLI.
+PLAN_VECTORS="${PARENT}/demiurge-plan-vectors"
+CLI_PROTOCOL="${PARENT}/cli-protocol"
+LLM_PROTOCOL="${PARENT}/llm-protocol"
+export CL_SOURCE_REGISTRY="${PLAN_VECTORS}//:${CLI_PROTOCOL}//:${LLM_PROTOCOL}//:${ROOT}//:${CL_REPOSITORY_DEST}//"
+
+DEMIURGE_LISP="${PLAN_VECTORS}/scripts/demiurge.lisp"
 
 if [[ "${1:-}" == "--inner" ]]; then
   shift
   NAME="${1:-}"
-  LISP="${2:-}"
+  DIR="${2:-}"
   LOG="${3:-}"
   RECORDER="${4:-unknown}"
   VERSION="${5:-unknown}"
-  [[ -n "${NAME}" && -n "${LISP}" && -n "${LOG}" ]] || usage
+  MODE="${6:-cli}"
+  [[ -n "${NAME}" && -n "${DIR}" && -n "${LOG}" ]] || usage
   SBCL_BIN="${SBCL:-sbcl}"
+  # Piped SBCL full-buffers; stdbuf (if present) + Lisp line-buffering keep
+  # ── LLM generate lines visible while GENERATE blocks on HTTP.
+  if command -v stdbuf >/dev/null 2>&1; then
+    SBCL_BIN=(stdbuf -oL -eL "${SBCL_BIN}")
+  else
+    SBCL_BIN=("${SBCL_BIN}")
+  fi
   set +e
   {
     printf '=== demiurge-parity demo: %s ===\n' "${NAME}"
     printf 'date: %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     printf 'version: %s\n' "${VERSION}"
     printf 'host: %s %s\n' "$(uname -s)" "$(uname -m)"
-    printf 'sbcl: %s\n' "$(${SBCL_BIN} --version 2>/dev/null || printf 'unknown')"
+    printf 'sbcl: %s\n' "$("${SBCL_BIN[@]}" --version 2>/dev/null || printf 'unknown')"
     printf 'recorder: %s\n' "${RECORDER}"
     printf 'tier: %s\n' "${DEMIURGE_PARITY_TIER:-mock}"
+    printf 'dir: %s\n' "${DIR}"
+    printf 'mode: %s\n' "${MODE}"
     printf '\n'
-    "${SBCL_BIN}" --noinform --non-interactive --disable-debugger --load "${LISP}"
+    if [[ "${MODE}" == "runner" ]]; then
+      "${SBCL_BIN[@]}" --noinform --non-interactive --disable-debugger \
+        --load "${SCRIPT_DIR}/prelude.lisp" \
+        --load "${SCRIPT_DIR}/runner.lisp" \
+        -- "${DIR}"
+    else
+      if [[ ! -f "${DEMIURGE_LISP}" ]]; then
+        printf 'run-demo: missing %s (need demiurge-plan-vectors with B9 CLI)\n' \
+          "${DEMIURGE_LISP}" >&2
+        exit 1
+      fi
+      "${SBCL_BIN[@]}" --noinform --non-interactive --disable-debugger \
+        --load "${SCRIPT_DIR}/prelude.lisp" \
+        --load "${DEMIURGE_LISP}" \
+        -- demo "${DIR}"
+    fi
   } 2>&1 | tee "${LOG}"
   status="${PIPESTATUS[0]}"
   set -e
@@ -65,16 +102,32 @@ fi
 [[ $# -ge 1 ]] || usage
 RAW="$1"
 
-resolve_lisp() {
+resolve_dir() {
   local raw="$1"
   local stem="${raw%.lisp}"
+  stem="${stem%-demo}"
+  local aliases=()
+  case "${stem}" in
+    s2) aliases+=(s2-boot) ;;
+    s4) aliases+=(s4-answer) ;;
+    s6) aliases+=(s6-improve) ;;
+    s7) aliases+=(s7-resume) ;;
+    research) aliases+=(deep-research) ;;
+    corporate) aliases+=(corporate-boot) ;;
+  esac
   local candidates=(
-    "${ROOT}/demos/${stem}.lisp"
-    "${ROOT}/demos/${stem}-demo.lisp"
+    "${ROOT}/demos/${stem}"
+    "${ROOT}/demos/${raw}"
   )
+  local a
+  if ((${#aliases[@]})); then
+    for a in "${aliases[@]}"; do
+      candidates+=("${ROOT}/demos/${a}")
+    done
+  fi
   local c
   for c in "${candidates[@]}"; do
-    if [[ -f "${c}" ]]; then
+    if [[ -d "${c}" && -f "${c}/demo.toml" ]]; then
       printf '%s\n' "${c}"
       return 0
     fi
@@ -82,12 +135,26 @@ resolve_lisp() {
   return 1
 }
 
-LISP="$(resolve_lisp "${RAW}")" || {
-  printf 'run-demo: no demo script for %s\n' "${RAW}" >&2
+DIR="$(resolve_dir "${RAW}")" || {
+  printf 'run-demo: no demo directory for %s\n' "${RAW}" >&2
   usage
 }
 
-REC_NAME="$(basename "${LISP}" .lisp)"
+REC_NAME="$(basename "${DIR}")"
+peek_command() {
+  local f="$1/demo.toml"
+  [[ -f "${f}" ]] || { echo ask; return; }
+  local c
+  c="$(sed -n 's/^[[:space:]]*command[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "${f}" | head -n 1)"
+  echo "${c:-ask}"
+}
+
+COMMAND="$(peek_command "${DIR}")"
+MODE="cli"
+case "${COMMAND}" in
+  boot|resume|corporate|improve) MODE="runner" ;;
+esac
+
 VERSION="${DEMO_VERSION:-}"
 if [[ -z "${VERSION}" ]]; then
   VERSION="$(sed -n 's/^[[:space:]]*:version "\([^"]*\)".*/\1/p' "${ROOT}/demiurge-parity.asd" | head -n 1)"
@@ -107,7 +174,13 @@ ensure_searxng() {
   case "${mode}" in
     mock|scripted) return 0 ;;
   esac
-  local url="${SEARXNG_URL:-${DEMIURGE_PARITY_SEARXNG:-http://127.0.0.1:8888}}"
+  local url=""
+  if [[ -f "${DIR}/expert.toml" ]]; then
+    url="$(sed -n '/^\[websearch\]/,/^\[/{
+      s/^[[:space:]]*base-url[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p
+    }' "${DIR}/expert.toml" | head -n 1)"
+  fi
+  url="${url:-http://127.0.0.1:8888}"
   if curl -sS -m 2 -o /dev/null "${url}/search?q=ping&format=json"; then
     return 0
   fi
@@ -117,7 +190,7 @@ ensure_searxng() {
 }
 
 case "${REC_NAME}" in
-  deep-research-demo) ensure_searxng ;;
+  deep-research) ensure_searxng ;;
 esac
 
 SBCL_BIN="${SBCL:-sbcl}"
@@ -131,7 +204,7 @@ if command -v asciinema >/dev/null 2>&1; then
   RECORDER="asciinema"
 fi
 
-INNER=( "$0" --inner "${REC_NAME}" "${LISP}" "${LOG}" "${RECORDER}" "${VERSION}" )
+INNER=( "$0" --inner "${REC_NAME}" "${DIR}" "${LOG}" "${RECORDER}" "${VERSION}" "${MODE}" )
 INNER_CMD="$(printf '%q ' "${INNER[@]}")"
 
 if [[ "${RECORDER}" == "asciinema" ]]; then

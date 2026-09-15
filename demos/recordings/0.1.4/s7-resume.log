@@ -1,0 +1,151 @@
+=== demiurge-parity demo: s7-resume ===
+date: 2026-09-14T17:11:31Z
+version: 0.1.4
+host: Darwin arm64
+sbcl: SBCL 2.6.5-85913ede1
+recorder: asciinema
+tier: mock
+dir: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/demos/s7-resume
+mode: runner
+
+WARNING: System definition file #P"/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/trivial-garbage/0.21/trivial-garbage.asd" contains definition for system "trivial-garbage-tests". Please only define "trivial-garbage" and secondary systems with a name starting with "trivial-garbage/" (e.g. "trivial-garbage/test") in that file.
+WARNING: redefining IRONCLAD:BLOCK-LENGTH in DEFGENERIC
+;;; Computing Hangul syllable namesWARNING:
+   redefining LOAD-PROXY-SYSTEM-PLATFORM (#<STANDARD-CLASS HTTP-PROTOCOL:HTTP-PROXY-CONFIG>) in DEFMETHOD
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-chipz")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-chipz")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-brotli")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+
+; cl-repo: demiurge already available via ASDF
+WARNING: redefining PERFORM (#<STANDARD-CLASS ASDF/LISP-ACTION:TEST-OP> #<SB-MOP:EQL-SPECIALIZER #<SYSTEM "http-backend-dexador/tests">>) in DEFMETHOD
+; cl-repo: ensure deps for local demiurge-parity → 
+WARNING: redefining LLM-PROTOCOL:INVOKE-RETRY in DEFUN
+WARNING: redefining LLM-PROTOCOL:INVOKE-USE-VALUE in DEFUN
+WARNING: redefining LLM-PROTOCOL:AUTO-RETRY in DEFUN
+WARNING: redefining DEMIURGE:LOAD-EXPERT-CONFIG in DEFUN
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-WARNING>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERFACE-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-UNIMPLEMENTED-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATABASE-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATA-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-OPERATIONAL-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTEGRITY-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERNAL-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-PROGRAMMING-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-NOTSUPPORTED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-COMMITED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-ROLLED-BACK-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-DRIVER>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-QUERY>
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3)) or (:STRUCT
+                                                                              SQLITE3) instead.
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3-STMT)) or (:STRUCT
+                                                                                   SQLITE3-STMT) instead.
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3>
+WARNING:
+   redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-QUERY>
+=== loaded system versions ===
+oci systems-root: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/
+  demiurge-parity  asdf=0.1.4  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/
+  demiurge  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  demiurge/cli  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  demiurge/improve  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  demiurge/workflows  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  demiurge/serve  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  demiurge/observe  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  cli-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/cli-protocol/
+  blackboard-protocol  asdf=0.2.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/capability-protocol/0.2.2/
+  capability-protocol  asdf=0.2.1  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/capability-protocol/0.2.2/
+  eval-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/eval-protocol/0.1.0/
+  rag-protocol  asdf=0.1.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-protocol/0.1.2/
+  rag-backend-text  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-backend-text/0.2.0/
+  rag-backend-memory  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-backend-memory/0.1.0/
+  doc-extract-protocol  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/doc-extract-protocol/0.2.0/
+  llm-protocol  asdf=0.3.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/llm-protocol/0.3.0/
+  websearch-protocol  asdf=0.1.1  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/websearch-protocol/
+  mcp-protocol  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-protocol/0.2.0/
+  http-backend-dexador  asdf=0.1.4
+    /Users/nikolaimatiushev/Projects/cl-workspace/http-backend-dexador/
+  json-backend-jzon  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/json-protocol/0.2.1/
+  toml-backend-tomlet  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/toml-backend-tomlet/0.1.0/
+  steer-protocol  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/steer-protocol/0.2.0/
+  task-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/task-protocol/0.1.0/
+  task-backend-sql  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/task-backend-sql/0.1.0/
+  sql-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/sql-backend-postgres/0.1.0/
+  sql-backend-sqlite3  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/sql-backend-postgres/0.1.0/
+  event-backend-libuv  asdf=0.1.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/event-backend-libuv/
+=== end versions ===
+
+── generic runner command=RESUME dir=/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/demos/s7-resume/
+
+── S7 durability — 2-step journal, child SBCL kill, parent replay
+   look at: journal replay counts: before-count, after-count, fresh-1/fresh-2, side-effect counts
+
+── Launching a child SBCL that journals step-1, writes a side-effect, then aborts
+   look at: shared SQLite journal: one STEP-COMPLETED before resume
+
+── Parent replayed the journal and continued with step-2
+   before-count (steps before resume; expect 1): 1
+   after-count (steps after resume; expect 2): 2
+   step-names (expect step-1 step-2): ("step-1" "step-2")
+   fresh-1 (step-1 body re-executed? expect 0): 0
+   fresh-2 (step-2 ran on resume? expect 1): 1
+   effect-1 (side-effect written exactly once): 1
+   effect-2 (side-effect written on resume): 1
+
+── Replay contract: step-1 came from the journal (fresh-1=0); step-2 executed once.
+
+── S7 done. Reviewer: before-count=1, after-count=2, fresh-1=0, fresh-2=1, effects=1/1.

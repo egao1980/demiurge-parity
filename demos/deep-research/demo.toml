@@ -1,0 +1,7 @@
+# Deep research — product `research`. Backends are in expert.toml
+# ([llm.catalog], [websearch]). Env DEMIURGE_PARITY_DEMO_LLM/WEBSEARCH
+# can force mock for CI; they do not supply URLs or model names.
+expert = "expert.toml"
+command = "research"
+queries = "queries.md"
+narration = "verbose"

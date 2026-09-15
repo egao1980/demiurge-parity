@@ -16,6 +16,7 @@
                "rag-protocol"
                "rag-backend-text"
                "rag-backend-memory"
+               "rag-backend-hybrid"
                "doc-extract-protocol"
                "object-store-protocol"
                "mail-protocol"
@@ -71,6 +72,7 @@
                (:file "s7-durability")
                (:file "s8-serve")
                (:file "s9-corporate")
+               (:file "s10-research")
                (:file "live-local"))
   :perform (test-op (o c)
              (unless (symbol-call :rove :run c)

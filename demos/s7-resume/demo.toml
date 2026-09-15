@@ -1,0 +1,6 @@
+# S7 resume — kill-and-resume is parity-specific.
+# Dispatched by demos/runner.lisp (product CLI has no resume command).
+command = "resume"
+llm = "mock"
+websearch = "mock"
+narration = "normal"

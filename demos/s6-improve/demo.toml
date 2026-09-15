@@ -1,0 +1,7 @@
+# S6 improve — promote then demote. Product CLI `improve` on an empty
+# eval suite skips; the one generic runner runs the existing parity
+# helpers (run-promote-cycle + critical-regression demote).
+command = "improve"
+llm = "mock"
+websearch = "mock"
+narration = "verbose"

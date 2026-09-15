@@ -54,12 +54,13 @@ ros -e '(asdf:load-system "demiurge-parity/tests")' \
 ## Demo evidence
 
 Narrated recordings for later human review live in
-[`demos/`](demos/README.md). They are scripts, not tests
-(S2/S4/S6/S7 plus B8 v2 `deep-research` / `corporate-boot`).
-S3/S5/S8/S9 run in Rove. `deep-research` hits LM Studio or llama.cpp when
-a local model is up (`DEMIURGE_PARITY_DEMO_LLM=mock` to force the script)
+[`demos/`](demos/README.md). Each demo is a directory (`demo.toml` +
+`queries.md`); `./demos/run-demo.sh <name>` records `demiurge demo`
+(or the one generic runner for boot/resume/corporate). S3/S5/S8/S9 run
+in Rove. `deep-research` hits LM Studio or llama.cpp when a local model
+is up (`DEMIURGE_PARITY_DEMO_LLM=mock` to force the scripted backend)
 and SearXNG JSON on `:8888` (`docker compose --profile search up -d --wait searxng`;
-`DEMIURGE_PARITY_DEMO_WEBSEARCH=mock` to force the script).
+`DEMIURGE_PARITY_DEMO_WEBSEARCH=mock` uses `demos/deep-research/websearch.toml`).
 
 ```bash
 ./demos/run-demo.sh s2-boot

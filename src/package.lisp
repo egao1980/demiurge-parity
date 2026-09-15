@@ -32,6 +32,7 @@
    #:ensure-ci-backends
    #:demiurge-version-string
    #:observe-b5b-available-p
+   #:research-b4b-available-p
    #:taxonomy-metric-present-p
    #:taxonomy-coverage
    #:s4-taxonomy-reasons

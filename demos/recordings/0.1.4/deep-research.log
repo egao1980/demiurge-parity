@@ -1,0 +1,237 @@
+=== demiurge-parity demo: deep-research ===
+date: 2026-09-14T17:10:20Z
+version: 0.1.4
+host: Darwin arm64
+sbcl: SBCL 2.6.5-85913ede1
+recorder: asciinema
+tier: mock
+dir: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/demos/deep-research
+mode: cli
+
+WARNING: System definition file #P"/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/trivial-garbage/0.21/trivial-garbage.asd" contains definition for system "trivial-garbage-tests". Please only define "trivial-garbage" and secondary systems with a name starting with "trivial-garbage/" (e.g. "trivial-garbage/test") in that file.
+WARNING: redefining IRONCLAD:BLOCK-LENGTH in DEFGENERIC
+;;; Computing Hangul syllable namesWARNING:
+   redefining LOAD-PROXY-SYSTEM-PLATFORM (#<STANDARD-CLASS HTTP-PROTOCOL:HTTP-PROXY-CONFIG>) in DEFMETHOD
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-chipz")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-chipz")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-brotli")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+
+; cl-repo: demiurge already available via ASDF
+WARNING: redefining PERFORM (#<STANDARD-CLASS ASDF/LISP-ACTION:TEST-OP> #<SB-MOP:EQL-SPECIALIZER #<SYSTEM "http-backend-dexador/tests">>) in DEFMETHOD
+; cl-repo: ensure deps for local demiurge-parity → 
+WARNING: redefining LLM-PROTOCOL:INVOKE-RETRY in DEFUN
+WARNING: redefining LLM-PROTOCOL:INVOKE-USE-VALUE in DEFUN
+WARNING: redefining LLM-PROTOCOL:AUTO-RETRY in DEFUN
+WARNING: redefining DEMIURGE:LOAD-EXPERT-CONFIG in DEFUN
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-WARNING>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERFACE-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-UNIMPLEMENTED-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATABASE-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATA-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-OPERATIONAL-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTEGRITY-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERNAL-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-PROGRAMMING-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-NOTSUPPORTED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-COMMITED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-ROLLED-BACK-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-DRIVER>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-QUERY>
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3)) or (:STRUCT
+                                                                              SQLITE3) instead.
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3-STMT)) or (:STRUCT
+                                                                                   SQLITE3-STMT) instead.
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3>
+WARNING:
+   redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-QUERY>
+=== loaded system versions ===
+oci systems-root: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/
+  demiurge-parity  asdf=0.1.4  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/
+  demiurge  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  demiurge/cli  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  demiurge/improve  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  demiurge/workflows  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  demiurge/serve  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  demiurge/observe  asdf=0.3.6  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-plan-vectors/
+  cli-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/cli-protocol/
+  blackboard-protocol  asdf=0.2.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/capability-protocol/0.2.2/
+  capability-protocol  asdf=0.2.1  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/capability-protocol/0.2.2/
+  eval-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/eval-protocol/0.1.0/
+  rag-protocol  asdf=0.1.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-protocol/0.1.2/
+  rag-backend-text  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-backend-text/0.2.0/
+  rag-backend-memory  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/rag-backend-memory/0.1.0/
+  doc-extract-protocol  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/doc-extract-protocol/0.2.0/
+  llm-protocol  asdf=0.3.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/llm-protocol/0.3.0/
+  websearch-protocol  asdf=0.1.1  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/websearch-protocol/
+  mcp-protocol  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/mcp-protocol/0.2.0/
+  http-backend-dexador  asdf=0.1.4
+    /Users/nikolaimatiushev/Projects/cl-workspace/http-backend-dexador/
+  json-backend-jzon  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/json-protocol/0.2.1/
+  toml-backend-tomlet  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/toml-backend-tomlet/0.1.0/
+  steer-protocol  asdf=0.2.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/steer-protocol/0.2.0/
+  task-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/task-protocol/0.1.0/
+  task-backend-sql  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/task-backend-sql/0.1.0/
+  sql-protocol  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/sql-backend-postgres/0.1.0/
+  sql-backend-sqlite3  asdf=0.1.0  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/.demo-oci/sql-backend-postgres/0.1.0/
+  event-backend-libuv  asdf=0.1.2  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/event-backend-libuv/
+=== end versions ===
+
+── demo /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-wrap/demos/deep-research/
+   expert: "research-demo"
+   command: :RESEARCH
+   llm: :MOCK
+   websearch: :MOCK
+
+── RESEARCH "CL expert systems"
+   look at: verdict, child answers, citations, rendered report
+   verdict: :PASS
+   child count: 2
+<!-- {#f133df4865421fcd210e9cb3fe9387dc99d0d3c70b85bc9e0b9333743cfe8cba type=text kind=heading} -->
+Research: CL expert systems
+
+<!-- {#7cf4f97cdfaf4812b5eb2ffb3dca29e668e53e784dc934807d14a8544dd3b5e7 type=text kind=para} -->
+echo: Synthesize a cited report for CL expert systems from 2 sub-answers.
+
+Child answers:
+
+### echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems (q1)
+echo: Subquestion: echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems
+
+Retrieved workspace sources (cite as [id]; full text at research://source/<id>):
+
+[q1-1] What is KSAR?
+  https://ex.test/ksar
+  KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+
+### echo: Gap analysis for CL expert systems. Existing answers:
+echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems => echo: Subquestion: echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems
+
+Retrieved workspace sources (cite as [id]; full text at research://source/<id>):
+
+[q1-1] What is KSAR?
+  https://ex.test/ksar
+  KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+
+Return new subquestions or none. (q1)
+echo: Subquestion: echo: Gap analysis for CL expert systems. Existing answers:
+echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems => echo: Subquestion: echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems
+
+Retrieved workspace sources (cite as [id]; full text at research://source/<id>):
+
+[q1-1] What is KSAR?
+  https://ex.test/ksar
+  KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+
+Return new subquestions or none.
+
+Retrieved workspace sources (cite as [id]; full text at research://source/<id>):
+
+[q1-1] What is KSAR?
+  https://ex.test/ksar
+  KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+
+Source catalog:
+[q1-1] What is KSAR? — https://ex.test/ksar (104 chars)
+[q1-1] What is KSAR? — https://ex.test/ksar (104 chars)
+
+
+<!-- {#34146b1038be57ab5a3570866a9396127d7139f6bcbd302aa3e66cd96f4c8d6a type=section level=2} -->
+## echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems
+
+<!-- {#39b0c5baca056738a663445b838eebad0a20974943adc9c9a03707dc2042a1fb type=text kind=para} -->
+echo: Subquestion: echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems
+
+Retrieved workspace sources (cite as [id]; full text at research://source/<id>):
+
+[q1-1] What is KSAR?
+  https://ex.test/ksar
+  KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+
+<!-- {close=section} -->
+
+<!-- {#1869455fca6e983ee103e4c01e226e56e8aaed67f0eb66a5253b44a6ca8c2a34 type=section level=2} -->
+## echo: Gap analysis for CL expert systems. Existing answers:
+echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems => echo: Subquestion: echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems
+
+Retrieved workspace sources (cite as [id]; full text at research://source/<id>):
+
+[q1-1] What is KSAR?
+  https://ex.test/ksar
+  KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+
+Return new subquestions or none.
+
+<!-- {#f30be68116510f76e8e0f53ad54a4291144b197deeb391e30975de863cafcad8 type=text kind=para} -->
+echo: Subquestion: echo: Gap analysis for CL expert systems. Existing answers:
+echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems => echo: Subquestion: echo: Decompose this question into a schema-typed research plan with subquestions: CL expert systems
+
+Retrieved workspace sources (cite as [id]; full text at research://source/<id>):
+
+[q1-1] What is KSAR?
+  https://ex.test/ksar
+  KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+
+Return new subquestions or none.
+
+Retrieved workspace sources (cite as [id]; full text at research://source/<id>):
+
+[q1-1] What is KSAR?
+  https://ex.test/ksar
+  KSAR (Knowledge-Source Activation Record) is one KS firing: agenda item, COW workspace, journaled steps.
+
+<!-- {close=section} -->
+
+

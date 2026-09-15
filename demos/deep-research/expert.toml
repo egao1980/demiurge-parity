@@ -1,0 +1,41 @@
+[expert]
+name = "research-demo"
+description = "Deep-research demo expert (zai-org/glm-4.6v-flash). LLM + websearch backends come from this file."
+catalogue = "world"
+
+[profile]
+kind = "personal"
+
+[profile.paths]
+data-dir = "/tmp/demiurge-demo-deep-research"
+
+[llm]
+default-model = "lmstudio"
+
+[[llm.catalog]]
+name = "lmstudio"
+kind = "openai-compat"
+base-url = "http://127.0.0.1:1234/v1"
+model = "zai-org/glm-4.6v-flash"
+api-key-env = "LM_API_TOKEN"
+
+[[llm.catalog]]
+name = "mock"
+kind = "mock"
+
+[workspace]
+# demos/deep-research → cl-workspace (wrap/demos/deep-research = 3 levels)
+root = "../../../"
+seed = "KSAR blackboard no-critical-regression-gate gap-analysis improve cycle demiurge"
+
+[websearch]
+kind = "searxng"
+base-url = "http://127.0.0.1:8888"
+fixtures = "websearch.toml"
+
+[[ks]]
+name = "echo"
+watch = "(:prompt)"
+prompt-key = "prompt"
+result-key = "result"
+instructions = "You are a Common Lisp / cl-stack expert. Check the local workspace (workspace://) first. Cite workspace:// files before the web. Do not guess."

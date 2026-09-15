@@ -1,0 +1,7 @@
+# Corporate boot — make-corporate-profile + /healthz /readyz smoke.
+# Dispatched by demos/runner.lisp (C4 factory + Clack probes, no live Postgres).
+command = "corporate"
+llm = "mock"
+websearch = "mock"
+narration = "normal"
+config = "corporate.toml"
