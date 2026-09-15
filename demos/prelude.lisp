@@ -50,7 +50,8 @@
     (append
      (loop for name in '("http-backend-dexador" "http-backend-async"
                          "event-backend-libuv" "websearch-protocol"
-                         "llm-protocol" "llm-protocol-openai")
+                         "llm-protocol" "llm-protocol-openai"
+                         "rag-backend-hybrid")
            for dir = (probe-file (merge-pathnames (format nil "~A/" name) parent))
            when dir collect `(:directory ,dir))
      (when cli-protocol
@@ -159,7 +160,8 @@
                         "cli-protocol" "blackboard-protocol"
                         "capability-protocol" "eval-protocol"
                         "rag-protocol" "rag-backend-text"
-                        "rag-backend-memory" "doc-extract-protocol"
+                        "rag-backend-memory" "rag-backend-hybrid"
+                        "doc-extract-protocol"
                         "llm-protocol" "websearch-protocol" "mcp-protocol"
                         "http-backend-dexador" "http-backend-async"
                         "json-backend-jzon"
