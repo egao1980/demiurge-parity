@@ -14,7 +14,7 @@
 (in-package #:demiurge-parity/tests/s10-research)
 
 ;;; S10 research — B4b deep-research completeness (mock-tier).
-;;; Requires demiurge >= 0.3.6 (collect-research-citations,
+;;; Requires demiurge >= 0.3.7 (collect-research-citations,
 ;;; format-research-budget-footer, :require-hitl).
 
 (defun %turns-text (turns)

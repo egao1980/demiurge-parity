@@ -48,11 +48,11 @@
          (system-available-p "demiurge/observe"))))
 
 (defun research-b4b-available-p ()
-  "True when published demiurge is >= 0.3.6 and workflows is loadable.
-   B4b citations / budget footer shipped in that release."
+  "True when published demiurge is >= 0.3.7 and workflows is loadable.
+   B4b citations / budget footer shipped in that release (0.3.6 did not export them)."
   (let ((v (demiurge-version-string)))
     (and v
-         (uiop:version<= "0.3.6" v)
+         (uiop:version<= "0.3.7" v)
          (workflows-system-available-p))))
 
 (defun +taxonomy-metric-names+ ()
