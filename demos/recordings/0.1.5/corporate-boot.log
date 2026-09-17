@@ -1,0 +1,157 @@
+=== demiurge-parity demo: corporate-boot ===
+date: 2026-09-17T19:52:23Z
+version: 0.1.5
+host: Darwin arm64
+sbcl: SBCL 2.6.5-85913ede1
+recorder: asciinema
+tier: mock
+dir: /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-g2/demos/corporate-boot
+mode: runner
+
+WARNING: System definition file #P"/private/tmp/demiurge-parity-g2-oci/trivial-garbage/0.21/trivial-garbage.asd" contains definition for system "trivial-garbage-tests". Please only define "trivial-garbage" and secondary systems with a name starting with "trivial-garbage/" (e.g. "trivial-garbage/test") in that file.
+WARNING: redefining IRONCLAD:BLOCK-LENGTH in DEFGENERIC
+;;; Computing Hangul syllable namesWARNING:
+   redefining LOAD-PROXY-SYSTEM-PLATFORM (#<STANDARD-CLASS HTTP-PROTOCOL:HTTP-PROXY-CONFIG>) in DEFMETHOD
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-chipz")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+WARNING:
+   Deprecated recursive use of (ASDF/OPERATE:OPERATE 'ASDF/LISP-ACTION:LOAD-OP
+   '("http-encoding-chipz")) while visiting
+   (ASDF/LISP-ACTION:LOAD-OP "cl-oci-client/http" "lisp") - please use proper
+   dependencies instead
+
+; cl-repo: demiurge already available via ASDF
+; cl-repo: ensure deps for local demiurge-parity → 
+WARNING: redefining LLM-PROTOCOL:INVOKE-RETRY in DEFUN
+WARNING: redefining LLM-PROTOCOL:INVOKE-USE-VALUE in DEFUN
+WARNING: redefining LLM-PROTOCOL:AUTO-RETRY in DEFUN
+WARNING:
+   redefining PARSE-STRUCTURED-OUTPUT (#<STRUCTURE-CLASS COMMON-LISP:HASH-TABLE>
+                                       #<BUILT-IN-CLASS COMMON-LISP:STRING>) in DEFMETHOD
+WARNING: redefining DEMIURGE:LOAD-EXPERT-CONFIG in DEFUN
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-WARNING>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERFACE-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-UNIMPLEMENTED-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATABASE-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-DATA-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-OPERATIONAL-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTEGRITY-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-INTERNAL-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-PROGRAMMING-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-NOTSUPPORTED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-COMMITED-ERROR>
+WARNING:
+   redefining DEFTYPE type to be a class: DBI.ERROR:<DBI-ALREADY-ROLLED-BACK-ERROR>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-DRIVER>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBI.DRIVER:<DBI-QUERY>
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3)) or (:STRUCT
+                                                                              SQLITE3) instead.
+WARNING:
+   bare references to struct types are deprecated. Please use (:POINTER
+                                                               (:STRUCT
+                                                                SQLITE3-STMT)) or (:STRUCT
+                                                                                   SQLITE3-STMT) instead.
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3>
+WARNING:
+   redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-CONNECTION>
+WARNING: redefining DEFTYPE type to be a class: DBD.SQLITE3:<DBD-SQLITE3-QUERY>
+=== loaded system versions ===
+oci systems-root: /private/tmp/demiurge-parity-g2-oci/
+  demiurge-parity  asdf=0.1.5  loaded=T
+    /Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-g2/
+  demiurge  asdf=0.3.7  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/demiurge/0.3.7/
+  demiurge/cli  asdf=0.3.7  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/demiurge/0.3.7/
+  demiurge/improve  asdf=0.3.7  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/demiurge/0.3.7/
+  demiurge/workflows  asdf=0.3.7  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/demiurge/0.3.7/
+  demiurge/serve  asdf=0.3.7  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/demiurge/0.3.7/
+  demiurge/observe  asdf=0.3.7  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/demiurge/0.3.7/
+  cli-protocol  asdf=0.1.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/cli-backend-clingon/0.1.0/
+  blackboard-protocol  asdf=0.2.2  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/capability-protocol/0.2.2/
+  capability-protocol  asdf=0.2.1  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/capability-protocol/0.2.2/
+  eval-protocol  asdf=0.1.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/eval-protocol/0.1.0/
+  rag-protocol  asdf=0.1.2  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/rag-protocol/0.1.2/
+  rag-backend-text  asdf=0.2.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/rag-backend-text/0.2.0/
+  rag-backend-memory  asdf=0.1.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/rag-backend-memory/0.1.0/
+  rag-backend-hybrid  asdf=0.1.1  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/rag-backend-hybrid/0.1.1/
+  doc-extract-protocol  asdf=0.2.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/doc-extract-protocol/0.2.0/
+  llm-protocol  asdf=0.3.1  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/llm-protocol/0.3.1/
+  websearch-protocol  asdf=0.1.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/websearch-protocol/0.1.0/
+  mcp-protocol  asdf=0.2.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/mcp-protocol/0.2.0/
+  http-backend-dexador  asdf=0.1.2  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/mcp-backend-stdio/0.1.1/.cl-repository/http-backend-dexador-0.1.2/
+  http-backend-async  asdf=0.2.9
+    /private/tmp/demiurge-parity-g2-oci/http-backend-async/0.2.9/
+  json-backend-jzon  asdf=0.2.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/json-protocol/0.2.1/
+  toml-backend-tomlet  asdf=0.1.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/toml-backend-tomlet/0.1.0/
+  steer-protocol  asdf=0.2.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/steer-protocol/0.2.0/
+  task-protocol  asdf=0.2.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/task-protocol/0.2.0/
+  task-backend-sql  asdf=0.1.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/task-backend-sql/0.1.0/
+  sql-protocol  asdf=0.1.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/sql-backend-postgres/0.1.0/
+  sql-backend-sqlite3  asdf=0.1.0  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/sql-backend-postgres/0.1.0/
+  event-backend-libuv  asdf=0.1.2  loaded=T
+    /private/tmp/demiurge-parity-g2-oci/event-backend-libuv/0.1.2/
+=== end versions ===
+
+── generic runner command=CORPORATE dir=/Users/nikolaimatiushev/Projects/cl-workspace/demiurge-parity-g2/demos/corporate-boot/
+
+── Corporate boot — make-corporate-profile with memory/sqlite fallback
+   look at: kind, tenant, tenant-scoped ids; Clack /healthz /readyz 200; unauthenticated / → 302
+WARNING: could not load sql-migrate: Component "sql-migrate" not found
+
+── Factory returned a corporate profile (no live Postgres)
+   corporate-profile-p: T
+   profile-kind: :CORPORATE
+   tenant: "acme"
+   look at: :CORPORATE kind and tenant "acme" — memory journal/session/rag, not a DSN
+
+── Tenant-scoped identifiers
+   tenant-task-id echo: "tenant/acme/domain/echo"
+   tenant-corpus-name docs: "tenant/acme/corpus/docs"
+   current-tenant: "acme"
+
+── make-expert-app Clack env (no session cookie)
+   GET /healthz status: 200
+   GET /readyz status: 200
+   GET / status: 302
+   GET / Location: "/login"
+   look at: /healthz and /readyz stay unauthenticated (C4). GET / is a 302 to /login.
+
+── Corporate-boot done. Reviewer: kind/tenant scoped; probes 200; / challenges.

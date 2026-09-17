@@ -3,6 +3,8 @@
 ;;;; Narration lives in the product CLI (ask/research/improve/ingest) or
 ;;;; the one generic runner (boot/resume/corporate).
 
+(require "asdf")
+
 (setf *debugger-hook*
       (lambda (c h)
         (declare (ignore h))
@@ -41,23 +43,10 @@
                         (user-homedir-pathname)))))
 
 (defun %local-override-directories ()
-  "Sibling first-party checkouts beat OCI dest (unpublished protocol fixes).
-   Prefer demiurge-plan-vectors: B8 needs demiurge/cli (B9). Do not put
-   demiurge-b4b or a stale demiurge/ checkout first — those trees lack the CLI."
-  (let* ((parent (uiop:pathname-parent-directory-pathname *demo-root*))
-         (cli (probe-file (merge-pathnames "demiurge-plan-vectors/" parent)))
-         (cli-protocol (probe-file (merge-pathnames "cli-protocol/" parent))))
-    (append
-     (loop for name in '("http-backend-dexador" "http-backend-async"
-                         "event-backend-libuv" "websearch-protocol"
-                         "llm-protocol" "llm-protocol-openai"
-                         "rag-backend-hybrid")
-           for dir = (probe-file (merge-pathnames (format nil "~A/" name) parent))
-           when dir collect `(:directory ,dir))
-     (when cli-protocol
-       (list `(:directory ,cli-protocol)))
-     (when cli
-       (list `(:directory ,cli))))))
+  "No sibling checkouts. Demos record against pinned GHCR dest only
+   (demiurge 0.3.7 + :provides slash systems). Unpublished workspace
+   trees must not leak into recordings."
+  nil)
 
 (defun %isolated-source-registry ()
   "Checkout + dest + client only. Inherited shared trees have stale demiurge."

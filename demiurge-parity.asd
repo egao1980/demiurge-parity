@@ -1,5 +1,5 @@
 (defsystem "demiurge-parity"
-  :version "0.1.5"
+  :version "0.1.6"
   :description "Product smoke / incremental integration harness for demiurge"
   :author "egao1980"
   :license "MIT"

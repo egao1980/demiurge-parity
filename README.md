@@ -22,7 +22,7 @@ Each Rove file is runnable standalone. Later stages assume earlier ones pass.
 | S7 durability | `tests/s7-durability.lisp` | run — child SBCL kill-and-resume (2-step journal) |
 | S8 serve | `tests/s8-serve.lisp` | run — in-process MCP / A2A / AG-UI round-trips vs echo + mock LLM |
 | S9 corporate | `tests/s9-corporate.lisp` | run — mock-tier corporate profile / tenant / OIDC / authz; live `readyz` only when `DEMIURGE_PARITY_TIER=live-corporate` |
-| S10 research | `tests/s10-research.lisp` | run — B4b deep-research citations / budget footer / HITL against demiurge 0.3.7 |
+| S10 research | `tests/s10-research.lisp` | run — B4b deep-research citations / budget footer / HITL against demiurge 0.3.7 (direct `wf:` exports; no find-symbol shim) |
 
 ## Tiers
 
@@ -58,10 +58,15 @@ Narrated recordings for later human review live in
 [`demos/`](demos/README.md). Each demo is a directory (`demo.toml` +
 `queries.md`); `./demos/run-demo.sh <name>` records `demiurge demo`
 (or the one generic runner for boot/resume/corporate). S3/S5/S8/S9 run
-in Rove. `deep-research` hits LM Studio or llama.cpp when a local model
-is up (`DEMIURGE_PARITY_DEMO_LLM=mock` to force the scripted backend)
-and SearXNG JSON on `:8888` (`docker compose --profile search up -d --wait searxng`;
+in Rove. Checkout-only: deps from GHCR dest, no sibling
+`CL_SOURCE_REGISTRY`. `deep-research` hits LM Studio or llama.cpp when a
+local model is up (`DEMIURGE_PARITY_DEMO_LLM=mock` to force the scripted
+backend) and SearXNG JSON on `:8888`
+(`docker compose --profile search up -d --wait searxng`;
 `DEMIURGE_PARITY_DEMO_WEBSEARCH=mock` uses `demos/deep-research/websearch.toml`).
+Mock-tier `demiurge demo` research on 0.3.7 still dies after workspace
+seed (`illegal sharp macro character: #<` on `:output research-plan`);
+S10 Rove covers the same APIs with a custom mock handler.
 
 ```bash
 ./demos/run-demo.sh s2-boot

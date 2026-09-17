@@ -45,6 +45,7 @@ demos/
   searxng/settings.yml
   recordings/0.1.1/    # B8 v1 casts+logs (kept)
   recordings/0.1.4/    # B8 v2 *-demo + B8 v3 mock-tier casts+logs
+  recordings/0.1.5/    # G2 mock-tier vs demiurge 0.3.7 (OCI dest, no sibling registry)
 ```
 
 A new demo is a new directory (`demo.toml` + `queries.md`). No new Lisp.
@@ -68,20 +69,21 @@ DEMIURGE_PARITY_DEMO_WEBSEARCH=mock \
   ./demos/run-demo.sh s4-answer
 ```
 
-`run-demo.sh` resolves `demos/<name>/`, isolates dest to `.demo-oci`, then
-loads `prelude.lisp` and either `scripts/demiurge.lisp -- demo <dir>`
-(from the sibling `demiurge-plan-vectors` checkout, which has B9
-`demiurge/cli`) or `runner.lisp` for boot/resume/corporate. It wraps SBCL
-in `asciinema rec demos/recordings/<version>/<name>.cast` when asciinema
+`run-demo.sh` resolves `demos/<name>/`, isolates dest to `.demo-oci` (or
+`CL_REPOSITORY_DEST`), then loads `prelude.lisp` and either
+`scripts/demiurge.lisp -- demo <dir>` from the **published** demiurge
+package on dest (`demiurge/0.3.7/scripts/demiurge.lisp`) or
+`runner.lisp` for boot/resume/corporate/improve. It wraps SBCL in
+`asciinema rec demos/recordings/<version>/<name>.cast` when asciinema
 is on `PATH`, otherwise `script`(1). It **always** tees
 `demos/recordings/<version>/<name>.log`. The Lisp header prints ASDF
 versions of loaded systems and the OCI tag when the source path is a
-GHCR dest.
+GHCR dest. SBCL is invoked with `--no-userinit --no-sysinit` so
+Quicklisp local-projects cannot leak sibling trees.
 
 Checkout-only: dependencies come from `ghcr.io/egao1980/cl-systems`.
-`%local-override-directories` prefers sibling `demiurge-plan-vectors`
-so B8 can load `demiurge/cli`. Do not point `CL_SOURCE_REGISTRY` at a
-stale `demiurge/` or `demiurge-b4b` checkout.
+Do not point `CL_SOURCE_REGISTRY` at a sibling `demiurge/`,
+`demiurge-plan-vectors`, or `demiurge-b4b` checkout.
 
 CI: `.github/workflows/demo-evidence.yml` on `v*` tags and `workflow_dispatch`.
 It uploads logs/casts as artifacts and does not auto-commit.
@@ -102,10 +104,18 @@ It uploads logs/casts as artifacts and does not auto-commit.
 | [`recordings/0.1.4/s7-resume`](recordings/0.1.4/s7-resume.log) ([.cast](recordings/0.1.4/s7-resume.cast)) | B8 v3 mock: kill-and-resume `before-count=1` / `after-count=2` | 2026-09-14 | same `demiurge/cli` 0.3.6 line |
 | [`recordings/0.1.4/deep-research`](recordings/0.1.4/deep-research.log) ([.cast](recordings/0.1.4/deep-research.cast)) | B8 v3 mock: `demiurge demo` research, verdict `:PASS`, workspace sources | 2026-09-14 | same `demiurge/cli` 0.3.6 line; `DEMIURGE_PARITY_DEMO_WEBSEARCH=mock` |
 | [`recordings/0.1.4/corporate-boot`](recordings/0.1.4/corporate-boot.log) ([.cast](recordings/0.1.4/corporate-boot.cast)) | B8 v3 mock: `command=corporate` — `:CORPORATE`, `/healthz` 200 | 2026-09-14 | same `demiurge/cli` 0.3.6 line |
+| [`recordings/0.1.5/s2-boot`](recordings/0.1.5/s2-boot.log) ([.cast](recordings/0.1.5/s2-boot.cast)) | G2 mock: `command=boot` via runner — `:PERSONAL`, OCI dest only | 2026-09-17 | `demiurge-parity` 0.1.5, `demiurge` 0.3.7 |
+| [`recordings/0.1.5/s4-answer`](recordings/0.1.5/s4-answer.log) ([.cast](recordings/0.1.5/s4-answer.cast)) | G2 mock: `demiurge demo` ask + ingest; board `:PROMPT`/`:RESULT` | 2026-09-17 | `demiurge/cli` 0.3.7 from GHCR dest |
+| [`recordings/0.1.5/s6-improve`](recordings/0.1.5/s6-improve.log) ([.cast](recordings/0.1.5/s6-improve.cast)) | G2 mock: runner promote then demote | 2026-09-17 | same 0.3.7 line |
+| [`recordings/0.1.5/s7-resume`](recordings/0.1.5/s7-resume.log) ([.cast](recordings/0.1.5/s7-resume.cast)) | G2 mock: kill-and-resume `before-count=1` / `after-count=2` | 2026-09-17 | same 0.3.7 line |
+| [`recordings/0.1.5/corporate-boot`](recordings/0.1.5/corporate-boot.log) ([.cast](recordings/0.1.5/corporate-boot.cast)) | G2 mock: `command=corporate` — `:CORPORATE`, `/healthz` 200 | 2026-09-17 | same 0.3.7 line |
 
-B8 v3 sources are the directories above (`demo.toml` + `queries.md`).
+B8 v3 / G2 sources are the directories above (`demo.toml` + `queries.md`).
 Record locally with `./demos/run-demo.sh`. Live re-record (LM Studio / SearXNG)
-is still deferred; mock-tier v3 casts above are asciinema v3 (`{"version":3,…}`).
+is still deferred. Mock-tier `deep-research` via `demiurge demo` on 0.3.7
+fails after workspace seed (`illegal sharp macro character: #<` while
+`generate-research-step` requests `:output research-plan`); S10 Rove is
+the mock-tier proof for B4b. Casts are asciinema v3 (`{"version":3,…}`).
 
 Casts sit next to the logs (`.cast`). Play an asciinema cast with
 `asciinema play demos/recordings/<version>/<name>.cast` when the recorder was
