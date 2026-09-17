@@ -2,11 +2,13 @@
 # Record a narrated mock-tier demo.
 #   ./demos/run-demo.sh <name>
 # names: s2-boot | s4-answer | s6-improve | s7-resume | deep-research | corporate-boot
-# Resolves demos/<name>/, isolates dest to .demo-oci, then:
+# Resolves demos/<name>/, isolates dest to .demo-oci (or CL_REPOSITORY_DEST), then:
 #   product commands (ask/research/ingest) → demiurge demo <dir>
+#     (scripts/demiurge.lisp from pinned GHCR dest, not a sibling checkout)
 #   boot/resume/corporate/scripted-improve → demos/runner.lisp
 # Wraps SBCL in `asciinema rec` when present, else script(1).
 # Always tees demos/recordings/<version>/<name>.log
+# CL_SOURCE_REGISTRY is checkout + dest + client only (no sibling trees).
 set -Eeuo pipefail
 
 usage() {
@@ -38,14 +40,39 @@ if [[ -z "${CL_REPOSITORY_DEST:-}" ]]; then
 fi
 export CL_REPOSITORY_CLIENT_DIR="${CL_REPOSITORY_CLIENT_DIR:-${HOME}/.local/share/cl-repository-client/cl-oci-0.16.0}"
 
-# B8 needs demiurge/cli from demiurge-plan-vectors (B9). Never add a stale
-# demiurge/ or demiurge-b4b checkout — those trees do not have the CLI.
-PLAN_VECTORS="${PARENT}/demiurge-plan-vectors"
-CLI_PROTOCOL="${PARENT}/cli-protocol"
-LLM_PROTOCOL="${PARENT}/llm-protocol"
-export CL_SOURCE_REGISTRY="${PLAN_VECTORS}//:${CLI_PROTOCOL}//:${LLM_PROTOCOL}//:${ROOT}//:${CL_REPOSITORY_DEST}//"
+# Checkout + dest only. Never add sibling demiurge / plan-vectors /
+# cli-protocol / llm-protocol — those leak unpublished trees over the
+# pinned GHCR demiurge (0.3.7). Product CLI comes from the OCI dest.
+export CL_SOURCE_REGISTRY="${ROOT}/:${CL_REPOSITORY_DEST}//:${CL_REPOSITORY_CLIENT_DIR}//"
 
-DEMIURGE_LISP="${PLAN_VECTORS}/scripts/demiurge.lisp"
+resolve_demiurge_lisp() {
+  if [[ -n "${DEMIURGE_LISP:-}" && -f "${DEMIURGE_LISP}" ]]; then
+    printf '%s\n' "${DEMIURGE_LISP}"
+    return 0
+  fi
+  local dest="${CL_REPOSITORY_DEST}"
+  local candidate
+  for candidate in \
+      "${dest}/demiurge/0.3.7/scripts/demiurge.lisp" \
+      "${dest}/systems/demiurge/0.3.7/scripts/demiurge.lisp"; do
+    if [[ -f "${candidate}" ]]; then
+      printf '%s\n' "${candidate}"
+      return 0
+    fi
+  done
+  # Highest installed 0.3.x under dest (version-sort).
+  local found
+  found="$(find "${dest}" -path '*/demiurge/*/scripts/demiurge.lisp' 2>/dev/null \
+    | sort -t/ -k1,1 -V | tail -n 1 || true)"
+  if [[ -n "${found}" && -f "${found}" ]]; then
+    printf '%s\n' "${found}"
+    return 0
+  fi
+  return 1
+}
+
+DEMIURGE_LISP="$(resolve_demiurge_lisp || true)"
+export DEMIURGE_LISP
 
 if [[ "${1:-}" == "--inner" ]]; then
   shift
@@ -77,17 +104,22 @@ if [[ "${1:-}" == "--inner" ]]; then
     printf 'mode: %s\n' "${MODE}"
     printf '\n'
     if [[ "${MODE}" == "runner" ]]; then
-      "${SBCL_BIN[@]}" --noinform --non-interactive --disable-debugger \
+      "${SBCL_BIN[@]}" --noinform --no-userinit --no-sysinit \
+        --non-interactive --disable-debugger \
         --load "${SCRIPT_DIR}/prelude.lisp" \
         --load "${SCRIPT_DIR}/runner.lisp" \
         -- "${DIR}"
     else
-      if [[ ! -f "${DEMIURGE_LISP}" ]]; then
-        printf 'run-demo: missing %s (need demiurge-plan-vectors with B9 CLI)\n' \
-          "${DEMIURGE_LISP}" >&2
+      if [[ -z "${DEMIURGE_LISP:-}" || ! -f "${DEMIURGE_LISP}" ]]; then
+        DEMIURGE_LISP="$(resolve_demiurge_lisp || true)"
+      fi
+      if [[ -z "${DEMIURGE_LISP:-}" || ! -f "${DEMIURGE_LISP}" ]]; then
+        printf 'run-demo: missing scripts/demiurge.lisp under %s (pin demiurge 0.3.7 on GHCR)\n' \
+          "${CL_REPOSITORY_DEST}" >&2
         exit 1
       fi
-      "${SBCL_BIN[@]}" --noinform --non-interactive --disable-debugger \
+      "${SBCL_BIN[@]}" --noinform --no-userinit --no-sysinit \
+        --non-interactive --disable-debugger \
         --load "${SCRIPT_DIR}/prelude.lisp" \
         --load "${DEMIURGE_LISP}" \
         -- demo "${DIR}"
