@@ -48,13 +48,12 @@
          (system-available-p "demiurge/observe"))))
 
 (defun research-b4b-available-p ()
-  "True when workflows export B4b helpers (citations + budget footer).
-   Skip s10 until unpublished 0.3.6 APIs are on GHCR."
-  (and (workflows-system-available-p)
-       (let* ((pkg (find-package '#:demiurge/workflows))
-              (cites (and pkg (find-symbol "COLLECT-RESEARCH-CITATIONS" pkg)))
-              (footer (and pkg (find-symbol "FORMAT-RESEARCH-BUDGET-FOOTER" pkg))))
-         (and cites footer (fboundp cites) (fboundp footer)))))
+  "True when published demiurge is >= 0.3.6 and workflows is loadable.
+   B4b citations / budget footer shipped in that release."
+  (let ((v (demiurge-version-string)))
+    (and v
+         (uiop:version<= "0.3.6" v)
+         (workflows-system-available-p))))
 
 (defun +taxonomy-metric-names+ ()
   '("demiurge.llm.tokens"

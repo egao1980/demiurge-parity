@@ -14,8 +14,8 @@
 (in-package #:demiurge-parity/tests/s10-research)
 
 ;;; S10 research — B4b deep-research completeness (mock-tier).
-;;; Skips until unpublished 0.3.6 APIs (collect-research-citations,
-;;; format-research-budget-footer, :require-hitl) are loadable.
+;;; Requires demiurge >= 0.3.6 (collect-research-citations,
+;;; format-research-budget-footer, :require-hitl).
 
 (defun %turns-text (turns)
   (cond
@@ -136,65 +136,55 @@
 
 (deftest s10-two-rounds-when-gap-returns-subquestion
   (ensure-ci-backends)
-  (if (not (research-b4b-available-p))
-      (skip "demiurge B4b research APIs not on GHCR yet")
-      (let* ((exec 0)
-             (wf:*research-child-exec-hook*
-              (lambda (in)
-                (declare (ignore in))
-                (incf exec)))
-             (result (%s10-run :task-id "s10-gap"
-                               :max-rounds 2
-                               :llm (%s10-llm :gap-once "What is a restart?"))))
-        (ok (= 2 exec) "gap re-spawns a second child")
-        (ok (= 2 (length (getf result :children))))
-        (ok (member (getf result :verdict) '(:pass :fail))))))
+  (let* ((exec 0)
+         (wf:*research-child-exec-hook*
+          (lambda (in)
+            (declare (ignore in))
+            (incf exec)))
+         (result (%s10-run :task-id "s10-gap"
+                           :max-rounds 2
+                           :llm (%s10-llm :gap-once "What is a restart?"))))
+    (ok (= 2 exec) "gap re-spawns a second child")
+    (ok (= 2 (length (getf result :children))))
+    (ok (member (getf result :verdict) '(:pass :fail)))))
 
 (deftest s10-rendered-markdown-has-url-and-block-id
   (ensure-ci-backends)
-  (if (not (research-b4b-available-p))
-      (skip "demiurge B4b research APIs not on GHCR yet")
-      (let* ((result (%s10-run :task-id "s10-cites"))
-             (md (getf result :markdown))
-             (cite-fn (find-symbol "COLLECT-RESEARCH-CITATIONS" :demiurge/workflows))
-             (cites (when (and cite-fn (fboundp cite-fn))
-                      (funcall cite-fn
-                               (getf result :children)
-                               :workspace (getf result :workspace)))))
-        (ok (stringp md))
-        (ok (search "https://ex.test/" md) "URL citation in rendered report")
-        (ok (or (search "[" md) (find :block-id cites :key (lambda (c) (getf c :kind))))
-            "block-id / source id in rendered report")
-        (ok (search "Sources" md))
-        (ok (search "Budget scope:" md)))))
+  (let* ((result (%s10-run :task-id "s10-cites"))
+         (md (getf result :markdown))
+         (cites (wf:collect-research-citations
+                 (getf result :children)
+                 :workspace (getf result :workspace))))
+    (ok (stringp md))
+    (ok (search "https://ex.test/" md) "URL citation in rendered report")
+    (ok (or (search "[" md) (find :block-id cites :key (lambda (c) (getf c :kind))))
+        "block-id / source id in rendered report")
+    (ok (search "Sources" md))
+    (ok (search "Budget scope:" md))))
 
 (deftest s10-budget-zero-incomplete-keeps-footer
   (ensure-ci-backends)
-  (if (not (research-b4b-available-p))
-      (skip "demiurge B4b research APIs not on GHCR yet")
-      (let ((result (%s10-run
-                     :task-id "s10-budget"
-                     :budget (llm:make-llm-budget :max-tokens 0))))
-        (ok (eq :incomplete (getf result :verdict)))
-        (ok (stringp (getf result :markdown)))
-        (when (plusp (length (or (getf result :markdown) "")))
-          (ok (search "Budget scope:" (getf result :markdown))
-              "partial report still has the budget footer")))))
+  (let ((result (%s10-run
+                 :task-id "s10-budget"
+                 :budget (llm:make-llm-budget :max-tokens 0))))
+    (ok (eq :incomplete (getf result :verdict)))
+    (ok (stringp (getf result :markdown)))
+    (when (plusp (length (or (getf result :markdown) "")))
+      (ok (search "Budget scope:" (getf result :markdown))
+          "partial report still has the budget footer"))))
 
 (deftest s10-hitl-restart-between-rounds
   (ensure-ci-backends)
-  (if (not (research-b4b-available-p))
-      (skip "demiurge B4b research APIs not on GHCR yet")
-      (let* ((approved nil)
-             (result
-              (handler-bind ((wf:approval-required
-                              (lambda (c)
-                                (setf approved t)
-                                (wf:invoke-approve c))))
-                (%s10-run :task-id "s10-hitl"
-                          :max-rounds 2
-                          :require-hitl t
-                          :llm (%s10-llm :gap-once "What is a restart?")))))
-        (ok approved "HITL checkpoint was offered between rounds")
-        (ok (member (getf result :verdict) '(:pass :fail)))
-        (ok (= 2 (length (getf result :children)))))))
+  (let* ((approved nil)
+         (result
+          (handler-bind ((wf:approval-required
+                          (lambda (c)
+                            (setf approved t)
+                            (wf:invoke-approve c))))
+            (%s10-run :task-id "s10-hitl"
+                      :max-rounds 2
+                      :require-hitl t
+                      :llm (%s10-llm :gap-once "What is a restart?")))))
+    (ok approved "HITL checkpoint was offered between rounds")
+    (ok (member (getf result :verdict) '(:pass :fail)))
+    (ok (= 2 (length (getf result :children))))))

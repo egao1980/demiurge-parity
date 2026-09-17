@@ -1,14 +1,14 @@
 (defsystem "demiurge-parity"
-  :version "0.1.4"
+  :version "0.1.5"
   :description "Product smoke / incremental integration harness for demiurge"
   :author "egao1980"
   :license "MIT"
-  :depends-on ("demiurge"
-               "demiurge/improve"
-               "demiurge/ingest"
-               "demiurge/serve"
-               "demiurge/observe"
-               "demiurge/workflows"
+  :depends-on ((:version "demiurge" "0.3.6")
+               (:version "demiurge/improve" "0.3.6")
+               (:version "demiurge/ingest" "0.3.6")
+               (:version "demiurge/serve" "0.3.6")
+               (:version "demiurge/observe" "0.3.6")
+               (:version "demiurge/workflows" "0.3.6")
                "blackboard-protocol"
                "blackboard-wire"
                "capability-protocol"

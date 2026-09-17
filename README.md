@@ -22,6 +22,7 @@ Each Rove file is runnable standalone. Later stages assume earlier ones pass.
 | S7 durability | `tests/s7-durability.lisp` | run — child SBCL kill-and-resume (2-step journal) |
 | S8 serve | `tests/s8-serve.lisp` | run — in-process MCP / A2A / AG-UI round-trips vs echo + mock LLM |
 | S9 corporate | `tests/s9-corporate.lisp` | run — mock-tier corporate profile / tenant / OIDC / authz; live `readyz` only when `DEMIURGE_PARITY_TIER=live-corporate` |
+| S10 research | `tests/s10-research.lisp` | run — B4b deep-research citations / budget footer / HITL against demiurge 0.3.6 |
 
 ## Tiers
 
