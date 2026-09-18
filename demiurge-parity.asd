@@ -3,12 +3,12 @@
   :description "Product smoke / incremental integration harness for demiurge"
   :author "egao1980"
   :license "MIT"
-  :depends-on ((:version "demiurge" "0.3.7")
-               (:version "demiurge/improve" "0.3.7")
-               (:version "demiurge/ingest" "0.3.7")
-               (:version "demiurge/serve" "0.3.7")
-               (:version "demiurge/observe" "0.3.7")
-               (:version "demiurge/workflows" "0.3.7")
+  :depends-on ((:version "demiurge" "0.3.11")
+               (:version "demiurge/improve" "0.3.11")
+               (:version "demiurge/ingest" "0.3.11")
+               (:version "demiurge/serve" "0.3.11")
+               (:version "demiurge/observe" "0.3.11")
+               (:version "demiurge/workflows" "0.3.11")
                "blackboard-protocol"
                "blackboard-wire"
                "capability-protocol"
