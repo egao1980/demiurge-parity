@@ -976,9 +976,9 @@
                                        :fx-dir fx
                                        :task-id task-id
                                        :cycle-id cycle-id
-                                       :skill-dir skill-dir))))))))
+                                       :skill-dir skill-dir)))))))
       (ignore-errors
         (uiop:delete-directory-tree
          root
          :validate (lambda (p) (search "parity-h7-chaos-" (namestring p)))
-         :if-does-not-exist :ignore))))))
+         :if-does-not-exist :ignore)))))
