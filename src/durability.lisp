@@ -288,6 +288,11 @@
       (format out "(unless (and (fboundp 'demiurge:journal-effect-receipt)~%")
       (format out "             (fboundp 'demiurge:find-effect-receipt))~%")
       (format out "  (error \"published demiurge is missing effect-receipt APIs\"))~%")
+      ;; demiurge may bind serdes JSON. Parent journal-events then
+      ;; decode-payload READs the wire as sexp and sees `{`.
+      (format out "(let* ((pkg (find-package '#:serdes-protocol))~%")
+      (format out "       (sym (and pkg (find-symbol \"*SERDES-FORMAT*\" pkg))))~%")
+      (format out "  (when (and sym (boundp sym)) (set sym nil)))~%")
       (format out "(let* ((db ~s)~%" (namestring db))
       (format out "       (fx #p~s)~%" (namestring (uiop:ensure-directory-pathname fx-dir)))
       (format out "       (marker #p~s)~%" (namestring marker))
@@ -328,6 +333,17 @@
       (format out "          (mark \"killed-after-receipt\")~%")
       (format out "          #+sbcl (sb-ext:exit :abort t)~%")
       (format out "          #-sbcl (uiop:quit 0))))))))~%"))))
+
+(defun %call-without-json-wire (fn)
+  "Force sexp-plist journal payloads so a child/parent pair match S7."
+  (let* ((pkg (find-package '#:serdes-protocol))
+         (sym (and pkg (find-symbol "*SERDES-FORMAT*" pkg))))
+    (if (and sym (boundp sym))
+        (let ((old (symbol-value sym)))
+          (unwind-protect
+               (progn (set sym nil) (funcall fn))
+            (set sym old)))
+        (funcall fn))))
 
 (defun %receipt-present-p (journal activation &key task)
   (and (fboundp 'demiurge:find-effect-receipt)
@@ -390,43 +406,45 @@
                                        (if (probe-file log)
                                            (uiop:read-file-string log)
                                            "")))))
-           (sql-protocol:with-connection (c :driver :sqlite3
-                                            :database-name (namestring db))
-             (let* ((journal (tbsql:make-sql-task-journal :connection c
-                                                          :ensure-schema t))
-                    (task (task:make-durable-task :id task-id))
-                    (before-steps (%journal-steps journal task))
-                    (before-receipt (%receipt-present-p journal activation-id
-                                                        :task task))
-                    (fresh 0))
-               (task:with-durable-task (task journal)
-                 (task:with-durable-step
-                     ((format nil "execute/~a" activation-id)
-                      :idempotency-key activation-id)
-                   (incf fresh)
-                   (let ((path (merge-pathnames "effect.txt" fx)))
-                     (ensure-directories-exist path)
-                     (with-open-file (o path :direction :output
-                                        :if-exists :append
-                                        :if-does-not-exist :create)
-                       (write-line "effect" o)))
-                   :must-not-reexec)
-                 (unless (demiurge:find-effect-receipt journal activation-id
-                                                       :task task)
-                   (demiurge:journal-effect-receipt
-                    journal activation-id
-                    (list :kind :ksar-activation :effect :once)
-                    :task task)))
-               (list :kill-point (intern (string-upcase point) :keyword)
-                     :before-count (length before-steps)
-                     :after-count (length (%journal-steps journal task))
-                     :before-receipt-p before-receipt
-                     :after-receipt-p (%receipt-present-p journal activation-id
+           (%call-without-json-wire
+            (lambda ()
+              (sql-protocol:with-connection (c :driver :sqlite3
+                                               :database-name (namestring db))
+                (let* ((journal (tbsql:make-sql-task-journal :connection c
+                                                             :ensure-schema t))
+                       (task (task:make-durable-task :id task-id))
+                       (before-steps (%journal-steps journal task))
+                       (before-receipt (%receipt-present-p journal activation-id
+                                                           :task task))
+                       (fresh 0))
+                  (task:with-durable-task (task journal)
+                    (task:with-durable-step
+                        ((format nil "execute/~a" activation-id)
+                         :idempotency-key activation-id)
+                      (incf fresh)
+                      (let ((path (merge-pathnames "effect.txt" fx)))
+                        (ensure-directories-exist path)
+                        (with-open-file (o path :direction :output
+                                           :if-exists :append
+                                           :if-does-not-exist :create)
+                          (write-line "effect" o)))
+                      :must-not-reexec)
+                    (unless (demiurge:find-effect-receipt journal activation-id
                                                           :task task)
-                     :fresh fresh
-                     :effect-count (%effect-count fx "effect")
-                     :step-names (mapcar #'task:step-name
-                                         (%journal-steps journal task))))))
+                      (demiurge:journal-effect-receipt
+                       journal activation-id
+                       (list :kind :ksar-activation :effect :once)
+                       :task task)))
+                  (list :kill-point (intern (string-upcase point) :keyword)
+                        :before-count (length before-steps)
+                        :after-count (length (%journal-steps journal task))
+                        :before-receipt-p before-receipt
+                        :after-receipt-p (%receipt-present-p journal activation-id
+                                                             :task task)
+                        :fresh fresh
+                        :effect-count (%effect-count fx "effect")
+                        :step-names (mapcar #'task:step-name
+                                            (%journal-steps journal task))))))))
       (ignore-errors
         (uiop:delete-directory-tree
          root
