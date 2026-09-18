@@ -69,8 +69,11 @@
    #:sbcl-runtime
    #:systems-root-dir
    #:child-registry-dirs
+   #:crash-registry-dirs
    #:write-kill-resume-child
-   #:run-kill-resume)
+   #:write-effect-receipt-child
+   #:run-kill-resume
+   #:run-effect-receipt-crash)
   (:documentation
    "Staged product-smoke helpers for demiurge. Checkout-only: deps from GHCR."))
 
