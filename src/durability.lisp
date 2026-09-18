@@ -566,7 +566,8 @@
              (declare (ignore in))
              (when body-counter (incf (car body-counter)))
              :ok)
-           :input :h7-fan-out)))
+           :input :h7-fan-out)
+          :spawned))
       (values journal parent))))
 
 (defun %chaos-child-fan-out (&key db fx-dir marker task-id)
@@ -708,7 +709,8 @@
              (declare (ignore in))
              (incf (car resume-exec))
              :ok)
-           :input :h7-fan-out)))
+           :input :h7-fan-out)
+          :spawned))
       (list :before-child-spawned before-spawned
             :after-child-spawned (%count-typed-events
                                   journal task 'task:child-spawned)
