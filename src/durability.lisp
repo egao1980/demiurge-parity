@@ -976,7 +976,7 @@
                                        :fx-dir fx
                                        :task-id task-id
                                        :cycle-id cycle-id
-                                       :skill-dir skill-dir)))))))
+                                       :skill-dir skill-dir))))))))
       (ignore-errors
         (uiop:delete-directory-tree
          root
