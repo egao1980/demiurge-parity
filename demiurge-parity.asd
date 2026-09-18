@@ -3,12 +3,12 @@
   :description "Product smoke / incremental integration harness for demiurge"
   :author "egao1980"
   :license "MIT"
-  :depends-on ((:version "demiurge" "0.3.7")
-               (:version "demiurge/improve" "0.3.7")
-               (:version "demiurge/ingest" "0.3.7")
-               (:version "demiurge/serve" "0.3.7")
-               (:version "demiurge/observe" "0.3.7")
-               (:version "demiurge/workflows" "0.3.7")
+  :depends-on ((:version "demiurge" "0.3.11")
+               (:version "demiurge/improve" "0.3.11")
+               (:version "demiurge/ingest" "0.3.11")
+               (:version "demiurge/serve" "0.3.11")
+               (:version "demiurge/observe" "0.3.11")
+               (:version "demiurge/workflows" "0.3.11")
                "blackboard-protocol"
                "blackboard-wire"
                "capability-protocol"
@@ -73,6 +73,12 @@
                (:file "s8-serve")
                (:file "s9-corporate")
                (:file "s10-research")
+               (:file "h7-repeated-activation")
+               (:file "h7-crash-boundary")
+               (:file "h7-trial-isolation")
+               (:file "h7-eval-integrity")
+               (:file "h7-corporate-session")
+               (:file "h7-ingest-failure")
                (:file "live-local"))
   :perform (test-op (o c)
              (unless (symbol-call :rove :run c)

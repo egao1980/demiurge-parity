@@ -23,6 +23,12 @@ Each Rove file is runnable standalone. Later stages assume earlier ones pass.
 | S8 serve | `tests/s8-serve.lisp` | run — in-process MCP / A2A / AG-UI round-trips vs echo + mock LLM |
 | S9 corporate | `tests/s9-corporate.lisp` | run — mock-tier corporate profile / tenant / OIDC / authz; live `readyz` only when `DEMIURGE_PARITY_TIER=live-corporate` |
 | S10 research | `tests/s10-research.lisp` | run — B4b deep-research citations / budget footer / HITL against demiurge 0.3.7 (direct `wf:` exports; no find-symbol shim) |
+| H7 repeated-activation | `tests/h7-repeated-activation.lisp` | run — same KS twice = two executions; replay executes neither; fresh run IDs |
+| H7 crash-boundary | `tests/h7-crash-boundary.lisp` | run — kill before/after effect-receipt append (SBCL child); no lost/duplicate effect |
+| H7 trial-isolation | `tests/h7-trial-isolation.lisp` | run — no root leak; denied op recorded; restricted catalogue reaches tools |
+| H7 eval-integrity | `tests/h7-eval-integrity.lisp` | run — production feedback cannot enter holdout; confidence threshold enforced |
+| H7 corporate-session | `tests/h7-corporate-session.lisp` | run — default/missing secret rejected; expired/tampered tokens rejected; Secure explicit |
+| H7 ingest-failure | `tests/h7-ingest-failure.lisp` | run — extractor/embedder/store faults are typed + retryable; never zero vectors or false completion |
 
 ## Tiers
 

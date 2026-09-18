@@ -57,11 +57,17 @@ tenant.id = ~S
 issuer = ~S
 client-id = ~S
 
+[corporate.session]
+secret = ~S
+kid = \"k1\"
+issuer = \"demiurge\"
+audience = \"demiurge-session\"
+
 [corporate.role-grants]
 reader = [\"lookup-symbol\", \"search-corpus\"]
 admin = [\"lookup-symbol\", \"search-corpus\", \"run-tests\"]
 "
-                       dsn tenant issuer client))))
+                       dsn tenant issuer client (%corporate-hs-key)))))
     (demiurge:load-demiurge-config :path path :prefix "DEMIURGE" :env env)))
 
 (defun %corporate-id-token (&key (iss "https://idp.example")
@@ -313,7 +319,8 @@ admin = [\"lookup-symbol\", \"search-corpus\", \"run-tests\"]
                         :data-dir tmp
                         :config cfg
                         :llm-catalog catalog
-                        :default-model "mock"))
+                        :default-model "mock"
+                        :session-secret (%corporate-hs-key)))
               (llm-backend (llm:resolve-backend
                             catalog
                             (or (demiurge:profile-default-model profile) "mock")))
