@@ -70,6 +70,7 @@
    #:systems-root-dir
    #:child-registry-dirs
    #:crash-registry-dirs
+   #:crash-registry-trees
    #:write-kill-resume-child
    #:write-effect-receipt-child
    #:run-kill-resume

@@ -201,21 +201,45 @@
          :if-does-not-exist :ignore)))))
 
 (defun crash-registry-dirs ()
-  "S7 dirs plus published demiurge so the crash child can journal receipts."
-  (let ((dirs (copy-list (child-registry-dirs))))
-    (flet ((add (name)
-             (let ((dir (%system-dir name)))
-               (when dir
+  "Parent-resolved system dirs so the crash child can load demiurge
+   without inheriting stale workspace trees. Demiurge is first."
+  (let ((dirs '())
+        (demiurge (%probe-dir (%system-dir "demiurge"))))
+    (flet ((add (p)
+             (let ((dir (%probe-dir p)))
+               (when (and dir (not (and demiurge (string-equal dir demiurge))))
                  (pushnew dir dirs :test #'string-equal)))))
-      (dolist (name '("demiurge" "blackboard-protocol" "blackboard-journal"
+      (dolist (name (child-registry-dirs))
+        (add name))
+      (dolist (name '("mcp-protocol" "a2a-protocol" "ag-ui-protocol"
+                      "http-protocol" "encoding-protocol" "json-protocol"
+                      "log-protocol" "blackboard-protocol" "blackboard-journal"
                       "capability-protocol" "ai-agent-protocol"
                       "conversation-protocol" "steer-protocol"
                       "eval-protocol" "llm-protocol" "rag-protocol"
-                      "log-protocol" "telemetry-protocol" "event-protocol"
+                      "telemetry-protocol" "event-protocol"
                       "cl-stack-config" "cl-stack-oauth2" "cl-stack-jwt"
-                      "ldap-protocol"))
-        (add name)))
-    dirs))
+                      "ldap-protocol" "doc-extract-protocol"
+                      "object-store-protocol" "mail-protocol"
+                      "websearch-protocol" "toml-protocol"))
+        (add (%system-dir name)))
+      (dolist (name (ignore-errors (asdf:already-loaded-systems)))
+        (add (%system-dir name))))
+    (if demiurge
+        (cons demiurge (nreverse dirs))
+        (nreverse dirs))))
+
+(defun crash-registry-trees ()
+  "Dest + XDG trees. Dest is preferred when both exist; demiurge itself
+   is pinned via CRASH-REGISTRY-DIRS."
+  (remove-duplicates
+   (remove nil
+           (list (systems-root-dir)
+                 (%probe-dir (uiop:getenv "CL_REPOSITORY_DEST"))
+                 (%probe-dir (merge-pathnames
+                              ".local/share/cl-repository/systems/"
+                              (user-homedir-pathname)))))
+   :test #'string-equal))
 
 (defun %kill-point-name (kill-point)
   (let ((name (string-downcase (string kill-point))))
@@ -251,6 +275,13 @@
       (format out "   :ignore-inherited-configuration))~%")
       (format out "(asdf:load-system \"sql-backend-sqlite3\")~%")
       (format out "(asdf:load-system \"task-backend-sql\")~%")
+      (let ((demiurge-asd (ignore-errors
+                            (probe-file
+                             (merge-pathnames "demiurge.asd"
+                                              (first dirs))))))
+        (when demiurge-asd
+          (format out "(asdf:clear-system \"demiurge\")~%")
+          (format out "(asdf:load-asd ~s)~%" demiurge-asd)))
       (format out "(asdf:load-system \"demiurge\")~%")
       (format out "(unless (and (fboundp 'demiurge:journal-effect-receipt)~%")
       (format out "             (fboundp 'demiurge:find-effect-receipt))~%")
@@ -329,8 +360,7 @@
          (fx (ensure-directories-exist (merge-pathnames "fx/" root)))
          (marker (merge-pathnames "killed" root))
          (dirs (crash-registry-dirs))
-         (trees (remove nil (list (systems-root-dir)
-                                  (%probe-dir (uiop:getenv "CL_REPOSITORY_DEST"))))))
+         (trees (crash-registry-trees))))
     (unwind-protect
          (progn
            (write-effect-receipt-child script
