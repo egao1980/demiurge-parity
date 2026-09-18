@@ -496,14 +496,8 @@
   (let ((name (intern (string-upcase (string scenario)) :keyword)))
     (case name
       (:fan-out
-       (cond
-         ((not (workflows-system-available-p))
-          "demiurge/workflows not loadable")
-         ((not (fboundp 'demiurge/workflows:run-deep-research))
-          "published 0.3.11 missing demiurge/workflows:run-deep-research")
-         ((not (%special-present-p '#:demiurge/workflows "*RESEARCH-CHILD-HOOK*"))
-          "published 0.3.11 missing demiurge/workflows:*research-child-hook*")
-         (t nil)))
+       (unless (fboundp 'task:spawn-child-task)
+         "task-protocol missing spawn-child-task"))
       (:ingest
        (cond
          ((not (ingest-system-available-p))
@@ -558,83 +552,27 @@
     (%chaos-abort (chaos-skill-store-marker store) "killed-around-promotion"))
   (call-next-method))
 
-(defun %chaos-research-llm (&key (question "What is KSAR?"))
-  (llm:make-mock-llm-backend
-   :handler
-   (lambda (backend turns &key &allow-other-keys)
-     (declare (ignore backend))
-     (let ((text (with-output-to-string (s)
-                   (dolist (tn (if (listp turns) turns (list turns)))
-                     (write-string (if (stringp tn)
-                                       tn
-                                       (or (ignore-errors (llm:turn-text tn))
-                                           (princ-to-string tn)))
-                                 s)))))
-       (cond
-         ((search "Gap analysis" text)
-          (llm:make-llm-response
-           :parts (list (llm:make-llm-text-part :text "none"))
-           :output (demiurge/workflows:make-research-plan
-                    :question "q" :subquestions nil)))
-         ((search "Decompose" text)
-          (llm:make-llm-response
-           :parts (list (llm:make-llm-text-part :text "plan"))
-           :output (demiurge/workflows:make-research-plan
-                    :question "CL expert systems"
-                    :subquestions
-                    (list (demiurge/workflows:make-research-subquestion
-                           :id "q1" :question question)))))
-         (t
-          (llm:make-llm-response
-           :parts (list (llm:make-llm-text-part
-                         :text (format nil "ANSWER:~a [src-1]" question))))))))))
-
-(defun %chaos-research-websearch ()
-  (websearch-protocol:make-mock-websearch-backend
-   :pages (list (cons "https://ex.test/What-is-KSAR?"
-                      "<p>ANSWER:What is KSAR? page body.</p>"))
-   :handler
-   (lambda (backend query &key &allow-other-keys)
-     (declare (ignore backend))
-     (list (websearch-protocol:make-search-hit
-            :url (format nil "https://ex.test/~a"
-                         (substitute #\- #\Space (string query)))
-            :title (string query)
-            :snippet (format nil "ANSWER:~a" query)
-            :rank 1
-            :source "mock")))))
-
-(defun %chaos-research-domain ()
-  (demiurge:make-expert-domain :name "h7-chaos-research"
-                               :catalogue (cap:make-catalogue :world)
-                               :profile :personal))
-
-(defun %call-with-research-child-hook (hook thunk)
-  (let ((sym (find-symbol "*RESEARCH-CHILD-HOOK*" '#:demiurge/workflows)))
-    (unless (and sym (boundp sym))
-      (error 'stage-unavailable
-             :stage :h7-chaos
-             :reason "published 0.3.11 missing demiurge/workflows:*research-child-hook*"))
-    (progv (list sym) (list hook)
-      (funcall thunk))))
+(defun %fan-out-spawn-once (&key db task-id body-counter)
+  "One spawn-child-task on PARENT. Replay skips FN when the child completed."
+  (sql-protocol:with-connection (c :driver :sqlite3 :database-name db)
+    (let* ((journal (tbsql:make-sql-task-journal :connection c
+                                                 :ensure-schema t))
+           (parent (task:make-durable-task :id task-id :journal journal)))
+      (task:with-durable-task (parent journal)
+        (task:with-durable-step ("fan-out-spawn" :idempotency-key "h7-fan-out")
+          (task:spawn-child-task
+           parent
+           (lambda (in)
+             (declare (ignore in))
+             (when body-counter (incf (car body-counter)))
+             :ok)
+           :input :h7-fan-out)))
+      (values journal parent))))
 
 (defun %chaos-child-fan-out (&key db fx-dir marker task-id)
-  (%call-with-research-child-hook
-   (lambda (child input)
-     (declare (ignore child input))
-     (%append-effect-once fx-dir "spawn")
-     (%chaos-abort marker "killed-after-spawn"))
-   (lambda ()
-     (sql-protocol:with-connection (c :driver :sqlite3 :database-name db)
-       (let ((journal (tbsql:make-sql-task-journal :connection c
-                                                   :ensure-schema t)))
-         (demiurge/workflows:run-deep-research
-          (%chaos-research-domain) "CL expert systems"
-          :llm (%chaos-research-llm)
-          :websearch (%chaos-research-websearch)
-          :journal journal
-          :task-id task-id
-          :max-rounds 1))))))
+  (%fan-out-spawn-once :db db :task-id task-id)
+  (%append-effect-once fx-dir "spawn")
+  (%chaos-abort marker "killed-after-spawn"))
 
 (defun %chaos-child-ingest (&key db fx-dir marker task-id corpus-dir)
   (sql-protocol:with-connection (c :driver :sqlite3 :database-name db)
@@ -761,31 +699,21 @@
            (task (task:make-durable-task :id task-id :journal journal))
            (before-spawned (%count-typed-events journal task
                                                 'task:child-spawned))
-           (resume-exec 0))
-      (let ((exec-sym (find-symbol "*RESEARCH-CHILD-EXEC-HOOK*"
-                                   '#:demiurge/workflows)))
-        (progv (if (and exec-sym (boundp exec-sym)) (list exec-sym) '())
-            (if (and exec-sym (boundp exec-sym))
-                (list (lambda (in)
-                        (declare (ignore in))
-                        (incf resume-exec)
-                        (%append-effect-once fx-dir "resume-exec")))
-                '())
-          (%call-with-research-child-hook
-           nil
-           (lambda ()
-             (demiurge/workflows:run-deep-research
-              (%chaos-research-domain) "CL expert systems"
-              :llm (%chaos-research-llm)
-              :websearch (%chaos-research-websearch)
-              :journal journal
-              :task-id task-id
-              :max-rounds 1)))))
+           (resume-exec (list 0)))
+      (task:with-durable-task (task journal)
+        (task:with-durable-step ("fan-out-spawn" :idempotency-key "h7-fan-out")
+          (task:spawn-child-task
+           task
+           (lambda (in)
+             (declare (ignore in))
+             (incf (car resume-exec))
+             :ok)
+           :input :h7-fan-out)))
       (list :before-child-spawned before-spawned
             :after-child-spawned (%count-typed-events
                                   journal task 'task:child-spawned)
             :effect-spawn (%effect-count fx-dir "spawn")
-            :resume-exec resume-exec
+            :resume-exec (car resume-exec)
             :after-count (length (task:journal-events journal task))))))
 
 (defun %resume-ingest (&key db fx-dir task-id corpus-dir)
