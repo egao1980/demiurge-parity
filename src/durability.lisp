@@ -258,6 +258,8 @@
     (with-open-file (out script :direction :output :if-exists :supersede)
       (format out ";;;; Generated H7 effect-receipt crash child. Do not edit.~%")
       (format out "(require :asdf)~%")
+      ;; cl-stack-pathlib (via demiurge) fasls reference SB-POSIX:S-IXUSR.
+      (format out "#+sbcl (require :sb-posix)~%")
       (format out "#+sbcl (sb-ext:disable-debugger)~%")
       (format out "(setf *debugger-hook*~%")
       (format out "      (lambda (c h)~%")
