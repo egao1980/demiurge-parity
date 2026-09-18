@@ -42,7 +42,7 @@ export CL_REPOSITORY_CLIENT_DIR="${CL_REPOSITORY_CLIENT_DIR:-${HOME}/.local/shar
 
 # Checkout + dest only. Never add sibling demiurge / plan-vectors /
 # cli-protocol / llm-protocol — those leak unpublished trees over the
-# pinned GHCR demiurge (0.3.7). Product CLI comes from the OCI dest.
+# pinned GHCR demiurge (0.4.1). Product CLI comes from the OCI dest.
 export CL_SOURCE_REGISTRY="${ROOT}/:${CL_REPOSITORY_DEST}//:${CL_REPOSITORY_CLIENT_DIR}//"
 
 resolve_demiurge_lisp() {
@@ -53,17 +53,17 @@ resolve_demiurge_lisp() {
   local dest="${CL_REPOSITORY_DEST}"
   local candidate
   for candidate in \
-      "${dest}/demiurge/0.3.7/scripts/demiurge.lisp" \
-      "${dest}/systems/demiurge/0.3.7/scripts/demiurge.lisp"; do
+      "${dest}/demiurge/0.4.1/scripts/demiurge.lisp" \
+      "${dest}/systems/demiurge/0.4.1/scripts/demiurge.lisp"; do
     if [[ -f "${candidate}" ]]; then
       printf '%s\n' "${candidate}"
       return 0
     fi
   done
-  # Highest installed 0.3.x under dest (version-sort).
+  # Highest installed under dest (version-sort the full path).
   local found
   found="$(find "${dest}" -path '*/demiurge/*/scripts/demiurge.lisp' 2>/dev/null \
-    | sort -t/ -k1,1 -V | tail -n 1 || true)"
+    | sort -V | tail -n 1 || true)"
   if [[ -n "${found}" && -f "${found}" ]]; then
     printf '%s\n' "${found}"
     return 0
@@ -114,7 +114,7 @@ if [[ "${1:-}" == "--inner" ]]; then
         DEMIURGE_LISP="$(resolve_demiurge_lisp || true)"
       fi
       if [[ -z "${DEMIURGE_LISP:-}" || ! -f "${DEMIURGE_LISP}" ]]; then
-        printf 'run-demo: missing scripts/demiurge.lisp under %s (pin demiurge 0.3.7 on GHCR)\n' \
+        printf 'run-demo: missing scripts/demiurge.lisp under %s (pin demiurge 0.4.1 on GHCR)\n' \
           "${CL_REPOSITORY_DEST}" >&2
         exit 1
       fi
