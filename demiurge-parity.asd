@@ -1,5 +1,5 @@
 (defsystem "demiurge-parity"
-  :version "0.1.7"
+  :version "0.1.8"
   :description "Product smoke / incremental integration harness for demiurge"
   :author "egao1980"
   :license "MIT"
@@ -79,6 +79,8 @@
                (:file "h7-eval-integrity")
                (:file "h7-corporate-session")
                (:file "h7-ingest-failure")
+               (:file "h7-serve-boundary")
+               (:file "h7-chaos")
                (:file "live-local"))
   :perform (test-op (o c)
              (unless (symbol-call :rove :run c)
