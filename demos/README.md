@@ -46,6 +46,7 @@ demos/
   recordings/0.1.1/    # B8 v1 casts+logs (kept)
   recordings/0.1.4/    # B8 v2 *-demo + B8 v3 mock-tier casts+logs
   recordings/0.1.5/    # G2 mock-tier vs demiurge 0.3.7 (OCI dest, no sibling registry)
+  recordings/0.1.9/    # G2 leftover: deep-research vs demiurge 0.4.1 (make-research-mock-llm)
 ```
 
 A new demo is a new directory (`demo.toml` + `queries.md`). No new Lisp.
@@ -72,7 +73,7 @@ DEMIURGE_PARITY_DEMO_WEBSEARCH=mock \
 `run-demo.sh` resolves `demos/<name>/`, isolates dest to `.demo-oci` (or
 `CL_REPOSITORY_DEST`), then loads `prelude.lisp` and either
 `scripts/demiurge.lisp -- demo <dir>` from the **published** demiurge
-package on dest (`demiurge/0.3.7/scripts/demiurge.lisp`) or
+package on dest (`demiurge/0.4.1/scripts/demiurge.lisp`) or
 `runner.lisp` for boot/resume/corporate/improve. It wraps SBCL in
 `asciinema rec demos/recordings/<version>/<name>.cast` when asciinema
 is on `PATH`, otherwise `script`(1). It **always** tees
@@ -109,13 +110,14 @@ It uploads logs/casts as artifacts and does not auto-commit.
 | [`recordings/0.1.5/s6-improve`](recordings/0.1.5/s6-improve.log) ([.cast](recordings/0.1.5/s6-improve.cast)) | G2 mock: runner promote then demote | 2026-09-17 | same 0.3.7 line |
 | [`recordings/0.1.5/s7-resume`](recordings/0.1.5/s7-resume.log) ([.cast](recordings/0.1.5/s7-resume.cast)) | G2 mock: kill-and-resume `before-count=1` / `after-count=2` | 2026-09-17 | same 0.3.7 line |
 | [`recordings/0.1.5/corporate-boot`](recordings/0.1.5/corporate-boot.log) ([.cast](recordings/0.1.5/corporate-boot.cast)) | G2 mock: `command=corporate` — `:CORPORATE`, `/healthz` 200 | 2026-09-17 | same 0.3.7 line |
+| [`recordings/0.1.9/deep-research`](recordings/0.1.9/deep-research.log) ([.cast](recordings/0.1.9/deep-research.cast)) | G2 leftover mock: `demiurge demo` research vs 0.4.1 `make-research-mock-llm`; `verdict: :FAIL` (gate); 2 child answers + workspace citations; no `#<` death | 2026-09-18 | `demiurge-parity` 0.1.9, `demiurge` 0.4.1 from GHCR dest |
 
 B8 v3 / G2 sources are the directories above (`demo.toml` + `queries.md`).
 Record locally with `./demos/run-demo.sh`. Live re-record (LM Studio / SearXNG)
-is still deferred. Mock-tier `deep-research` via `demiurge demo` on 0.3.7
-fails after workspace seed (`illegal sharp macro character: #<` while
-`generate-research-step` requests `:output research-plan`); S10 Rove is
-the mock-tier proof for B4b. Casts are asciinema v3 (`{"version":3,…}`).
+is still deferred. Mock-tier `deep-research` via `demiurge demo` on 0.4.1
+uses `make-research-mock-llm` (no `#<` / `illegal sharp macro character`
+on `:output research-plan`). S10 Rove covers the same APIs. Casts are
+asciinema v3 (`{"version":3,…}`).
 
 Casts sit next to the logs (`.cast`). Play an asciinema cast with
 `asciinema play demos/recordings/<version>/<name>.cast` when the recorder was

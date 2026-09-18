@@ -22,7 +22,7 @@ Each Rove file is runnable standalone. Later stages assume earlier ones pass.
 | S7 durability | `tests/s7-durability.lisp` | run — child SBCL kill-and-resume (2-step journal) |
 | S8 serve | `tests/s8-serve.lisp` | run — in-process MCP / A2A / AG-UI round-trips vs echo + mock LLM |
 | S9 corporate | `tests/s9-corporate.lisp` | run — mock-tier corporate profile / tenant / OIDC / authz; live `readyz` only when `DEMIURGE_PARITY_TIER=live-corporate` |
-| S10 research | `tests/s10-research.lisp` | run — B4b deep-research citations / budget footer / HITL against demiurge 0.3.7 (direct `wf:` exports; no find-symbol shim) |
+| S10 research | `tests/s10-research.lisp` | run — B4b deep-research citations / budget footer / HITL against demiurge 0.4.1 (direct `wf:` exports; no find-symbol shim) |
 | H7 repeated-activation | `tests/h7-repeated-activation.lisp` | run — same KS twice = two executions; replay executes neither; fresh run IDs |
 | H7 crash-boundary | `tests/h7-crash-boundary.lisp` | run — kill before/after effect-receipt append (SBCL child); no lost/duplicate effect |
 | H7 trial-isolation | `tests/h7-trial-isolation.lisp` | run — no root leak; denied op recorded; restricted catalogue reaches tools |
@@ -72,9 +72,9 @@ local model is up (`DEMIURGE_PARITY_DEMO_LLM=mock` to force the scripted
 backend) and SearXNG JSON on `:8888`
 (`docker compose --profile search up -d --wait searxng`;
 `DEMIURGE_PARITY_DEMO_WEBSEARCH=mock` uses `demos/deep-research/websearch.toml`).
-Mock-tier `demiurge demo` research on 0.3.7 still dies after workspace
-seed (`illegal sharp macro character: #<` on `:output research-plan`);
-S10 Rove covers the same APIs with a custom mock handler.
+Mock-tier `demiurge demo` research records against demiurge 0.4.1
+(`make-research-mock-llm` — no `#<` / `illegal sharp macro character`
+on `:output research-plan`). S10 Rove covers the same APIs.
 
 ```bash
 ./demos/run-demo.sh s2-boot

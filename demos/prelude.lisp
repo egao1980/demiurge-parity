@@ -44,7 +44,7 @@
 
 (defun %local-override-directories ()
   "No sibling checkouts. Demos record against pinned GHCR dest only
-   (demiurge 0.3.7 + :provides slash systems). Unpublished workspace
+   (demiurge 0.4.1 + :provides slash systems). Unpublished workspace
    trees must not leak into recordings."
   nil)
 
