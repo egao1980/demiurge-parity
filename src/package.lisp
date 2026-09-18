@@ -74,7 +74,11 @@
    #:write-kill-resume-child
    #:write-effect-receipt-child
    #:run-kill-resume
-   #:run-effect-receipt-crash)
+   #:run-effect-receipt-crash
+   #:write-chaos-child
+   #:chaos-child-entry
+   #:chaos-skip-reason
+   #:run-chaos-crash)
   (:documentation
    "Staged product-smoke helpers for demiurge. Checkout-only: deps from GHCR."))
 

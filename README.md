@@ -29,6 +29,8 @@ Each Rove file is runnable standalone. Later stages assume earlier ones pass.
 | H7 eval-integrity | `tests/h7-eval-integrity.lisp` | run — production feedback cannot enter holdout; confidence threshold enforced |
 | H7 corporate-session | `tests/h7-corporate-session.lisp` | run — default/missing secret rejected; expired/tampered tokens rejected; Secure explicit |
 | H7 ingest-failure | `tests/h7-ingest-failure.lisp` | run — extractor/embedder/store faults are typed + retryable; never zero vectors or false completion |
+| H7 serve-boundary | `tests/h7-serve-boundary.lisp` | run — malformed/oversized `/feedback` and MCP `record_feedback` → 4xx / `mcp-error`; dataset unchanged |
+| H7 chaos | `tests/h7-chaos.lisp` | run — SBCL child kill mid fan-out / ingest / HITL / promotion; resume has no lost or duplicate events |
 
 ## Tiers
 
