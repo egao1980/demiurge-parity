@@ -114,6 +114,16 @@ if [[ "${1:-}" == "--inner" ]]; then
         DEMIURGE_LISP="$(resolve_demiurge_lisp || true)"
       fi
       if [[ -z "${DEMIURGE_LISP:-}" || ! -f "${DEMIURGE_LISP}" ]]; then
+        # Fresh dest: prelude pulls GHCR demiurge 0.4.1, then resolve again.
+        printf 'run-demo: dest missing scripts/demiurge.lisp; bootstrapping OCI dest %s\n' \
+          "${CL_REPOSITORY_DEST}" >&2
+        "${SBCL_BIN[@]}" --noinform --no-userinit --no-sysinit \
+          --non-interactive --disable-debugger \
+          --load "${SCRIPT_DIR}/prelude.lisp" \
+          --eval '(uiop:quit 0)'
+        DEMIURGE_LISP="$(resolve_demiurge_lisp || true)"
+      fi
+      if [[ -z "${DEMIURGE_LISP:-}" || ! -f "${DEMIURGE_LISP}" ]]; then
         printf 'run-demo: missing scripts/demiurge.lisp under %s (pin demiurge 0.4.1 on GHCR)\n' \
           "${CL_REPOSITORY_DEST}" >&2
         exit 1
