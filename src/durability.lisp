@@ -360,7 +360,7 @@
          (fx (ensure-directories-exist (merge-pathnames "fx/" root)))
          (marker (merge-pathnames "killed" root))
          (dirs (crash-registry-dirs))
-         (trees (crash-registry-trees))))
+         (trees (crash-registry-trees)))
     (unwind-protect
          (progn
            (write-effect-receipt-child script
