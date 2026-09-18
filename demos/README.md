@@ -110,7 +110,7 @@ It uploads logs/casts as artifacts and does not auto-commit.
 | [`recordings/0.1.5/s6-improve`](recordings/0.1.5/s6-improve.log) ([.cast](recordings/0.1.5/s6-improve.cast)) | G2 mock: runner promote then demote | 2026-09-17 | same 0.3.7 line |
 | [`recordings/0.1.5/s7-resume`](recordings/0.1.5/s7-resume.log) ([.cast](recordings/0.1.5/s7-resume.cast)) | G2 mock: kill-and-resume `before-count=1` / `after-count=2` | 2026-09-17 | same 0.3.7 line |
 | [`recordings/0.1.5/corporate-boot`](recordings/0.1.5/corporate-boot.log) ([.cast](recordings/0.1.5/corporate-boot.cast)) | G2 mock: `command=corporate` — `:CORPORATE`, `/healthz` 200 | 2026-09-17 | same 0.3.7 line |
-| [`recordings/0.1.9/deep-research`](recordings/0.1.9/deep-research.log) ([.cast](recordings/0.1.9/deep-research.cast)) | G2 leftover mock: `demiurge demo` research vs 0.4.1 `make-research-mock-llm`; verdict present; no `#<` death | 2026-09-18 | `demiurge-parity` 0.1.9, `demiurge` 0.4.1 from GHCR dest |
+| [`recordings/0.1.9/deep-research`](recordings/0.1.9/deep-research.log) ([.cast](recordings/0.1.9/deep-research.cast)) | G2 leftover mock: `demiurge demo` research vs 0.4.1 `make-research-mock-llm`; `verdict: :FAIL` (gate); 2 child answers + workspace citations; no `#<` death | 2026-09-18 | `demiurge-parity` 0.1.9, `demiurge` 0.4.1 from GHCR dest |
 
 B8 v3 / G2 sources are the directories above (`demo.toml` + `queries.md`).
 Record locally with `./demos/run-demo.sh`. Live re-record (LM Studio / SearXNG)
